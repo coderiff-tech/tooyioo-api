@@ -1,0 +1,12 @@
+opencollection: 1.0.0
+info:
+  name: "tooyioo-api"
+  type: workspace
+
+collections:
+  - name: "tooyioo-api"
+    path: "collections\\tooyioo-api"
+
+specs:
+
+docs: ''

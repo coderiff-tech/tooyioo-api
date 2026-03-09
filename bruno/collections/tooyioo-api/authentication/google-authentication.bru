@@ -1,0 +1,46 @@
+meta {
+  name: google-authentication
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://httpbin.org/status/204
+  body: none
+  auth: oauth2
+}
+
+auth:oauth2 {
+  grant_type: authorization_code
+  callback_url: https://oauth.usebruno.com/callback
+  authorization_url: https://accounts.google.com/o/oauth2/v2/auth
+  access_token_url: https://oauth2.googleapis.com/token
+  refresh_token_url: 
+  client_id: {{clientId}}
+  client_secret: {{secret}}
+  scope: openid email profile
+  state: 
+  pkce: false
+  credentials_placement: body
+  credentials_id: google-credentials
+  token_placement: url
+  token_query_key: access_token
+  auto_fetch_token: true
+  auto_refresh_token: false
+}
+
+script:post-response {
+  var idToken = bru.getOauth2CredentialVar('$oauth2.google-credentials.id_token');
+  
+  if(idToken === undefined) {
+    throw new Error("OAuth completed, rerun once to populate id_token");
+  }
+  
+  bru.setVar("idToken", idToken);
+  console.log("New id_token saved as idToken: " + idToken);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
