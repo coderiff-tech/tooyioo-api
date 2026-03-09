@@ -4,10 +4,11 @@ Event Source application with vertical slice approach
 ## Pre-requirements
 - .NET 10 SDK
 - Docker
-- Docker compose
 
 ## Getting Started
+Run the Aspire's AppHost application, which will start the KurrentDB and MongoDB containers and will also initiate the Api main project. 
 Access `http://localhost:2113/` to explore KurrentDB
+Access `http://localhost:27017/` to explore MongoDB with Mongo  
 
 ## Test & Report
 Run
