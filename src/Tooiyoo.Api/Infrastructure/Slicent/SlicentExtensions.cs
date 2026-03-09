@@ -5,7 +5,7 @@ using Eventuous.Subscriptions.Registrations;
 using Slicent;
 using Slicent.Application;
 using Tooiyoo.Api.Infrastructure.OpenApi;
-using Tooiyoo.Identity.ReadModel;
+using Tooyioo.Profile.ReadModel;
 
 namespace Tooiyoo.Api.Infrastructure.Slicent;
 

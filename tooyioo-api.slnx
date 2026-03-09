@@ -9,6 +9,9 @@
     <Project Path="src/identity/Tooiyoo.Identity.Contracts/Tooiyoo.Identity.Contracts.csproj" />
     <Project Path="src/identity/Tooiyoo.Identity/Tooiyoo.Identity.csproj" />
   </Folder>
+  <Folder Name="/src/profile/">
+    <Project Path="src/profile/Tooyioo.Profile/Tooyioo.Profile.csproj" />
+  </Folder>
   <Folder Name="/src/slicent/">
     <Project Path="src/slicent/Slicent/Slicent.csproj" />
   </Folder>

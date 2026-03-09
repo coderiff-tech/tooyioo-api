@@ -5,21 +5,20 @@ using Tooiyoo.Api.Infrastructure.OpenApi;
 using Tooiyoo.Api.Infrastructure.PhoneNumberValidator;
 using Tooiyoo.Api.Infrastructure.Slicent;
 using Tooiyoo.Api.Infrastructure.Telemetry;
-using Tooiyoo.Identity;
-using Tooiyoo.Identity.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var sliceAssemblies =
     new[]
     {
-        typeof(SliceAssemblyMarker).Assembly
+        typeof(Tooiyoo.Identity.SliceAssemblyMarker).Assembly,
+        typeof(Tooyioo.Profile.SliceAssemblyMarker).Assembly
     };
 
 var domainEventAssemblies =
     new[]
     {
-        typeof(ContractsAssemblyMarker).Assembly
+        typeof(Tooiyoo.Identity.Contracts.ContractsAssemblyMarker).Assembly
     };
 
 var allAssemblies = sliceAssemblies.Concat(domainEventAssemblies).ToArray();

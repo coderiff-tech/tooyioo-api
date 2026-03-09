@@ -15,7 +15,7 @@ var mongoDb =
         builder.AddMongoDB("mongo", 27017)
         //.WithDataVolume()
         .WithLifetime(ContainerLifetime.Session)
-        .WithMongoExpress();
+        .WithMongoExpress(cfg => cfg.WithHostPort(27018));
 
 builder.AddProject<Projects.Tooiyoo_Api>("tooyioo-api")
     .WithReference(kurrentDb, "KurrentDb")

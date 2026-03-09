@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
 using Tooiyoo.Common;
 using Tooiyoo.Identity.Features.Bootstrap.Contracts;
-
 // ReSharper disable ClassNeverInstantiated.Global
-
 // ReSharper disable UnusedType.Global
 
 namespace Tooiyoo.Identity.Features.Bootstrap;
