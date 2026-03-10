@@ -1,4 +1,4 @@
-﻿using Tooiyoo.Identity.Features.CompleteProfile.Support;
+﻿using Tooyioo.Profile.Features.Complete.Support;
 // ReSharper disable UnusedType.Global
 
 namespace Tooiyoo.Api.Infrastructure.PhoneNumberValidator;

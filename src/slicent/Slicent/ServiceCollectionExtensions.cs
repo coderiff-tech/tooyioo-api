@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using Slicent.Application;
 using Slicent.Application.Authorization;
 using Slicent.Application.Commands;
+using Slicent.Application.Queries;
 using Slicent.EventStore;
 // ReSharper disable UnusedType.Global
 // ReSharper disable ConvertToExtensionBlock
@@ -22,11 +23,35 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddTransient(typeof(CommandInvoker<,>), typeof(CommandInvoker<,>));
         services.TryAddScoped<ICommandDispatcher, CommandDispatcher>();
+        
+        services.TryAddTransient(typeof(QueryInvoker<,>), typeof(QueryInvoker<,>));
+        services.TryAddScoped<IQueryDispatcher, QueryDispatcher>();
+        
         var candidates = GetConcreteTypes(assemblies);
         
         AddCommandHandlersAndInvokers(services, candidates);
+        AddQueryHandlersAndInvokers(services, candidates);
+        
         RegisterInMemoryEventStore(services);
-        RegisterApplication(services, assemblies);
+        
+        services.TryAddScoped(typeof(CommandHttpResponseGenerator<>));
+        services.TryAddScoped(typeof(QueryHttpResponseGenerator<>));
+        
+        AddClosedGenericImplementations(services, candidates, typeof(ICommandMapper<,,>), ServiceLifetime.Scoped);
+        AddClosedGenericImplementations(services, candidates, typeof(ICommandMapper<,,,>), ServiceLifetime.Scoped);
+        AddClosedGenericImplementations(services, candidates, typeof(ICommandHttpResponseMapper<,,>), ServiceLifetime.Scoped);
+        
+        AddClosedGenericImplementations(services, candidates, typeof(IQueryMapper<,>), ServiceLifetime.Scoped);
+        AddClosedGenericImplementations(services, candidates, typeof(IQueryMapper<,,>), ServiceLifetime.Scoped);
+        AddClosedGenericImplementations(services, candidates, typeof(IQueryHttpResponseMapper<,,>), ServiceLifetime.Scoped);
+        
+        AddClosedGenericImplementations(services, candidates, typeof(IRouteAuthorizer<>), ServiceLifetime.Scoped, true);
+        AddClosedGenericImplementations(services, candidates, typeof(IPayloadAuthorizer<>), ServiceLifetime.Scoped, true);
+        AddClosedGenericImplementations(services, candidates, typeof(IRoutePayloadAuthorizer<,>), ServiceLifetime.Scoped, true);
+        
+        AddAssignableImplementations(services, candidates, typeof(IHttpEndpointModule), ServiceLifetime.Singleton);
+        
+        services.AddCustomProblemDetails();
         
         TypeMap.RegisterKnownEventTypes();
 
@@ -59,25 +84,6 @@ public static class ServiceCollectionExtensions
         });
         
         return services;
-    }
-
-    private static void RegisterApplication(IServiceCollection services, Assembly[] assemblies)
-    {
-        //services.TryAddScoped(typeof(QueryHttpResponseGenerator<>)); // Is it needed?
-        services.TryAddScoped(typeof(CommandHttpResponseGenerator<>));
-        
-        var candidates = GetConcreteTypes(assemblies);
-        
-        AddClosedGenericImplementations(services, candidates, typeof(ICommandMapper<,,>), ServiceLifetime.Scoped);
-        AddClosedGenericImplementations(services, candidates, typeof(ICommandMapper<,,,>), ServiceLifetime.Scoped);
-        AddClosedGenericImplementations(services, candidates, typeof(ICommandHttpResponseMapper<,,>), ServiceLifetime.Scoped);
-        AddClosedGenericImplementations(services, candidates, typeof(IRouteAuthorizer<>), ServiceLifetime.Scoped, true);
-        AddClosedGenericImplementations(services, candidates, typeof(IPayloadAuthorizer<>), ServiceLifetime.Scoped, true);
-        AddClosedGenericImplementations(services, candidates, typeof(IRoutePayloadAuthorizer<,>), ServiceLifetime.Scoped, true);
-        
-        AddAssignableImplementations(services, candidates, typeof(IHttpEndpointModule), ServiceLifetime.Singleton);
-        
-        services.AddCustomProblemDetails();
     }
 
     private static void RegisterInMemoryEventStore(IServiceCollection services)
@@ -124,6 +130,38 @@ public static class ServiceCollectionExtensions
 
                 var invokerService = typeof(ICommandInvoker<>).MakeGenericType(resultType);
                 var invokerImpl = typeof(CommandInvoker<,>).MakeGenericType(commandType, resultType);
+
+                services.TryAdd(new ServiceDescriptor(invokerService, invokerImpl, ServiceLifetime.Scoped));
+            }
+        }
+    }
+    
+    private static void AddQueryHandlersAndInvokers(IServiceCollection services, Type[] candidates)
+    {
+        foreach (var implType in candidates)
+        {
+            var handlerInterfaces = implType.GetInterfaces()
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))
+                .ToArray();
+
+            if (handlerInterfaces.Length == 0)
+            {
+                continue;
+            }
+
+            foreach (var handlerInterface in handlerInterfaces)
+            {
+                services.TryAdd(new ServiceDescriptor(handlerInterface, implType, ServiceLifetime.Scoped));
+            }
+
+            foreach (var handlerInterface in handlerInterfaces)
+            {
+                var args = handlerInterface.GetGenericArguments();
+                var queryType = args[0];
+                var resultType = args[1];
+
+                var invokerService = typeof(IQueryInvoker<>).MakeGenericType(resultType);
+                var invokerImpl = typeof(QueryInvoker<,>).MakeGenericType(queryType, resultType);
 
                 services.TryAdd(new ServiceDescriptor(invokerService, invokerImpl, ServiceLifetime.Scoped));
             }

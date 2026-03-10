@@ -1,13 +1,12 @@
 ﻿// ReSharper disable UnusedType.Global
-
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Tooiyoo.Common;
-using Tooiyoo.Identity.Features.Bootstrap;
-using Tooiyoo.Identity.Features.Bootstrap.Support;
+using Tooyioo.Profile.Features.Bootstrap;
+using Tooyioo.Profile.Features.Bootstrap.Support;
 
 namespace Tooiyoo.Api.Infrastructure.Auth;
 
@@ -45,7 +44,7 @@ public static class AuthExtensions
                 };
             })
             .Services
-            .AddSingleton<IIdentityPrincipalService, IdentityPrincipalCache>()
+            .AddSingleton<IProfilePrincipalService, ProfilePrincipalCache>()
             .AddScoped<IPersonalDetailsRetriever, PersonalDetailsRetriever>()
             .AddAuthorization(options =>
             {
@@ -54,7 +53,7 @@ public static class AuthExtensions
                     .RequireAuthenticatedUser()
                     .Build();
 
-                options.AddPolicy(BootstrapIdentityEndpoint.BootstrapAuthPolicy, p =>
+                options.AddPolicy(BootstrapProfileEndpoint.BootstrapAuthPolicy, p =>
                 {
                     p.AddAuthenticationSchemes(BoostrapScheme);
                     p.RequireAuthenticatedUser();
@@ -116,7 +115,7 @@ public static class AuthExtensions
     
     private static async Task OnStandardTokenValidated(TokenValidatedContext context)
     {
-        var identityPrincipalService = context.HttpContext.RequestServices.GetRequiredService<IIdentityPrincipalService>();
+        var profilePrincipalService = context.HttpContext.RequestServices.GetRequiredService<IProfilePrincipalService>();
         var principal = context.Principal!;
         var subOption = principal.GetSubClaim();
         if (!subOption.IsSome(out var sub))
@@ -125,10 +124,10 @@ public static class AuthExtensions
             return;
         }
 
-        var claimsPrincipal = await identityPrincipalService.GetByExternalId(sub);
+        var claimsPrincipal = await profilePrincipalService.GetByExternalId(sub);
         if (!claimsPrincipal.IsSome(out var claimsPrincipalValue))
         {
-            context.Fail("Unknown user. Identity hasn't been bootstrapped yet.");
+            context.Fail("Unknown user. Profile hasn't been bootstrapped yet.");
             return;
         }
 

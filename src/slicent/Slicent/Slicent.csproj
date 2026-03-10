@@ -17,9 +17,5 @@
       <PackageReference Include="Eventuous.KurrentDB" Version="0.16.0" />
       <PackageReference Include="Eventuous.Projections.MongoDB" Version="0.16.0" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Application\Queries\" />
-    </ItemGroup>
 
 </Project>

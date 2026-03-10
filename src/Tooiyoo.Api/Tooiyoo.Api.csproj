@@ -29,7 +29,6 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\identity\Tooiyoo.Identity\Tooiyoo.Identity.csproj" />
       <ProjectReference Include="..\profile\Tooyioo.Profile\Tooyioo.Profile.csproj" />
     </ItemGroup>
 

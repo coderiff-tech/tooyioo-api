@@ -11,14 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 var sliceAssemblies =
     new[]
     {
-        typeof(Tooiyoo.Identity.SliceAssemblyMarker).Assembly,
         typeof(Tooyioo.Profile.SliceAssemblyMarker).Assembly
     };
 
 var domainEventAssemblies =
     new[]
     {
-        typeof(Tooiyoo.Identity.Contracts.ContractsAssemblyMarker).Assembly
+        typeof(Tooyioo.Profile.Contracts.ContractsAssemblyMarker).Assembly
     };
 
 var allAssemblies = sliceAssemblies.Concat(domainEventAssemblies).ToArray();

@@ -13,8 +13,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\identity\Tooiyoo.Identity.Contracts\Tooiyoo.Identity.Contracts.csproj" />
         <ProjectReference Include="..\..\Tooiyoo.Common\Tooiyoo.Common.csproj" />
+        <ProjectReference Include="..\Tooyioo.Profile.Contracts\Tooyioo.Profile.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

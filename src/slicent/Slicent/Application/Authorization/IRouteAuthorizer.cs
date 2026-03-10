@@ -6,7 +6,7 @@ namespace Slicent.Application.Authorization;
 public interface IRouteAuthorizer<in TRoute>
 {
     Task<bool> Authorize(
-        ClaimsPrincipal user,
+        ClaimsPrincipal claimsPrincipal,
         TRoute route,
         HttpContext http,
         CancellationToken ct);
