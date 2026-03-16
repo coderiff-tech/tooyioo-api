@@ -26,6 +26,7 @@ public static class ServiceCollectionExtensions
         
         services.TryAddTransient(typeof(QueryInvoker<,>), typeof(QueryInvoker<,>));
         services.TryAddScoped<IQueryDispatcher, QueryDispatcher>();
+        services.TryAddSingleton(typeof(QueryService<,>));
         
         var candidates = GetConcreteTypes(assemblies);
         

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Slicent.Application;
 using Slicent.Application.Queries;
 using Tooyioo.Profile.Domain;
 using Tooyioo.Profile.Features.Retrieve.Contracts;

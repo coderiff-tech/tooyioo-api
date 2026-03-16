@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Slicent.Application.Queries;
+namespace Slicent.Application;
 
 public sealed class QueryHttpResponseGenerator<THttpResponse>
     where THttpResponse : class

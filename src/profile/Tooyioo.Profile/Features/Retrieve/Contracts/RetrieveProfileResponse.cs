@@ -1,9 +1,10 @@
-﻿namespace Tooyioo.Profile.Features.Retrieve.Contracts;
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace Tooyioo.Profile.Features.Retrieve.Contracts;
 
 /// <summary>
 /// Response returned after a successful retrieve profile
 /// </summary>
-/// <example>{"id": "00000000-0000-0000-0000-000000000001"}</example>
+/// <example>{"id": "00000000-0000-0000-0000-000000000001", "isComplete": true, "alias": "joe-bloggs-spain_123", "email": "joe@test.com", "phoneNumber": "+34644000000"}</example>
 public sealed record RetrieveProfileResponse
 {
     /// <summary>

@@ -1,5 +1,4 @@
 ﻿using Eventuous;
-using Funzo;
 using Slicent.Application.Queries;
 using Slicent.EventStore;
 using Tooyioo.Profile.Domain;
@@ -9,12 +8,12 @@ using Tooyioo.Profile.Domain;
 
 namespace Tooyioo.Profile.Features.Retrieve;
 
-public sealed class CompleteProfileHandler
+public sealed class RetrieveProfileHandler
     : IQueryHandler<RetrieveProfileQuery, RetrieveProfileQueryResultOkResult>
 {
     private readonly IEventReader _eventReader;
 
-    public CompleteProfileHandler(IEventReader eventReader)
+    public RetrieveProfileHandler(IEventReader eventReader)
     {
         _eventReader = eventReader;
     }

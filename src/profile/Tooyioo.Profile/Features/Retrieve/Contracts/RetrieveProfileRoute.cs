@@ -7,6 +7,4 @@ public record RetrieveProfileRoute
 {
     [FromRoute(Name = "id")] 
     public required Guid ProfileId { get; init; }
-
-    // Add optional [FromQuery] parameters here
 }

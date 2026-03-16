@@ -1,10 +1,11 @@
-﻿using Eventuous.Projections.MongoDB.Tools;
+﻿using Slicent.Application.Queries;
+// ReSharper disable ConvertToPrimaryConstructor
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace Tooyioo.Profile.ReadModel;
 
 public sealed record ProfileDocument
-    : ProjectedDocument
+    : Document
 {
     public ProfileDocument(string Id) 
         : base(Id)
