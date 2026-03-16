@@ -1,7 +1,7 @@
-﻿using Eventuous;
+﻿using Funzo;
 using Slicent.Application.Queries;
-using Slicent.EventStore;
 using Tooyioo.Profile.Domain;
+using Tooyioo.Profile.ReadModel;
 // ReSharper disable ConvertToPrimaryConstructor
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -9,38 +9,33 @@ using Tooyioo.Profile.Domain;
 namespace Tooyioo.Profile.Features.Retrieve;
 
 public sealed class RetrieveProfileHandler
-    : IQueryHandler<RetrieveProfileQuery, RetrieveProfileQueryResultOkResult>
+    : IQueryHandler<RetrieveProfileQuery, RetrieveProfileQueryResult>
 {
-    private readonly IEventReader _eventReader;
+    private readonly QueryService<ProfileDocument, RetrieveProfileQuery> _queryService;
 
-    public RetrieveProfileHandler(IEventReader eventReader)
+    public RetrieveProfileHandler(QueryService<ProfileDocument, RetrieveProfileQuery> queryService)
     {
-        _eventReader = eventReader;
+        _queryService = queryService;
     }
 
-    public async Task<RetrieveProfileQueryResultOkResult> Handle(
+    public async Task<RetrieveProfileQueryResult> Handle(
         RetrieveProfileQuery query, 
         CancellationToken cancellationToken = default)
     {
-        var profileAggregate =
-            await _eventReader.LoadAggregateOrNew<ProfileAggregate, ProfileState, ProfileId>(
-                query.ProfileId, cancellationToken);
-        
-        return new RetrieveProfileQueryResultOkResult(
-            profileAggregate.State.Id,
-            profileAggregate.State.Alias,
-            profileAggregate.State.Email,
-            profileAggregate.State.PhoneNumber,
-            profileAggregate.State.IsProfileComplete);
+        var queryResult = await _queryService.GetSingleOrDefault(query.ProfileId, cancellationToken);
+        if (queryResult is null)
+        {
+            return new RetrieveProfileQueryNotFoundResult(query.ProfileId);
+        }
+        return new RetrieveProfileQueryOkResult(queryResult);
     }
 }
 
 public sealed record RetrieveProfileQuery(ProfileId ProfileId)
-    : IQuery<RetrieveProfileQueryResultOkResult>;
+    : DocumentFilter<ProfileDocument>, IQuery<RetrieveProfileQueryResult>;
 
-public sealed record RetrieveProfileQueryResultOkResult(
-    ProfileId ProfileId, 
-    string? Alias,
-    string Email,
-    string? PhoneNumber,
-    bool IsComplete);
+[Result<RetrieveProfileQueryOkResult, RetrieveProfileQueryNotFoundResult>]
+public partial class RetrieveProfileQueryResult;
+
+public sealed record RetrieveProfileQueryOkResult(ProfileDocument Document);
+public sealed record RetrieveProfileQueryNotFoundResult(ProfileId Id);

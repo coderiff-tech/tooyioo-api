@@ -17,7 +17,7 @@ public sealed class RetrieveProfileEndpoint
             .MapQuery<
                 RetrieveProfileRoute,
                 RetrieveProfileQuery,
-                RetrieveProfileQueryResultOkResult,
+                RetrieveProfileQueryResult,
                 RetrieveProfileResponse>(
                 "/profiles/{id:guid}",
                 cfg => cfg

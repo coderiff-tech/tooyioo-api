@@ -4,18 +4,17 @@ namespace Tooyioo.Profile.Features.Retrieve.Contracts;
 /// <summary>
 /// Response returned after a successful retrieve profile
 /// </summary>
-/// <example>{"id": "00000000-0000-0000-0000-000000000001", "isComplete": true, "alias": "joe-bloggs-spain_123", "email": "joe@test.com", "phoneNumber": "+34644000000"}</example>
+/// <example>
+/// {"id": "00000000-0000-0000-0000-000000000001", "alias": "joe-bloggs-spain_123", "email": "joe@test.com",
+/// "phoneNumber": "+34644000000", "isComplete": true, "createdAt": "2026-01-01T00:00:00.123Z",
+/// "lastModifiedAt": "2026-01-01T00:00:00.123Z", "completedAt": "2026-01-01T00:00:00.123Z"}
+/// </example>
 public sealed record RetrieveProfileResponse
 {
     /// <summary>
     /// The unique identifier of the profile
     /// </summary>
     public required string Id { get; init; }
-    
-    /// <summary>
-    /// Flag indicating whether the profile is complete or needs to be completed
-    /// </summary>
-    public required bool IsComplete { get; init; }
     
     /// <summary>
     /// The unique alias (if any)
@@ -31,4 +30,24 @@ public sealed record RetrieveProfileResponse
     /// The phone number (if any)
     /// </summary>
     public required string PhoneNumber { get; init; }
+    
+    /// <summary>
+    /// Flag indicating whether the profile is complete or needs to be completed
+    /// </summary>
+    public required bool IsComplete { get; init; }
+    
+    /// <summary>
+    /// Creation date
+    /// </summary>
+    public required DateTime CreatedAt { get; init; }
+    
+    /// <summary>
+    /// Last modification date
+    /// </summary>
+    public required DateTime LastModifiedAt { get; init; }
+    
+    /// <summary>
+    /// Profile completion date (if any)
+    /// </summary>
+    public required DateTime? CompletedAt { get; init; }
 }

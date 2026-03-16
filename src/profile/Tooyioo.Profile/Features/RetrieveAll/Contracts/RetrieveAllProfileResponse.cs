@@ -4,7 +4,12 @@ namespace Tooyioo.Profile.Features.RetrieveAll.Contracts;
 /// <summary>
 /// Response returned after a successful retrieve all profile
 /// </summary>
-/// <example>{"pageNumber": 1, "pageSize": 20, "totalPages": 1, "totalCount": 1, "items": [{"id": "00000000-0000-0000-0000-000000000001", "alias": "joe-bloggs-spain_123"}]}</example>
+/// <example>
+/// {"pageNumber": 1, "pageSize": 20, "totalPages": 1, "totalCount": 1,
+/// "items": [{"id": "00000000-0000-0000-0000-000000000001", "alias": "joe-bloggs-spain_123",
+/// "isComplete": true, "createdAt": "2026-01-01T00:00:00.123Z", "lastModifiedAt": "2026-01-01T00:00:00.123Z",
+/// "completedAt": "2026-01-01T00:00:00.123Z"}]}
+/// </example>
 public sealed record RetrieveAllProfileResponse
 {
     /// <summary>

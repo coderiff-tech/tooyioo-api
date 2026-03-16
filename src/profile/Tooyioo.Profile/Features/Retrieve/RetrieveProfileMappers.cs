@@ -18,19 +18,27 @@ public static class RetrieveProfileMappers
     }
 
     public sealed class QueryHttpResponseMapper
-        : IQueryHttpResponseMapper<RetrieveProfileQueryResultOkResult, HttpContext, RetrieveProfileResponse>
+        : IQueryHttpResponseMapper<RetrieveProfileQueryResult, HttpContext, RetrieveProfileResponse>
     {
         public IResult Map(
-            RetrieveProfileQueryResultOkResult queryResult, 
+            RetrieveProfileQueryResult queryResult, 
             HttpContext context,
             QueryHttpResponseGenerator<RetrieveProfileResponse> queryHttpResponseGenerator)
-            => queryHttpResponseGenerator.Ok(new RetrieveProfileResponse
+            => queryResult.Match<IResult>(
+                ok => queryHttpResponseGenerator.Ok(new RetrieveProfileResponse
                 {
-                    Id = queryResult.ProfileId,
-                    IsComplete = queryResult.IsComplete,
-                    Alias = queryResult.Alias ?? string.Empty,
-                    Email = queryResult.Email,
-                    PhoneNumber = queryResult.PhoneNumber ?? string.Empty
-                });
+                    Id = ok.Document.Id,
+                    IsComplete = ok.Document.IsComplete,
+                    Alias = ok.Document.Alias,
+                    Email = ok.Document.Email,
+                    PhoneNumber = ok.Document.PhoneNumber,
+                    CreatedAt = ok.Document.CreatedAt,
+                    LastModifiedAt = ok.Document.LastModifiedAt,
+                    CompletedAt = ok.Document.CompletedAt
+                }),
+                notFound => queryHttpResponseGenerator.NotFound(
+                    context,
+                    "identity_not_found",
+                    $"Could not find Identity with Id {notFound.Id}"));
     }
 }
