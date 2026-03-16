@@ -65,3 +65,4 @@ The OAuth client is `tooyioo-web`
 8. Test the refresh token functionality.
 
 For Bruno ensure `Use System Browser for OAuth2 Authorization` is enabled in Preferences > General
+The collection reads the token directly from Bruno's OAuth store with `{{$oauth2.google-credentials.id_token}}`, so a second request is not needed to copy it into a separate variable.

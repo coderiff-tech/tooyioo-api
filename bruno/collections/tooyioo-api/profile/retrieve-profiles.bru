@@ -5,13 +5,18 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/profiles
+  url: {{baseUrl}}/profiles?pageNumber=1&pageSize=5
   body: none
   auth: none
 }
 
+params:query {
+  pageNumber: 1
+  pageSize: 5
+}
+
 headers {
-  Authorization: Bearer {{idToken}}
+  Authorization: Bearer {{$oauth2.google-credentials.id_token}}
 }
 
 vars:pre-request {

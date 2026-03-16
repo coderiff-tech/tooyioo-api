@@ -11,7 +11,7 @@ post {
 }
 
 headers {
-  Authorization: Bearer {{idToken}}
+  Authorization: Bearer {{$oauth2.google-credentials.id_token}}
 }
 
 body:json {

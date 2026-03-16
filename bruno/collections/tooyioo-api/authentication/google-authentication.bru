@@ -29,17 +29,6 @@ auth:oauth2 {
   auto_refresh_token: false
 }
 
-script:post-response {
-  var idToken = bru.getOauth2CredentialVar('$oauth2.google-credentials.id_token');
-  
-  if(idToken === undefined) {
-    throw new Error("OAuth completed, rerun once to populate id_token");
-  }
-  
-  bru.setVar("idToken", idToken);
-  console.log("New id_token saved as idToken: " + idToken);
-}
-
 settings {
   encodeUrl: true
   timeout: 0
