@@ -11,11 +11,11 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Eventuous" Version="0.16.0" />
-      <PackageReference Include="Eventuous.Diagnostics.OpenTelemetry" Version="0.16.0" />
-      <PackageReference Include="Eventuous.Extensions.DependencyInjection" Version="0.16.0" />
-      <PackageReference Include="Eventuous.KurrentDB" Version="0.16.0" />
-      <PackageReference Include="Eventuous.Projections.MongoDB" Version="0.16.0" />
+      <PackageReference Include="Eventuous" Version="0.16.3" />
+      <PackageReference Include="Eventuous.Diagnostics.OpenTelemetry" Version="0.16.3" />
+      <PackageReference Include="Eventuous.Extensions.DependencyInjection" Version="0.16.3" />
+      <PackageReference Include="Eventuous.KurrentDB" Version="0.16.3" />
+      <PackageReference Include="Eventuous.Projections.MongoDB" Version="0.16.3" />
     </ItemGroup>
 
 </Project>
