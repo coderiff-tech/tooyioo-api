@@ -2,6 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var kurrentDb =
     builder.AddKurrentDB("kurrent", 2113)
+        //.WithDataVolume()
         .WithLifetime(ContainerLifetime.Session)
         .WithEnvironment("KURRENTDB_CLUSTER_SIZE", "1")
         .WithEnvironment("KURRENTDB_RUN_PROJECTIONS", "All")
@@ -12,6 +13,8 @@ var kurrentDb =
 
 var mongoDb =
         builder.AddMongoDB("mongo", 27017)
+            .WithEnvironment("GLIBC_TUNABLES", "libc.cpu.hwcaps=-SHSTK")
+        //.WithDataVolume()
         .WithLifetime(ContainerLifetime.Session)
         .WithMongoExpress(cfg => cfg.WithHostPort(27018));
 
