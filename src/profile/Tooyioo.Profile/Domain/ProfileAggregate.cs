@@ -38,8 +38,7 @@ public sealed class ProfileAggregate
     }
 
     public void CompleteProfile(
-        string alias, 
-        string phoneNumber)
+        string alias)
     {
         EnsureExists();
 
@@ -50,12 +49,6 @@ public sealed class ProfileAggregate
         
         var identityAliasAssociated = new ProfileDomainEvents.V1.AliasSet(alias);
         Apply(identityAliasAssociated);
-
-        if (string.IsNullOrWhiteSpace(phoneNumber))
-        {
-            var identityPhoneNumberSet = new ProfileDomainEvents.V1.PhoneNumberSet(phoneNumber);
-            Apply(identityPhoneNumberSet);
-        }
         
         var identityProfileCompleted = new ProfileDomainEvents.V1.Completed();
         Apply(identityProfileCompleted);
