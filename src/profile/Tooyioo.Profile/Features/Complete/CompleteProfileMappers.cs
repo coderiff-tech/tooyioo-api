@@ -23,10 +23,10 @@ public static class CompleteProfileMappers
     }
 
     public sealed class CommandHttpResponseMapper
-        : ICommandHttpResponseMapper<CompleteIdentityProfileCommandResult, HttpContext, CompleteProfileResponse>
+        : ICommandHttpResponseMapper<CompleteProfileCommandResult, HttpContext, CompleteProfileResponse>
     {
         public IResult Map(
-            CompleteIdentityProfileCommandResult commandResult,
+            CompleteProfileCommandResult commandResult,
             HttpContext context,
             CommandHttpResponseGenerator<CompleteProfileResponse> commandHttpResponseGenerator)
             => commandResult.Match<IResult>(

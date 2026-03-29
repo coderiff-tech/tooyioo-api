@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Validation;
-using Tooyioo.Profile.Features.Complete.Support;
 
 namespace Tooyioo.Profile.Features.Complete.Contracts;
 
 /// <summary>
 /// Request payload used to complete the profile
 /// </summary>
-/// <example>{"alias": "joe-bloggs-spain_123", "phoneNumber": "+34644000000"}</example>
+/// <example>{"alias": "joe-bloggs-spain_123"}</example>
 #pragma warning disable ASP0029
 [ValidatableType]
 #pragma warning restore ASP0029

@@ -53,4 +53,18 @@ public sealed class ProfileAggregate
         var identityProfileCompleted = new ProfileDomainEvents.V1.Completed();
         Apply(identityProfileCompleted);
     }
+    
+    public void SetProfilePhoneNumber(
+        string? phoneNumber)
+    {
+        EnsureExists();
+
+        if (State.PhoneNumber == phoneNumber)
+        {
+            return;
+        }
+        
+        var identityAliasAssociated = new ProfileDomainEvents.V1.PhoneNumberSet(phoneNumber);
+        Apply(identityAliasAssociated);
+    }
 }

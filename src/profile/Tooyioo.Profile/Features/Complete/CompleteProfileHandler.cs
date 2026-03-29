@@ -11,7 +11,7 @@ using Tooyioo.Profile.Domain.UniqueAlias;
 namespace Tooyioo.Profile.Features.Complete;
 
 public sealed class CompleteProfileHandler
-    : ICommandHandler<CompleteIdentityProfileCommand, CompleteIdentityProfileCommandResult>
+    : ICommandHandler<CompleteIdentityProfileCommand, CompleteProfileCommandResult>
 {
     private readonly IEventReader _eventReader;
     private readonly IMultiAppendEventWriter _multiAppendEventWriter;
@@ -24,7 +24,7 @@ public sealed class CompleteProfileHandler
         _multiAppendEventWriter = multiAppendEventWriter;
     }
     
-    public async Task<CompleteIdentityProfileCommandResult> Handle(
+    public async Task<CompleteProfileCommandResult> Handle(
         CompleteIdentityProfileCommand command, 
         CancellationToken cancellationToken = default)
     {
@@ -43,14 +43,14 @@ public sealed class CompleteProfileHandler
         
         if (isClaimedByOther)
         {
-            return new CompleteIdentityAliasInUseError(profileId);
+            return new CompleteProfileAliasInUseError(profileId);
         }
         
-        var identityAggregate =
+        var profileAggregate =
             await _eventReader.LoadAggregateOrNew<ProfileAggregate, ProfileState, ProfileId>(
                 profileId, cancellationToken);
         
-        identityAggregate.CompleteProfile(
+        profileAggregate.CompleteProfile(
             command.Alias);
 
         try
@@ -58,27 +58,27 @@ public sealed class CompleteProfileHandler
             await _multiAppendEventWriter.StoreAggregatesAtomically<
                 ProfileAggregate, ProfileState, ProfileId,
                 UniqueAliasAggregate, UniqueAliasState, UniqueAliasId>(
-                identityAggregate, uniqueAliasAggregate, cancellationToken);
+                profileAggregate, uniqueAliasAggregate, cancellationToken);
             
-            return new CompleteIdentityProfileCommandOkResult(profileId);
+            return new CompleteProfileCommandOkResult(profileId);
         }
         catch (OptimisticConcurrencyException)
         {
-            return new CompleteIdentityConcurrencyError();
+            return new CompleteProfileConcurrencyError();
         }
     }
 }
 
 public sealed record CompleteIdentityProfileCommand(ProfileId ProfileId, string Alias)
-    : ICommand<CompleteIdentityProfileCommandResult>;
+    : ICommand<CompleteProfileCommandResult>;
     
-[Result<CompleteIdentityProfileCommandOkResult, CompleteIdentityProfileCommandErrorResult>]
-public partial class CompleteIdentityProfileCommandResult;
+[Result<CompleteProfileCommandOkResult, CompleteProfileCommandErrorResult>]
+public partial class CompleteProfileCommandResult;
 
-public sealed record CompleteIdentityProfileCommandOkResult(ProfileId Id);
+public sealed record CompleteProfileCommandOkResult(ProfileId Id);
 
-[Union<CompleteIdentityAliasInUseError, CompleteIdentityConcurrencyError>]
-public partial class CompleteIdentityProfileCommandErrorResult;
+[Union<CompleteProfileAliasInUseError, CompleteProfileConcurrencyError>]
+public partial class CompleteProfileCommandErrorResult;
 
-public sealed record CompleteIdentityAliasInUseError(ProfileId ProfileId);
-public sealed record CompleteIdentityConcurrencyError;
+public sealed record CompleteProfileAliasInUseError(ProfileId ProfileId);
+public sealed record CompleteProfileConcurrencyError;

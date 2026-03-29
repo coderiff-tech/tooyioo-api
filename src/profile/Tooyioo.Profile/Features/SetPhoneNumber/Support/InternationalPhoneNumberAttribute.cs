@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
-
 // ReSharper disable ConvertToPrimaryConstructor
 
-namespace Tooyioo.Profile.Features.Complete.Support;
+namespace Tooyioo.Profile.Features.SetPhoneNumber.Support;
 
 public sealed class InternationalPhoneNumberAttribute
     : ValidationAttribute

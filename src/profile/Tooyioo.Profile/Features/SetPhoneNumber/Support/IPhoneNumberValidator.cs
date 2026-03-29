@@ -2,7 +2,7 @@
 
 // ReSharper disable ClassNeverInstantiated.Global
 
-namespace Tooyioo.Profile.Features.Complete.Support;
+namespace Tooyioo.Profile.Features.SetPhoneNumber.Support;
 
 public interface IPhoneNumberValidator
 {

@@ -18,7 +18,7 @@ public sealed class CompleteProfileEndpoint
                 CompleteProfileRoute,
                 CompleteProfileRequest,
                 CompleteIdentityProfileCommand,
-                CompleteIdentityProfileCommandResult,
+                CompleteProfileCommandResult,
                 CompleteProfileResponse>(
                 "/profiles/{id:guid}/complete",
                 cfg => cfg

@@ -1,6 +1,6 @@
 ﻿using PhoneNumbers;
-using Tooyioo.Profile.Features.Complete.Support;
-using PhoneNumberValidationResult = Tooyioo.Profile.Features.Complete.Support.PhoneNumberValidationResult;
+using Tooyioo.Profile.Features.SetPhoneNumber.Support;
+using PhoneNumberValidationResult = Tooyioo.Profile.Features.SetPhoneNumber.Support.PhoneNumberValidationResult;
 // ReSharper disable ConvertConstructorToMemberInitializers
 
 namespace Tooiyoo.Api.Infrastructure.PhoneNumberValidator;

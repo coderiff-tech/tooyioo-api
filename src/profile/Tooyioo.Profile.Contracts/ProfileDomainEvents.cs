@@ -21,7 +21,7 @@ public static class ProfileDomainEvents
         public record AliasSet(string Alias);
         
         [EventType(Prefix + "PhoneNumberSet")]
-        public record PhoneNumberSet(string PhoneNumber);
+        public record PhoneNumberSet(string? PhoneNumber);
         
         [EventType(Prefix + "Completed")]
         public record Completed;
