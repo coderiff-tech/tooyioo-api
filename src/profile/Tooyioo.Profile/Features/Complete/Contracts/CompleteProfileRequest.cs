@@ -24,15 +24,4 @@ public sealed record CompleteProfileRequest
     [MaxLength(24, ErrorMessage = "alias_too_long")]
     [RegularExpression("^[a-z0-9_-]+$", ErrorMessage = "alias_invalid_format")]
     public string Alias { get; init; } = null!;
-    
-    /// <summary>
-    /// The primary contact phone number associated with the individual.
-    /// </summary>
-    /// <remarks>
-    /// Must be provided in E.164 international format (e.g., +34644000000)
-    /// </remarks>
-    [InternationalPhoneNumber("phone_number_valid_international_format_required")]
-    public string PhoneNumber { get; init; } = null!;
-
-
 }

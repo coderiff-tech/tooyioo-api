@@ -19,8 +19,7 @@ public static class CompleteProfileMappers
             HttpContext context)
             => new(
                 new ProfileId(urlParams.ProfileId.ToString()),
-                request.Alias.Trim(),
-                request.PhoneNumber.Trim());
+                request.Alias.Trim());
     }
 
     public sealed class CommandHttpResponseMapper

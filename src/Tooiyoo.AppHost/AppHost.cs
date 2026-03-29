@@ -12,6 +12,7 @@ var kurrentDb =
 
 var mongoDb =
         builder.AddMongoDB("mongo", 27017)
+            .WithEnvironment("GLIBC_TUNABLES", "libc.cpu.hwcaps=-SHSTK")
         .WithLifetime(ContainerLifetime.Session)
         .WithMongoExpress(cfg => cfg.WithHostPort(27018));
 

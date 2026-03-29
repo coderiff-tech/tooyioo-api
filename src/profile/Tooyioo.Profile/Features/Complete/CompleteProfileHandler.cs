@@ -51,8 +51,7 @@ public sealed class CompleteProfileHandler
                 profileId, cancellationToken);
         
         identityAggregate.CompleteProfile(
-            command.Alias, 
-            command.PhoneNumber);
+            command.Alias);
 
         try
         {
@@ -70,7 +69,7 @@ public sealed class CompleteProfileHandler
     }
 }
 
-public sealed record CompleteIdentityProfileCommand(ProfileId ProfileId, string Alias, string PhoneNumber)
+public sealed record CompleteIdentityProfileCommand(ProfileId ProfileId, string Alias)
     : ICommand<CompleteIdentityProfileCommandResult>;
     
 [Result<CompleteIdentityProfileCommandOkResult, CompleteIdentityProfileCommandErrorResult>]
