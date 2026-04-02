@@ -21,6 +21,6 @@ public sealed record CompleteProfileRequest
     [Required(ErrorMessage = "alias_required")]
     [MinLength(4, ErrorMessage = "alias_too_short")]
     [MaxLength(24, ErrorMessage = "alias_too_long")]
-    [RegularExpression("^[a-z0-9_-]+$", ErrorMessage = "alias_invalid_format")]
+    [RegularExpression("^[a-zA-Z0-9_-]+$", ErrorMessage = "alias_invalid_format")]
     public string Alias { get; init; } = null!;
 }
