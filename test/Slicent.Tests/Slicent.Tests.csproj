@@ -9,7 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="TUnit" Version="1.19.74" />
+        <PackageReference Include="TUnit" Version="1.45.29" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\slicent\Slicent\Slicent.csproj" />
     </ItemGroup>
 
 </Project>

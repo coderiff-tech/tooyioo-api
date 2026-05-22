@@ -39,8 +39,7 @@ public static class TelemetryExtensions
                         .AddRuntimeInstrumentation()
                         .AddMeter("*")
                         .AddEventuous()
-                        .AddEventuousSubscriptions()
-                        .AddAspNetCoreInstrumentation();
+                        .AddEventuousSubscriptions();
 
                     if (otelEnabled)
                     {

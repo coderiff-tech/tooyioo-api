@@ -51,13 +51,13 @@ internal sealed class KurrentMultiAppendEventStore
         IReadOnlyCollection<NewStreamEvent> events,
         CancellationToken cancellationToken = default)
         => _inner.AppendEvents(stream, expectedVersion, events, cancellationToken);
+    
+    public IAsyncEnumerable<StreamEvent> ReadEvents(StreamName stream, StreamReadPosition start, int count, CancellationToken cancellationToken)
+        => _inner.ReadEvents(stream, start, count, cancellationToken);
 
-    public Task<StreamEvent[]> ReadEvents(StreamName stream, StreamReadPosition start, int count, bool failIfNotFound, CancellationToken cancellationToken = default)
-        => _inner.ReadEvents(stream, start, count, failIfNotFound, cancellationToken);
-
-    public Task<StreamEvent[]> ReadEventsBackwards(StreamName stream, StreamReadPosition start, int count, bool failIfNotFound, CancellationToken cancellationToken = default)
-        => _inner.ReadEventsBackwards(stream, start, count, failIfNotFound, cancellationToken);
-
+    public IAsyncEnumerable<StreamEvent> ReadEventsBackwards(StreamName stream, StreamReadPosition start, int count, CancellationToken cancellationToken)
+        => _inner.ReadEventsBackwards(stream, start, count, cancellationToken);
+    
     public Task TruncateStream(StreamName stream, StreamTruncatePosition truncatePosition, ExpectedStreamVersion expectedVersion, CancellationToken cancellationToken)
         => _inner.TruncateStream(stream, truncatePosition, expectedVersion, cancellationToken);
 

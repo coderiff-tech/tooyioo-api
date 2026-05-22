@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using Eventuous;
 // ReSharper disable ConvertToPrimaryConstructor
 
@@ -68,38 +69,34 @@ public sealed class InMemoryEventStore
         }
     }
 
-    public Task<StreamEvent[]> ReadEvents(
-        StreamName stream,
-        StreamReadPosition start,
-        int count,
-        bool failIfNotFound,
-        CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<StreamEvent> ReadEvents(StreamName stream, StreamReadPosition start, int count,
+        CancellationToken cancellationToken)
     {
+        StreamEvent[] events;
+
         lock (_gate)
         {
-            return Task.FromResult(
-                FindStream(stream, failIfNotFound)
-                    .GetEvents(start, count)
-                    .ToArray()
-            );
+            events = FindStream(stream)
+                .GetEvents(start, count)
+                .ToArray();
         }
+
+        return Enumerate(events, cancellationToken);
     }
 
-    public Task<StreamEvent[]> ReadEventsBackwards(
-        StreamName stream,
-        StreamReadPosition start,
-        int count,
-        bool failIfNotFound,
-        CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<StreamEvent> ReadEventsBackwards(StreamName stream, StreamReadPosition start, int count,
+        CancellationToken cancellationToken)
     {
+        StreamEvent[] events;
+
         lock (_gate)
         {
-            return Task.FromResult(
-                FindStream(stream, failIfNotFound)
-                    .GetEventsBackwards(start, count)
-                    .ToArray()
-            );
+            events = FindStream(stream)
+                .GetEventsBackwards(start, count)
+                .ToArray();
         }
+
+        return Enumerate(events, cancellationToken);
     }
 
     public Task TruncateStream(
@@ -246,7 +243,7 @@ public sealed class InMemoryEventStore
         }
     }
 
-    private InMemoryStream FindStream(StreamName stream, bool failIfNotFound)
+    private InMemoryStream FindStream(StreamName stream, bool failIfNotFound = true)
     {
         if (_storage.TryGetValue(stream, out var existing))
         {
@@ -256,6 +253,19 @@ public sealed class InMemoryEventStore
         return failIfNotFound 
             ? throw new StreamNotFound(stream) 
             : new InMemoryStream(stream);
+    }
+
+    private static async IAsyncEnumerable<StreamEvent> Enumerate(
+        IEnumerable<StreamEvent> events,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        foreach (var streamEvent in events)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            yield return streamEvent;
+        }
+
+        await Task.CompletedTask;
     }
 }
 
@@ -326,11 +336,19 @@ internal sealed class InMemoryStream
 
     public IEnumerable<StreamEvent> GetEventsBackwards(StreamReadPosition from, int count)
     {
-        var position = (int)from.Value;
-
-        while (count-- > 0)
+        if (_events.Count == 0 || count == 0)
         {
-            yield return _events[position--].Event;
+            yield break;
+        }
+
+        var position = from.Value < 0 || from.Value >= _events.Count
+            ? _events.Count - 1
+            : (int)from.Value;
+
+        while (position >= 0 && count-- > 0)
+        {
+            var storedEvent = _events[position--];
+            yield return storedEvent.Event with { Revision = storedEvent.Position };
         }
     }
 
