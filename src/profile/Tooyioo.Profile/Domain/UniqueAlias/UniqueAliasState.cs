@@ -10,12 +10,12 @@ public sealed record UniqueAliasState
     
     public UniqueAliasState()
     {
-        On<UniqueExternalIdDomainEvents.V1.Claimed>(UniqueExternalIdentityClaimed);
+        On<UniqueAliasDomainEvents.V1.Claimed>(UniqueAliasClaimed);
     }
 
-    private static UniqueAliasState UniqueExternalIdentityClaimed(
+    private static UniqueAliasState UniqueAliasClaimed(
         UniqueAliasState state, 
-        UniqueExternalIdDomainEvents.V1.Claimed domainEvent)
+        UniqueAliasDomainEvents.V1.Claimed domainEvent)
     {
         return state with
         {
