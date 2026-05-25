@@ -74,7 +74,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(sp =>
         {
             var client = sp.GetRequiredService<MongoClient>();
-            var mongoDatabase = client.GetDatabase("tooiyoo");
+            var mongoDatabase = client.GetDatabase("tooyioo");
             return mongoDatabase;
         });
         

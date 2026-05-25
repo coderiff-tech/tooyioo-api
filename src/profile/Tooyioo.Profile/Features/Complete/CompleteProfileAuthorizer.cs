@@ -1,7 +1,7 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Slicent.Application.Authorization;
-using Tooiyoo.Common;
+using Tooyioo.Common;
 using Tooyioo.Profile.Features.Complete.Contracts;
 
 // ReSharper disable ClassNeverInstantiated.Global

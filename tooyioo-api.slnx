@@ -1,9 +1,9 @@
-﻿<Solution>
+<Solution>
   <Folder Name="/doc/" />
   <Folder Name="/src/">
-    <Project Path="src/Tooiyoo.Api/Tooiyoo.Api.csproj" />
-    <Project Path="src/Tooiyoo.AppHost/Tooiyoo.AppHost.csproj" />
-    <Project Path="src/Tooiyoo.Common/Tooiyoo.Common.csproj" />
+    <Project Path="src/Tooyioo.Api/Tooyioo.Api.csproj" />
+    <Project Path="src/Tooyioo.AppHost/Tooyioo.AppHost.csproj" />
+    <Project Path="src/Tooyioo.Common/Tooyioo.Common.csproj" />
   </Folder>
   <Folder Name="/src/profile/">
     <Project Path="src/profile/Tooyioo.Profile.Contracts/Tooyioo.Profile.Contracts.csproj" />

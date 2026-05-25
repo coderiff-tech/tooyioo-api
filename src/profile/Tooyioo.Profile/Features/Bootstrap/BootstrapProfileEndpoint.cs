@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
 using Slicent.Application.Commands;
-using Tooiyoo.Common;
+using Tooyioo.Common;
 using Tooyioo.Profile.Features.Bootstrap.Contracts;
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedType.Global

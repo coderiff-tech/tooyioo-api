@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Slicent.Application.Commands;
-using Tooiyoo.Common;
+using Tooyioo.Common;
 using Tooyioo.Profile.Domain;
 using Tooyioo.Profile.Features.Bootstrap.Contracts;
 using Tooyioo.Profile.Features.Bootstrap.Support;

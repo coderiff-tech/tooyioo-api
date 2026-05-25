@@ -10,7 +10,10 @@ public sealed class ProfileProjector
 {
     public ProfileProjector(
         IMongoDatabase database) 
-        : base(database)
+        : base(database, new MongoProjectionOptions<ProfileDocument>
+        {
+            CollectionName = "profiles"
+        })
     {
         On<ProfileDomainEvents.V1.Created>(stream => stream.GetId(), Handle);
         On<ProfileDomainEvents.V1.EmailVerified>(stream => stream.GetId(), Handle);

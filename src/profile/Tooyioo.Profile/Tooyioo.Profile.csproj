@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Tooiyoo.Common\Tooiyoo.Common.csproj" />
+        <ProjectReference Include="..\..\Tooyioo.Common\Tooyioo.Common.csproj" />
         <ProjectReference Include="..\Tooyioo.Profile.Contracts\Tooyioo.Profile.Contracts.csproj" />
     </ItemGroup>
 

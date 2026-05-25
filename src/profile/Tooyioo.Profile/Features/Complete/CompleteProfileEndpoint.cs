@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
 using Slicent.Application.Authorization;
 using Slicent.Application.Commands;
-using Tooiyoo.Common;
+using Tooyioo.Common;
 using Tooyioo.Profile.Features.Complete.Contracts;
 // ReSharper disable UnusedType.Global
 
