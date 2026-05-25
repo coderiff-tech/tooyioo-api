@@ -8,12 +8,8 @@ namespace Tooyioo.Profile.ReadModel;
 public sealed class ProfileProjector
     : MongoProjector<ProfileDocument>
 {
-    public ProfileProjector(
-        IMongoDatabase database) 
-        : base(database, new MongoProjectionOptions<ProfileDocument>
-        {
-            CollectionName = "profiles"
-        })
+    public ProfileProjector(IMongoDatabase database) 
+        : base(database)
     {
         On<ProfileDomainEvents.V1.Created>(stream => stream.GetId(), Handle);
         On<ProfileDomainEvents.V1.EmailVerified>(stream => stream.GetId(), Handle);
