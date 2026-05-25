@@ -16,10 +16,10 @@ public static class EventStoreExtensions
         where TId : Id =>
         await eventReader.LoadAggregate<TAggregate, TState, TId>(id, failIfNotFound: false, cancellationToken: ct);
     
-    public static Task<MultiAppendEventsResult> StoreAggregatesAtomically<
+    public static Task<AppendEventsResult[]> Store<
         TAggregate1, TState1, TId1,
         TAggregate2, TState2, TId2>(
-        this IMultiAppendEventWriter eventWriter,
+        this IEventWriter eventWriter,
         TAggregate1 aggregate1,
         TAggregate2 aggregate2,
         CancellationToken ct = default)
@@ -32,31 +32,15 @@ public static class EventStoreExtensions
 
         ArgumentNullException.ThrowIfNull(aggregate1);
         ArgumentNullException.ThrowIfNull(aggregate2);
-
-        if (eventWriter is not IMultiAppendEventWriter multiAppendEventWriter)
-        { 
-            throw new NotSupportedException("Writer does not support multi-stream append");
-        }
         
-        var requests = new[]
-        {
-            ToRequest<TAggregate1,TState1,TId1>(aggregate1),
-            ToRequest<TAggregate2,TState2,TId2>(aggregate2)
-        };
+        var streamOne = StreamNameFactory.For<TAggregate1, TState1, TId1>(aggregate1.State.Id);
+        var streamTwo = StreamNameFactory.For<TAggregate2, TState2, TId2>(aggregate2.State.Id);
 
-        return multiAppendEventWriter.AppendEvents(requests, ct);
-    }
-
-    private static AppendEventsRequest ToRequest<TAgg,TState,TId>(TAgg aggregate)
-        where TAgg : Aggregate<TState>
-        where TState : State<TState,TId>, new()
-        where TId : Id
-    {
-        var stream = StreamNameFactory.For<TAgg,TState, TId>(aggregate.State.Id);
-
-        return new AppendEventsRequest(
-            stream,
-            new ExpectedStreamVersion(aggregate.OriginalVersion),
-            aggregate.Changes);
+        return eventWriter.Store(
+            [
+                (streamOne, new ExpectedStreamVersion(aggregate1.OriginalVersion), aggregate1.Changes),
+                (streamTwo, new ExpectedStreamVersion(aggregate2.OriginalVersion), aggregate2.Changes)
+            ],
+            cancellationToken: ct);
     }
 }

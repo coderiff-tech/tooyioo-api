@@ -14,57 +14,60 @@ public sealed class BootstrapProfileHandler
     : ICommandHandler<BootstrapProfileCommand, BootstrapProfileCommandResult>
 {
     private readonly IEventReader _eventReader;
-    private readonly IMultiAppendEventWriter _multiAppendEventWriter;
+    private readonly IEventWriter _eventWriter;
 
     public BootstrapProfileHandler(
         IEventReader eventReader,
-        IMultiAppendEventWriter multiAppendEventWriter)
+        IEventWriter eventWriter)
     {
         _eventReader = eventReader;
-        _multiAppendEventWriter = multiAppendEventWriter;
+        _eventWriter = eventWriter;
     }
 
     public async Task<BootstrapProfileCommandResult> Handle(
         BootstrapProfileCommand command, 
         CancellationToken cancellationToken = default)
     {
-        var identityId = command.ProfileId;
+        var profileId = command.ProfileId;
+        var externalId = command.ExternalId;
+        var externalIdentityProvider = command.ExternalIdentityProvider;
+        
         var uniqueExternalIdentityAggregate =
             await _eventReader.LoadAggregateOrNew<UniqueExternalIdentityAggregate, UniqueExternalIdentityState, UniqueExternalIdentityId>(
-                command.ExternalId, cancellationToken);
+                externalId, cancellationToken);
 
-        var claimUniqueExternalIdentityResult = uniqueExternalIdentityAggregate.Claim(identityId);
+        var claimUniqueExternalIdentityResult = uniqueExternalIdentityAggregate.Claim(profileId);
         var hasUniqueExternalIdentityError = claimUniqueExternalIdentityResult.IsErr(out var externalIdentityAlreadyClaimedError);
         if (hasUniqueExternalIdentityError)
         {
             // Idempotency guaranteed if external identity is already claimed
             return new BootstrapProfileCommandOkResult(
                 externalIdentityAlreadyClaimedError!.ExternalProfileClaimedBy, 
-                command.ExternalId, 
-                command.ExternalIdentityProvider);
+                externalId, 
+                externalIdentityProvider);
         }
         
-        var identityAggregate =
+        var profileAggregate =
             await _eventReader.LoadAggregateOrNew<ProfileAggregate, ProfileState, ProfileId>(
-                identityId, cancellationToken);
+                profileId, cancellationToken);
         
-        identityAggregate.Bootstrap(
+        profileAggregate.Bootstrap(
             command.Name, 
             command.LastName, 
             command.Email, 
             command.IsEmailConfirmed, 
-            command.ExternalId, 
-            command.ExternalIdentityProvider);
+            externalId, 
+            externalIdentityProvider);
 
         try
         {
-            await _multiAppendEventWriter.StoreAggregatesAtomically<
+            _ = await _eventWriter.Store<
                 ProfileAggregate, ProfileState, ProfileId,
                 UniqueExternalIdentityAggregate, UniqueExternalIdentityState, UniqueExternalIdentityId>(
-                identityAggregate, uniqueExternalIdentityAggregate, cancellationToken);
+                profileAggregate, uniqueExternalIdentityAggregate, cancellationToken);
             
             return new BootstrapProfileCommandOkResult(
-                identityId,
+                profileId,
                 command.ExternalId,
                 command.ExternalIdentityProvider);
         }

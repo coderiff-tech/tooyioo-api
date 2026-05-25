@@ -9,7 +9,6 @@ using Slicent.Application;
 using Slicent.Application.Authorization;
 using Slicent.Application.Commands;
 using Slicent.Application.Queries;
-using Slicent.EventStore;
 // ReSharper disable UnusedType.Global
 // ReSharper disable ConvertToExtensionBlock
 // ReSharper disable MemberCanBePrivate.Global
@@ -32,8 +31,6 @@ public static class ServiceCollectionExtensions
         
         AddCommandHandlersAndInvokers(services, candidates);
         AddQueryHandlersAndInvokers(services, candidates);
-        
-        RegisterInMemoryEventStore(services);
         
         services.TryAddScoped(typeof(CommandHttpResponseGenerator<>));
         services.TryAddScoped(typeof(QueryHttpResponseGenerator<>));
@@ -61,11 +58,8 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddSlicentKurrentDb(this IServiceCollection services, string connectionString)
     {
-        UnregisterInMemoryEventStore(services);
-        
         services.AddKurrentDBClient(connectionString);
         services.AddEventStore<KurrentDBEventStore>();
-        services.AddSingleton<IMultiAppendEventWriter, KurrentMultiAppendEventStore>();
         
         return services;
     }
@@ -85,24 +79,6 @@ public static class ServiceCollectionExtensions
         });
         
         return services;
-    }
-
-    private static void RegisterInMemoryEventStore(IServiceCollection services)
-    {
-        services.TryAddSingleton<InMemoryEventStore>();
-        services.TryAddSingleton<IEventWriter>(sp => sp.GetRequiredService<InMemoryEventStore>());
-        services.TryAddSingleton<IEventReader>(sp => sp.GetRequiredService<InMemoryEventStore>());
-        services.TryAddSingleton<IEventStore>(sp => sp.GetRequiredService<InMemoryEventStore>());
-        services.TryAddSingleton<IMultiAppendEventWriter>(sp => sp.GetRequiredService<InMemoryEventStore>());
-    }
-    
-    private static void UnregisterInMemoryEventStore(IServiceCollection services)
-    {
-        services.RemoveAll<IEventWriter>();
-        services.RemoveAll<IEventReader>();
-        services.RemoveAll<IEventStore>();
-        services.RemoveAll<IMultiAppendEventWriter>();
-        services.RemoveAll<InMemoryEventStore>();
     }
 
     private static void AddCommandHandlersAndInvokers(IServiceCollection services, Type[] candidates)

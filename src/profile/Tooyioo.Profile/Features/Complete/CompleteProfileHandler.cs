@@ -14,14 +14,14 @@ public sealed class CompleteProfileHandler
     : ICommandHandler<CompleteIdentityProfileCommand, CompleteProfileCommandResult>
 {
     private readonly IEventReader _eventReader;
-    private readonly IMultiAppendEventWriter _multiAppendEventWriter;
+    private readonly IEventWriter _eventWriter;
 
     public CompleteProfileHandler(
         IEventReader eventReader,
-        IMultiAppendEventWriter multiAppendEventWriter)
+        IEventWriter eventWriter)
     {
         _eventReader = eventReader;
-        _multiAppendEventWriter = multiAppendEventWriter;
+        _eventWriter = eventWriter;
     }
     
     public async Task<CompleteProfileCommandResult> Handle(
@@ -50,12 +50,11 @@ public sealed class CompleteProfileHandler
             await _eventReader.LoadAggregateOrNew<ProfileAggregate, ProfileState, ProfileId>(
                 profileId, cancellationToken);
         
-        profileAggregate.CompleteProfile(
-            command.Alias);
+        profileAggregate.CompleteProfile(command.Alias);
 
         try
         {
-            await _multiAppendEventWriter.StoreAggregatesAtomically<
+            await _eventWriter.Store<
                 ProfileAggregate, ProfileState, ProfileId,
                 UniqueAliasAggregate, UniqueAliasState, UniqueAliasId>(
                 profileAggregate, uniqueAliasAggregate, cancellationToken);
