@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Slicent.Application.Commands;
 using Tooyioo.Common;
@@ -58,7 +58,7 @@ public static class BootstrapProfileMappers
                 }),
                 _ => commandHttpResponseGenerator.Conflict(
                     context,
-                    "identity_concurrency_conflict",
-                    "Could not bootstrap the Identity because of a concurrency conflict. Please retry."));
+                    "profile_concurrency_conflict",
+                    "Could not bootstrap the Profile because of a concurrency conflict. Please retry."));
     }
 }

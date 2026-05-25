@@ -38,7 +38,7 @@ public static class RetrieveProfileMappers
                 }),
                 notFound => queryHttpResponseGenerator.NotFound(
                     context,
-                    "identity_not_found",
-                    $"Could not find Identity with Id {notFound.Id}"));
+                    "profile_not_found",
+                    $"Could not find Profile with Id {notFound.Id}"));
     }
 }

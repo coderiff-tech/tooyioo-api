@@ -31,7 +31,7 @@ public static class SetProfilePhoneNumberMappers
                 ok => commandHttpResponseGenerator.Ok(new SetProfilePhoneNumberResponse { Id = ok.Id }),
                 _ => commandHttpResponseGenerator.Conflict(
                     context,
-                    "identity_concurrency_conflict",
+                    "profile_concurrency_conflict",
                     "Could not set the profile's phone number because of a concurrency conflict. Please retry.")
                 );
     }

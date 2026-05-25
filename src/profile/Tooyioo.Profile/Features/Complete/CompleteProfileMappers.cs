@@ -34,11 +34,11 @@ public static class CompleteProfileMappers
                 err => err.Match<IResult>(
                     aliasInUseError => commandHttpResponseGenerator.BadRequest(
                         context,
-                        "identity_alias_already_in_use",
+                        "profile_alias_already_in_use",
                         $"The provided alias is already in use by profile with Id {aliasInUseError.ProfileId}"),
                     _ => commandHttpResponseGenerator.Conflict(
                         context,
-                        "identity_concurrency_conflict",
+                        "profile_concurrency_conflict",
                         "Could not complete the profile because of a concurrency conflict. Please retry.")
                 ));
     }
