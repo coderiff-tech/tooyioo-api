@@ -14,20 +14,6 @@ A typical use case is a hospitality business running a local promotion. Promoter
 
 The business model is subscription-based for merchants, with free usage options intended to increase market adoption.
 
-## Repository Structure
-The main repository folders are:
-
-- `src/` - application and framework source code
-- `test/` - automated tests
-- `doc/` - documentation, specifications, diagrams, and design notes
-
-Main projects under `src/`:
-
-- `Tooyioo.AppHost` - local development entry point using .NET Aspire
-- `Tooyioo.Api` - main ASP.NET Core/Kestrel application, infrastructure, dependency wiring, and `Program.cs`
-- `Tooyioo.Common` - Tooyioo-specific shared code that is not generic framework code
-- `slicent/Slicent` - reusable framework code built around Eventuous, vertical slices, CQRS, and event sourcing
-
 ## Architecture
 This repository is a modular monolith targeting .NET 10.
 
@@ -44,6 +30,23 @@ Eventuous is the main event sourcing framework.
 Slicent is a lightweight framework layer built on top of Eventuous. It does not try to hide Eventuous. Instead, it adds conventions, wiring, and contracts for command handlers, query handlers, vertical slice registration, and related application patterns.
 
 Prefer existing Slicent conventions before introducing new abstractions.
+
+## Repository Structure
+The main repository folders are:
+
+- `src/` - application and framework source code
+- `test/` - automated tests
+- `doc/` - documentation, specifications, diagrams, and design notes
+- `bruno/` - Bruno collectios to interact with the API
+
+Main projects under `src/`:
+
+- `Tooyioo.AppHost` - local development entry point using .NET Aspire
+- `Tooyioo.Api` - main ASP.NET Core/Kestrel application, infrastructure, dependency wiring, and `Program.cs`
+- `Tooyioo.Common` - shared code that is not generic framework code
+- `Slicent` - reusable framework code built around Eventuous, vertical slices, CQRS, and event sourcing
+
+the actual vertical slices are under each specific module folder.
 
 ## Infrastructure
 Local development is orchestrated with .NET Aspire.

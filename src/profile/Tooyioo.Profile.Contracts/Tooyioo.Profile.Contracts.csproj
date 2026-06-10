@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\slicent\Slicent\Slicent.csproj" />
+        <ProjectReference Include="..\..\Slicent\Slicent.csproj" />
     </ItemGroup>
 
 </Project>

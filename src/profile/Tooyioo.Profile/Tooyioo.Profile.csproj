@@ -13,6 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Slicent\Slicent.csproj" />
         <ProjectReference Include="..\..\Tooyioo.Common\Tooyioo.Common.csproj" />
         <ProjectReference Include="..\Tooyioo.Profile.Contracts\Tooyioo.Profile.Contracts.csproj" />
     </ItemGroup>
