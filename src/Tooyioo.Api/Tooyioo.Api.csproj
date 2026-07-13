@@ -19,13 +19,18 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.7.0" />
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.7.0" />
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
-        <PackageReference Include="Scalar.AspNetCore" Version="2.16.2" />
-        <PackageReference Include="libphonenumber-csharp" Version="9.0.32" />
+        <!-- Temporary security override for GHSA-v5pm-xwqc-g5wc.
+         Microsoft.AspNetCore.OpenApi 10.0.9 brings Microsoft.OpenApi 2.0.0 transitively.
+         Stay on Microsoft.OpenApi 2.x; do not upgrade to 3.x unless Microsoft.AspNetCore.OpenApi supports it.
+         Remove this direct reference once Microsoft.AspNetCore.OpenApi depends on a patched Microsoft.OpenApi version. -->
+        <PackageReference Include="Microsoft.OpenApi" Version="[2.7.5,3.0.0)" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.16.0" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.16.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.16.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.16.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.16.0" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.16.11" />
+        <PackageReference Include="libphonenumber-csharp" Version="9.0.34" />
     </ItemGroup>
     
     <ItemGroup>
