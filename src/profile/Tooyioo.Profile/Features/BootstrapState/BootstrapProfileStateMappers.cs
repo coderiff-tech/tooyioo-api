@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Slicent.Application.Commands;
 using Tooyioo.Common;
@@ -9,12 +9,12 @@ using Tooyioo.UserOnboarding.Features.Initiate.Support;
 // ReSharper disable ConvertToPrimaryConstructor
 // ReSharper disable UnusedType.Global
 
-namespace Tooyioo.Profile.Features.Bootstrap;
+namespace Tooyioo.Profile.Features.BootstrapState;
 
-public static class BootstrapProfileMappers
+public static class BootstrapProfileStateMappers
 {
     public sealed class CommandMapper
-        : ICommandMapper<BootstrapProfileRequest, HttpContext, BootstrapProfileCommand>
+        : ICommandMapper<BootstrapProfileRequest, HttpContext, BootstrapProfileStateCommand>
     {
         private readonly IPersonalDetailsRetriever _personalDetailsRetriever;
 
@@ -24,15 +24,15 @@ public static class BootstrapProfileMappers
         {
             _personalDetailsRetriever = personalDetailsRetriever;
         }
-        
-        public BootstrapProfileCommand Map(BootstrapProfileRequest request, HttpContext context)
+
+        public BootstrapProfileStateCommand Map(BootstrapProfileRequest request, HttpContext context)
         {
             var personalDetails = _personalDetailsRetriever.GetPersonalDetailsFromContext(context);
 
             var subOption = context.User.GetSubClaim();
             var externalId = subOption.ValueOr(string.Empty);
 
-            return new BootstrapProfileCommand(
+            return new BootstrapProfileStateCommand(
                 ProfileId.New(),
                 personalDetails.Name.Trim(),
                 personalDetails.LastName.Trim(),
@@ -44,17 +44,17 @@ public static class BootstrapProfileMappers
     }
 
     public sealed class CommandHttpResponseMapper
-        : ICommandHttpResponseMapper<BootstrapProfileCommandResult, HttpContext, BootstrapProfileResponse>
+        : ICommandHttpResponseMapper<BootstrapProfileStateCommandResult, HttpContext, BootstrapProfileResponse>
     {
         public IResult Map(
-            BootstrapProfileCommandResult commandResult, 
+            BootstrapProfileStateCommandResult commandResult,
             HttpContext context,
             CommandHttpResponseGenerator<BootstrapProfileResponse> commandHttpResponseGenerator)
             => commandResult.Match<IResult>(
                 ok => commandHttpResponseGenerator.Ok(new BootstrapProfileResponse
                 {
-                    Id = ok.ProfileId, 
-                    ExternalId = ok.ExternalId, 
+                    Id = ok.ProfileId,
+                    ExternalId = ok.ExternalId,
                     ExternalIdProvider = ok.ExternalIdProvider
                 }),
                 _ => commandHttpResponseGenerator.Conflict(

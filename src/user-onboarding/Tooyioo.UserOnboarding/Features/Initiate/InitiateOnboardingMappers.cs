@@ -1,65 +1,60 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Slicent.Application.Commands;
 using Tooyioo.Common;
-using Tooyioo.Profile.Domain;
-using Tooyioo.Profile.Features.Bootstrap.Contracts;
+using Tooyioo.UserOnboarding.Features.Initiate.Contracts;
 using Tooyioo.UserOnboarding.Features.Initiate.Support;
-
 // ReSharper disable ConvertToPrimaryConstructor
-// ReSharper disable UnusedType.Global
 
-namespace Tooyioo.Profile.Features.Bootstrap;
+namespace Tooyioo.UserOnboarding.Features.Initiate;
 
-public static class BootstrapProfileMappers
+public static class InitiateOnboardingMappers
 {
     public sealed class CommandMapper
-        : ICommandMapper<BootstrapProfileRequest, HttpContext, BootstrapProfileCommand>
+        : ICommandMapper<InitiateUserOnboardingRequest, HttpContext, InitiateOnboardingCommand>
     {
         private readonly IPersonalDetailsRetriever _personalDetailsRetriever;
 
-        public CommandMapper(
-            IPersonalDetailsRetriever personalDetailsRetriever,
-            ILogger<CommandMapper> logger)
+        public CommandMapper(IPersonalDetailsRetriever personalDetailsRetriever)
         {
             _personalDetailsRetriever = personalDetailsRetriever;
         }
         
-        public BootstrapProfileCommand Map(BootstrapProfileRequest request, HttpContext context)
+        public InitiateOnboardingCommand Map(InitiateUserOnboardingRequest request, HttpContext context)
         {
             var personalDetails = _personalDetailsRetriever.GetPersonalDetailsFromContext(context);
 
             var subOption = context.User.GetSubClaim();
             var externalId = subOption.ValueOr(string.Empty);
 
-            return new BootstrapProfileCommand(
-                ProfileId.New(),
+            return new InitiateOnboardingCommand(
+                UserOnboardingId.New(),
                 personalDetails.Name.Trim(),
                 personalDetails.LastName.Trim(),
                 personalDetails.Email.Trim(),
                 personalDetails.IsEmailVerified,
                 externalId.Trim(),
-                "Google");
+                request.ExternalIdProvider);
         }
     }
 
     public sealed class CommandHttpResponseMapper
-        : ICommandHttpResponseMapper<BootstrapProfileCommandResult, HttpContext, BootstrapProfileResponse>
+        : ICommandHttpResponseMapper<InitiateOnboardingCommandResult, HttpContext, InitiateUserOnboardingResponse>
     {
         public IResult Map(
-            BootstrapProfileCommandResult commandResult, 
+            InitiateOnboardingCommandResult commandResult, 
             HttpContext context,
-            CommandHttpResponseGenerator<BootstrapProfileResponse> commandHttpResponseGenerator)
+            CommandHttpResponseGenerator<InitiateUserOnboardingResponse> commandHttpResponseGenerator)
             => commandResult.Match<IResult>(
-                ok => commandHttpResponseGenerator.Ok(new BootstrapProfileResponse
+                ok => commandHttpResponseGenerator.Ok(new InitiateUserOnboardingResponse
                 {
-                    Id = ok.ProfileId, 
+                    Id = ok.UserOnboardingId, 
                     ExternalId = ok.ExternalId, 
                     ExternalIdProvider = ok.ExternalIdProvider
                 }),
                 _ => commandHttpResponseGenerator.Conflict(
                     context,
-                    "profile_concurrency_conflict",
-                    "Could not bootstrap the Profile because of a concurrency conflict. Please retry."));
+                    "user_onboarding_concurrency_conflict",
+                    "Could not initiate user onboarding because of a concurrency conflict. Please retry."));
+
     }
 }

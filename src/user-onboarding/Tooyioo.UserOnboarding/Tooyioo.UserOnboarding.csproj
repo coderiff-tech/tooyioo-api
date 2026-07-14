@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -13,10 +13,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Slicent\Slicent.csproj" />
         <ProjectReference Include="..\..\Tooyioo.Common\Tooyioo.Common.csproj" />
-        <ProjectReference Include="..\..\user-onboarding\Tooyioo.UserOnboarding\Tooyioo.UserOnboarding.csproj" />
-        <ProjectReference Include="..\Tooyioo.Profile.Contracts\Tooyioo.Profile.Contracts.csproj" />
+        <ProjectReference Include="..\Tooyioo.UserOnboarding.Contracts\Tooyioo.UserOnboarding.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

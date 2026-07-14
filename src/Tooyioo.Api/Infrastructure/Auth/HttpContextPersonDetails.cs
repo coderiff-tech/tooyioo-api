@@ -1,4 +1,4 @@
-using Tooyioo.Profile.Features.Bootstrap.Support;
+using Tooyioo.UserOnboarding.Features.Initiate.Support;
 
 namespace Tooyioo.Api.Infrastructure.Auth;
 

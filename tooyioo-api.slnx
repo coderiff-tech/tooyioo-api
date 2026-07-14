@@ -10,6 +10,10 @@
     <Project Path="src/profile/Tooyioo.Profile.Contracts/Tooyioo.Profile.Contracts.csproj" />
     <Project Path="src/profile/Tooyioo.Profile/Tooyioo.Profile.csproj" />
   </Folder>
+  <Folder Name="/src/user-onboarding/">
+    <Project Path="src/user-onboarding/Tooyioo.UserOnboarding.Contracts/Tooyioo.UserOnboarding.Contracts.csproj" />
+    <Project Path="src/user-onboarding/Tooyioo.UserOnboarding/Tooyioo.UserOnboarding.csproj" />
+  </Folder>
   <Folder Name="/test/">
     <Project Path="test/Slicent.Tests/Slicent.Tests.csproj" />
   </Folder>
