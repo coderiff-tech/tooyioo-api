@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 
 // ReSharper disable ClassNeverInstantiated.Global
-namespace Tooyioo.UserOnboarding.Features.Initiate.Support;
+namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 public interface IPersonalDetailsRetriever
 {

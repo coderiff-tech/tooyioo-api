@@ -2,9 +2,9 @@
 
 using Eventuous;
 
-namespace Tooyioo.UserOnboarding;
+namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-public sealed record ClaimingExternalIdentityId(string Value)
+internal sealed record ClaimingExternalIdentityId(string Value)
     : Id(Value)
 {
     public static implicit operator ClaimingExternalIdentityId(string id) => new(id);

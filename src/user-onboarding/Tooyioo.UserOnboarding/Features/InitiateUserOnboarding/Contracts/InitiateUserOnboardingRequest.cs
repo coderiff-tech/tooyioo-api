@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Validation;
 
-namespace Tooyioo.UserOnboarding.Features.Initiate.Contracts;
+namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Contracts;
 
 /// <summary>
 /// Request payload used to initiate onboarding out of an external subject (e.g., a Google sub)

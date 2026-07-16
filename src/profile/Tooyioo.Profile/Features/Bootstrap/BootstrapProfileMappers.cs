@@ -4,7 +4,7 @@ using Slicent.Application.Commands;
 using Tooyioo.Common;
 using Tooyioo.Profile.Domain;
 using Tooyioo.Profile.Features.Bootstrap.Contracts;
-using Tooyioo.UserOnboarding.Features.Initiate.Support;
+using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 // ReSharper disable ConvertToPrimaryConstructor
 // ReSharper disable UnusedType.Global
