@@ -13,7 +13,7 @@ namespace Tooyioo.Api.Infrastructure.Auth;
 public static class AuthExtensions
 {
     private const string DefaultScheme = "DefaultScheme";
-    private const string BoostrapScheme = "BootstapScheme";
+    private const string BoostrapScheme = "BootstrapScheme";
 
     public static TBuilder AddAuth<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
@@ -46,19 +46,16 @@ public static class AuthExtensions
             .Services
             .AddSingleton<IProfilePrincipalService, ProfilePrincipalCache>()
             .AddScoped<IPersonalDetailsRetriever, PersonalDetailsRetriever>()
-            .AddAuthorization(options =>
-            {
-                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+            .AddAuthorizationBuilder()
+            .SetDefaultPolicy(new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(DefaultScheme)
                     .RequireAuthenticatedUser()
-                    .Build();
-
-                options.AddPolicy(BootstrapProfileEndpoint.BootstrapAuthPolicy, p =>
+                    .Build())
+            .AddPolicy(BootstrapProfileEndpoint.BootstrapAuthPolicy, p =>
                 {
                     p.AddAuthenticationSchemes(BoostrapScheme);
                     p.RequireAuthenticatedUser();
                 });
-            });
                 
         return builder;
     }

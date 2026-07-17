@@ -6,6 +6,7 @@ using Slicent;
 using Slicent.Application;
 using Tooyioo.Api.Infrastructure.OpenApi;
 using Tooyioo.Profile.ReadModel;
+using Tooyioo.UserOnboarding.Features.RetrieveUserOnboarding.Support;
 
 namespace Tooyioo.Api.Infrastructure.Slicent;
 
@@ -36,7 +37,8 @@ public static class SlicentExtensions
                 "ReadModelsSubscription",
                 subscriptionBuilder => subscriptionBuilder
                     .UseCheckpointStore<MongoCheckpointStore>()
-                    .AddEventHandler<ProfileProjector>());
+                    .AddEventHandler<ProfileProjector>()
+                    .AddEventHandler<UserOnboardingProjector>());
             
         return builder;
     }

@@ -11,4 +11,6 @@ public abstract record Document(string Id)
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime LastModifiedAt { get; init; } = DateTime.MinValue;
+    
+    public ulong Revision { get; init; } = 0;
 }
