@@ -159,4 +159,17 @@ public static class AuthExtensions
             ProblemDetails = problemDetails
         });
     }
+    
+    // NEW
+    private static Task OnGoogleTokenValidated(TokenValidatedContext context)
+    {
+        var principal = context.Principal!;
+        var subOption = principal.GetSubClaim();
+        if (!subOption.IsSome(out var sub))
+        {
+            context.Fail("JWT is missing the 'sub' claim");
+            return Task.CompletedTask;
+        }
+    }
+    
 }

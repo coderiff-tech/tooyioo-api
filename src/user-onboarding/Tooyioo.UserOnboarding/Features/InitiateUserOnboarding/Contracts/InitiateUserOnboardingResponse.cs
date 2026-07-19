@@ -1,7 +1,7 @@
 ﻿namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Contracts;
 
 /// <summary>
-/// Response returned after a successful initiate onboarding request
+/// Response returned after a successful initiate user onboarding request
 /// </summary>
 /// <remarks>
 /// It contains the unique identifier of the user onboarding
