@@ -19,7 +19,7 @@ public sealed record RetrieveUserOnboardingResponse
     /// <summary>
     /// The unique alias (if any)
     /// </summary>
-    public required string Alias { get; init; }
+    public required string? Alias { get; init; }
     
     /// <summary>
     /// The name
@@ -44,7 +44,7 @@ public sealed record RetrieveUserOnboardingResponse
     /// <summary>
     /// Flag indicating whether the user onboarding is complete or needs to be completed
     /// </summary>
-    public required bool IsComplete { get; init; }
+    public bool IsComplete => CompletedAt is not null;
     
     /// <summary>
     /// Creation date

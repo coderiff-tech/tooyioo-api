@@ -2,6 +2,7 @@
 using Funzo;
 using Slicent.Application.Commands;
 using Slicent.EventStore;
+using Tooyioo.Common;
 using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
@@ -28,36 +29,33 @@ public sealed class InitiateUserOnboardingHandler
         InitiateUserOnboardingCommand command, 
         CancellationToken cancellationToken = default)
     {
-        var externalId = command.ExternalId;
-        var externalIdentityProvider = command.ExternalIdentityProvider;
+        var externalIdentity = command.ExternalIdentity;
 
         var claimingExternalIdentity =
             await _eventReader.LoadStateOrNew<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
-                externalId,
+                externalIdentity.Id,
                 cancellationToken);
 
-        if (claimingExternalIdentity.State.UserOnboardingId is not null)
+        if (claimingExternalIdentity.State.UserOnboardingId is { } existingUserOnboardingId)
         {
             // Idempotent: trusted ExternalId means this is the same principal retrying.
-            return new InitiateUserOnboardingOkResult(
-                claimingExternalIdentity.State.UserOnboardingId,
-                externalId,
-                externalIdentityProvider);
+            return new InitiateUserOnboardingOkResult(existingUserOnboardingId);
         }
         
-        var onboardingId = command.UserOnboardingId;
-        
+        var userOnboardingId = UserOnboardingId.New();
         var userOnboarding =
-            await _eventReader.LoadStateOrNew<UserOnboardingState, UserOnboardingId>(onboardingId, cancellationToken);
+            await _eventReader.LoadStateOrNew<UserOnboardingState, UserOnboardingId>(userOnboardingId, cancellationToken);
+        
         if (userOnboarding.Events.Length != 0)
         {
             return new InitiateUserOnboardingUnexpectedStateErrorResult();
         }
-        
+
         var userOnboardingEvents = new List<object>
         {
             new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(command.Name, command.LastName, command.Email),
-            new UserOnboardingDomainEvents.V1.UserExternalIdAssociated(externalId, externalIdentityProvider)
+            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(externalIdentity.Id,
+                externalIdentity.Provider.ToString(), externalIdentity.Issuer)
         };
 
         if (command.IsEmailConfirmed)
@@ -65,8 +63,10 @@ public sealed class InitiateUserOnboardingHandler
             userOnboardingEvents.Add(new UserOnboardingDomainEvents.V1.UserEmailVerified());
         }
 
-        var claimingExternalIdentityEvents =
-            new object[] { new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(onboardingId) };
+        var claimingExternalIdentityEvents = new object[]
+        {
+            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(userOnboardingId)
+        };
         
         try
         {
@@ -77,10 +77,7 @@ public sealed class InitiateUserOnboardingHandler
                 ],
                 cancellationToken);
 
-            return new InitiateUserOnboardingOkResult(
-                onboardingId,
-                externalId,
-                externalIdentityProvider);
+            return new InitiateUserOnboardingOkResult(userOnboardingId);
         }
         catch (OptimisticConcurrencyException)
         {
@@ -90,22 +87,21 @@ public sealed class InitiateUserOnboardingHandler
 }
 
 public sealed record InitiateUserOnboardingCommand(
-    UserOnboardingId UserOnboardingId,
     string Name, 
     string LastName, 
     string Email, 
     bool IsEmailConfirmed,
-    string ExternalId,
-    string ExternalIdentityProvider)
+    ExternalIdentity ExternalIdentity)
     : ICommand<InitiateUserOnboardingCommandResult>;
 
-[Result<InitiateUserOnboardingOkResult, ChooseUserAliasCommandErrorResult>]
+[Result<InitiateUserOnboardingOkResult, InitiateUserOnboardingCommandErrorResult>]
 public partial class InitiateUserOnboardingCommandResult;
 
-public sealed record InitiateUserOnboardingOkResult(UserOnboardingId UserOnboardingId, string ExternalId, string ExternalIdProvider);
+public sealed record InitiateUserOnboardingOkResult(UserOnboardingId UserOnboardingId);
 
 [Union<InitiateUserOnboardingConcurrencyErrorResult, InitiateUserOnboardingUnexpectedStateErrorResult>]
-public partial class ChooseUserAliasCommandErrorResult;
+public partial class InitiateUserOnboardingCommandErrorResult;
+
 public sealed record InitiateUserOnboardingConcurrencyErrorResult;
 public sealed record InitiateUserOnboardingUnexpectedStateErrorResult;
 

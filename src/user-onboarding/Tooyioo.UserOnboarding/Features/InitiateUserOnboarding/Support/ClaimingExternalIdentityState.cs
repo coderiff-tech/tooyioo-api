@@ -5,7 +5,7 @@ using Tooyioo.UserOnboarding.Contracts;
 
 namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-internal sealed record ClaimingExternalIdentityState
+public sealed record ClaimingExternalIdentityState
     : State<ClaimingExternalIdentityState, ClaimingExternalIdentityId>
 {
     public UserOnboardingId? UserOnboardingId { get; private init; }

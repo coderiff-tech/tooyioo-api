@@ -12,7 +12,7 @@ public sealed class UserOnboardingProjector
         : base(database)
     {
         On<UserOnboardingDomainEvents.V1.UserOnboardingInitiated>(stream => stream.GetId(), Handle);
-        On<UserOnboardingDomainEvents.V1.UserExternalIdAssociated>(stream => stream.GetId(), Handle);
+        On<UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated>(stream => stream.GetId(), Handle);
         On<UserOnboardingDomainEvents.V1.UserEmailVerified>(stream => stream.GetId(), Handle);
         On<UserOnboardingDomainEvents.V1.UserAliasChosen>(stream => stream.GetId(), Handle);
     }
@@ -34,9 +34,9 @@ public sealed class UserOnboardingProjector
             .Set(x => x.LastModifiedAt, happenedAtUtc)
             .Set(x => x.Revision, ctx.StreamPosition);
     }
-    
+
     private static UpdateDefinition<UserOnboardingDocument> Handle(
-        IMessageConsumeContext<UserOnboardingDomainEvents.V1.UserExternalIdAssociated> ctx, 
+        IMessageConsumeContext<UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated> ctx,
         UpdateDefinitionBuilder<UserOnboardingDocument> update)
     {
         var evt = ctx.Message;
@@ -44,8 +44,12 @@ public sealed class UserOnboardingProjector
 
         return update
             .SetOnInsert(x => x.Id, ctx.Stream.GetId())
-            .Set(x => x.ExternalId, evt.ExternalId)
-            .Set(x => x.ExternalIdProvider, evt.ExternalIdProvider)
+            .Set(x => x.ExternalIdentity, new ExternalIdentityDocument
+            {
+                Id = evt.Id,
+                Provider = evt.Provider,
+                Issuer = evt.Issuer
+            })
             .Set(x => x.LastModifiedAt, happenedAtUtc)
             .Set(x => x.Revision, ctx.StreamPosition);
     }

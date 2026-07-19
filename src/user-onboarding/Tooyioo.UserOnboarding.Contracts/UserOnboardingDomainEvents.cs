@@ -11,8 +11,8 @@ public static class UserOnboardingDomainEvents
         [EventType(Prefix + "UserOnboardingInitiated")]
         public record UserOnboardingInitiated(string Name, string LastName, string Email);
         
-        [EventType(Prefix + "UserExternalIdAssociated")]
-        public record UserExternalIdAssociated(string ExternalId, string ExternalIdProvider);
+        [EventType(Prefix + "UserExternalIdentityAssociated")]
+        public record UserExternalIdentityAssociated(string Id, string Provider, string Issuer);
         
         [EventType(Prefix + "UserEmailVerified")]
         public record UserEmailVerified;

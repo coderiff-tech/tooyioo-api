@@ -2,7 +2,6 @@ using Tooyioo.Api.Infrastructure.Auth;
 using Tooyioo.Api.Infrastructure.Health;
 using Tooyioo.Api.Infrastructure.MinimalApiValidator;
 using Tooyioo.Api.Infrastructure.OpenApi;
-using Tooyioo.Api.Infrastructure.PhoneNumberValidator;
 using Tooyioo.Api.Infrastructure.Slicent;
 using Tooyioo.Api.Infrastructure.Telemetry;
 
@@ -29,7 +28,7 @@ builder
     .AddHealth()
     .AddTelemetry()
     .AddOpenApi()
-    .AddPhoneNumberValidator()
+    //.AddPhoneNumberValidator()
     .AddMinimalApiValidator(sliceAssemblies)
     .AddSlicent(allAssemblies)
     .AddAuth();

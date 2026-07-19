@@ -17,12 +17,12 @@ public sealed class ChooseUserAliasAuthorizer
         HttpContext http,
         CancellationToken cancellationToken = default)
     {
-        var subOption = claimsPrincipal.GetSubClaim();
-        if (!subOption.IsSome(out var sub))
+        var userOnboardingIdOption = claimsPrincipal.GetClaim(Claims.UserOnboardingId);
+        if (!userOnboardingIdOption.IsSome(out var userOnboardingId))
         {
             return Task.FromResult(false);
         }
-        var isExpectedUserOnboardingId = route.UserOnboardingId.ToString() == sub;
+        var isExpectedUserOnboardingId = route.UserOnboardingId.ToString() == userOnboardingId;
         return Task.FromResult(isExpectedUserOnboardingId);
     }
 }

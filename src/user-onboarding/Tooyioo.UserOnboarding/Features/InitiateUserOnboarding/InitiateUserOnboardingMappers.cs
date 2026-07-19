@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Slicent.Application.Commands;
-using Tooyioo.Common;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
-
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding;
@@ -13,28 +11,28 @@ public static class InitiateUserOnboardingMappers
     public sealed class CommandMapper
         : ICommandMapper<InitiateUserOnboardingRequest, HttpContext, InitiateUserOnboardingCommand>
     {
+        private readonly IExternalIdentityRetriever _externalIdentityRetriever;
         private readonly IPersonalDetailsRetriever _personalDetailsRetriever;
 
-        public CommandMapper(IPersonalDetailsRetriever personalDetailsRetriever)
+        public CommandMapper(
+            IExternalIdentityRetriever externalIdentityRetriever,
+            IPersonalDetailsRetriever personalDetailsRetriever)
         {
+            _externalIdentityRetriever = externalIdentityRetriever;
             _personalDetailsRetriever = personalDetailsRetriever;
         }
         
         public InitiateUserOnboardingCommand Map(InitiateUserOnboardingRequest request, HttpContext context)
         {
+            var externalIdentity = _externalIdentityRetriever.GetExternalIdentityFromContext(context);
             var personalDetails = _personalDetailsRetriever.GetPersonalDetailsFromContext(context);
 
-            var subOption = context.User.GetSubClaim();
-            var externalId = subOption.ValueOr(string.Empty);
-
             return new InitiateUserOnboardingCommand(
-                UserOnboardingId.New(),
                 personalDetails.Name.Trim(),
                 personalDetails.LastName.Trim(),
                 personalDetails.Email.Trim(),
                 personalDetails.IsEmailVerified,
-                externalId.Trim(),
-                request.ExternalIdProvider);
+                externalIdentity);
         }
     }
 
@@ -48,9 +46,7 @@ public static class InitiateUserOnboardingMappers
             => commandResult.Match<IResult>(
                 ok => commandHttpResponseGenerator.Ok(new InitiateUserOnboardingResponse
                 {
-                    UserOnboardingId = ok.UserOnboardingId, 
-                    ExternalId = ok.ExternalId, 
-                    ExternalIdProvider = ok.ExternalIdProvider
+                    UserOnboardingId = ok.UserOnboardingId
                 }),
                 err => err.Match<IResult>(
                     _ => commandHttpResponseGenerator.Conflict(

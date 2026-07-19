@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Tooyioo.Common;
-using Tooyioo.Profile.Features.Bootstrap;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 namespace Tooyioo.Api.Infrastructure.Auth;
@@ -13,53 +12,52 @@ namespace Tooyioo.Api.Infrastructure.Auth;
 public static class AuthExtensions
 {
     private const string DefaultScheme = "DefaultScheme";
-    private const string BoostrapScheme = "BootstrapScheme";
 
     public static TBuilder AddAuth<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.Services
-            .AddAuthentication(options =>
-            {
-                options.DefaultForbidScheme = DefaultScheme;
-                options.DefaultChallengeScheme = DefaultScheme;
-            })
+            .AddAuthentication(DefaultScheme)
             .AddJwtBearer(DefaultScheme, options =>
             {
                 ConfigureGoogleJwt(builder, options);
                 options.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = OnStandardTokenValidated,
+                    OnTokenValidated = OnTokenValidated,
                     OnChallenge = OnChallenge,
                     OnForbidden = OnForbidden
                 };
-            })
-            .AddJwtBearer(BoostrapScheme, options =>
-            {
-                ConfigureGoogleJwt(builder, options);
-                options.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = OnBootstrapTokenValidated,
-                    OnChallenge = OnChallenge,
-                    OnForbidden = OnForbidden
-                };
-            })
-            .Services
-            .AddSingleton<IProfilePrincipalService, ProfilePrincipalCache>()
-            .AddScoped<IPersonalDetailsRetriever, PersonalDetailsRetriever>()
+            });
+
+        builder.Services
+            .AddSingleton<IExternalIdentityStatusResolver, ExternalIdentityStatusResolver>()
+            .AddScoped<IExternalIdentityRetriever, ExternalIdentityRetriever>()
+            .AddScoped<IPersonalDetailsRetriever, PersonalDetailsRetriever>();
+
+        builder.Services
             .AddAuthorizationBuilder()
-            .SetDefaultPolicy(new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(DefaultScheme)
-                    .RequireAuthenticatedUser()
-                    .Build())
-            .AddPolicy(BootstrapProfileEndpoint.BootstrapAuthPolicy, p =>
-                {
-                    p.AddAuthenticationSchemes(BoostrapScheme);
-                    p.RequireAuthenticatedUser();
-                });
-                
+            .SetDefaultPolicy(new AuthorizationPolicyBuilder(DefaultScheme)
+                .RequireAuthenticatedUser()
+                .Build())
+            .SetFallbackPolicy(new AuthorizationPolicyBuilder(DefaultScheme)
+                .RequireAuthenticatedUser()
+                .Build())
+            .AddPolicy(AuthorizationPolicies.ExternalIdentity, policy => policy
+                .AddAuthenticationSchemes(DefaultScheme)
+                .RequireAuthenticatedUser()
+                .RequireClaim(Claims.Sub)
+                .RequireClaim(Claims.Issuer))
+            .AddPolicy(AuthorizationPolicies.UserOnboarding, policy => policy
+                .AddAuthenticationSchemes(DefaultScheme)
+                .RequireAuthenticatedUser()
+                .RequireClaim(Claims.UserOnboardingId))
+            .AddPolicy(AuthorizationPolicies.UserOnboarded, policy => policy
+                .AddAuthenticationSchemes(DefaultScheme)
+                .RequireAuthenticatedUser()
+                .RequireClaim(Claims.UserId));
+
         return builder;
     }
-    
+
     private static void ConfigureGoogleJwt(IHostApplicationBuilder builder, JwtBearerOptions options)
     {
         options.RequireHttpsMetadata = true;
@@ -75,60 +73,55 @@ public static class AuthExtensions
             NameClaimType = "sub"
         };
     }
-    
-    private static Task OnBootstrapTokenValidated(TokenValidatedContext context)
-    {
-        var principal = context.Principal!;
 
-        var subOption = principal.GetSubClaim();
-        if (!subOption.IsSome(out _))
+    private static async Task OnTokenValidated(TokenValidatedContext context)
+    {
+        var claimsPrincipal = context.Principal;
+        
+        if (claimsPrincipal?.Identity is not ClaimsIdentity claimsIdentity)
         {
-            context.Fail("JWT is missing the 'sub' claim required for bootstrap");
-            return Task.CompletedTask;
+            context.Fail("JWT validation did not produce a claims identity");
+            return;
         }
         
-        var email = principal.FindFirstValue("email");
-        if (string.IsNullOrWhiteSpace(email))
+        ExternalIdentity externalIdentity;
+        try
         {
-            context.Fail("JWT is missing the 'email' claim required for bootstrap");
-            return Task.CompletedTask;
+            externalIdentity = ExternalIdentityClaimsParser.Parser(claimsPrincipal);
+        }
+        catch (Exception ex)
+        {
+            context.Fail(ex.Message);
+            return;
         }
         
-        var fullName  = principal.FindFirstValue("name");
-        var givenName = principal.FindFirstValue("given_name");
-        var lastName= principal.FindFirstValue("family_name");
-        var isEmailVerified = bool.TryParse(principal.FindFirstValue("email_verified"), out var value) && value;
-        
-        HttpContextPersonalDetails.Set(
-            context.HttpContext,
-            new PersonalDetails(
-                Name: givenName ?? fullName ?? string.Empty,
-                LastName: lastName ?? string.Empty,
-                Email: email,
-                IsEmailVerified: isEmailVerified));
-        
-        return Task.CompletedTask;
+        var resolver = context.HttpContext.RequestServices.GetRequiredService<IExternalIdentityStatusResolver>();
+        var resolutionStatusResult = await resolver.Resolve(externalIdentity, context.HttpContext.RequestAborted);
+
+        context.Principal = resolutionStatusResult.Match(
+            userOnboarding => AddClaim(
+                claimsPrincipal,
+                claimsIdentity,
+                Claims.UserOnboardingId,
+                userOnboarding.UserOnboardingId.ToString()),
+
+            userOnboarded => AddClaim(
+                claimsPrincipal,
+                claimsIdentity,
+                Claims.UserId,
+                userOnboarded.UserId.ToString()),
+
+            _ => claimsPrincipal);
     }
     
-    private static async Task OnStandardTokenValidated(TokenValidatedContext context)
+    private static ClaimsPrincipal AddClaim(
+        ClaimsPrincipal principal,
+        ClaimsIdentity identity,
+        string type,
+        string value)
     {
-        var profilePrincipalService = context.HttpContext.RequestServices.GetRequiredService<IProfilePrincipalService>();
-        var principal = context.Principal!;
-        var subOption = principal.GetSubClaim();
-        if (!subOption.IsSome(out var sub))
-        {
-            context.Fail("JWT is missing the 'sub' claim");
-            return;
-        }
-
-        var claimsPrincipal = await profilePrincipalService.GetByExternalId(sub);
-        if (!claimsPrincipal.IsSome(out var claimsPrincipalValue))
-        {
-            context.Fail("Unknown user. Profile hasn't been bootstrapped yet.");
-            return;
-        }
-
-        context.Principal = claimsPrincipalValue;
+        identity.AddClaim(new Claim(type, value));
+        return principal;
     }
 
     private static async Task OnForbidden(ForbiddenContext context)
@@ -136,7 +129,12 @@ public static class AuthExtensions
         var http = context.HttpContext;
         http.Response.StatusCode = StatusCodes.Status403Forbidden;
 
-        await WriteProblemAsync(http, new ProblemDetails { Status = StatusCodes.Status403Forbidden, Title = "forbidden", Detail = "You are not allowed to access this resource." });
+        await WriteProblemAsync(http,
+            new ProblemDetails
+            {
+                Status = StatusCodes.Status403Forbidden, Title = "forbidden",
+                Detail = "You are not allowed to access this resource."
+            });
     }
 
     private static async Task OnChallenge(JwtBearerChallengeContext context)
@@ -146,7 +144,12 @@ public static class AuthExtensions
         var http = context.HttpContext;
         http.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-        await WriteProblemAsync(http, new ProblemDetails { Status = StatusCodes.Status401Unauthorized, Title = "unauthorized", Detail = "Missing or invalid bearer token." });
+        await WriteProblemAsync(http,
+            new ProblemDetails
+            {
+                Status = StatusCodes.Status401Unauthorized, Title = "unauthorized",
+                Detail = "Missing or invalid bearer token."
+            });
     }
 
     private static ValueTask WriteProblemAsync(HttpContext http, ProblemDetails problemDetails)
@@ -159,17 +162,4 @@ public static class AuthExtensions
             ProblemDetails = problemDetails
         });
     }
-    
-    // NEW
-    private static Task OnGoogleTokenValidated(TokenValidatedContext context)
-    {
-        var principal = context.Principal!;
-        var subOption = principal.GetSubClaim();
-        if (!subOption.IsSome(out var sub))
-        {
-            context.Fail("JWT is missing the 'sub' claim");
-            return Task.CompletedTask;
-        }
-    }
-    
 }

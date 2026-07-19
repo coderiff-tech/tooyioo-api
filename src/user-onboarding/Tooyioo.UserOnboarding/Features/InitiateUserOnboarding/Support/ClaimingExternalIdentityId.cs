@@ -4,7 +4,7 @@ using Eventuous;
 
 namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-internal sealed record ClaimingExternalIdentityId(string Value)
+public sealed record ClaimingExternalIdentityId(string Value)
     : Id(Value)
 {
     public static implicit operator ClaimingExternalIdentityId(string id) => new(id);

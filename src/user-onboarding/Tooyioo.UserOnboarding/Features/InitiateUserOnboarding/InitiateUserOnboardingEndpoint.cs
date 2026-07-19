@@ -13,9 +13,6 @@ namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding;
 public sealed class InitiateUserOnboardingEndpoint
     : IHttpEndpointModule
 {
-    // TODO Why do I need this? Why not private? is it used in policy?
-    public const string InitiateUserOnboardingAuthPolicy = "InitiateUserOnboarding";
-
     public void Map(IEndpointRouteBuilder app)
         => app
             .MapCommand<InitiateUserOnboardingRequest, InitiateUserOnboardingCommand, InitiateUserOnboardingCommandResult,
@@ -26,6 +23,6 @@ public sealed class InitiateUserOnboardingEndpoint
                         .WithSummary("Initiates a user onboarding")
                         .WithDescription("Initiates a user onboarding with the information coming from external Id provider")
                         .WithTags("UserOnboarding"))
-            .RequireAuthorization(InitiateUserOnboardingAuthPolicy)
+            .RequireAuthorization(AuthorizationPolicies.ExternalIdentity)
             .WithCommandConventions<InitiateUserOnboardingResponse, HttpProblemDetails>();
 }

@@ -28,7 +28,6 @@ public static class RetrieveUserOnboardingMappers
                 ok => queryHttpResponseGenerator.Ok(new RetrieveUserOnboardingResponse
                 {
                     UserOnboardingId = ok.Document.Id,
-                    IsComplete = ok.Document.IsComplete,
                     Alias = ok.Document.Alias,
                     Name = ok.Document.Name,
                     LastName = ok.Document.LastName,
