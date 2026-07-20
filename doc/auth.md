@@ -35,7 +35,7 @@ These claims are Tooyioo facts, not Google facts. Keep that distinction clear.
 
 If personal details come from the identity token, parse them from the claims principal.
 
-Do not introduce a separate personal-details retriever unless the source is genuinely different from the token, for example a separate profile API call, a privacy transform, or a provider-specific normalization flow.
+Do not introduce a separate personal-details retriever unless the source is genuinely different from the token, for example a separate provider userinfo API call, a privacy transform, or a provider-specific normalization flow.
 
 ## Tests
 

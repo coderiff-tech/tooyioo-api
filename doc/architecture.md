@@ -16,7 +16,6 @@ The system uses:
 Application behavior belongs in feature slices under module projects, for example:
 
 - `src/user-onboarding/Tooyioo.UserOnboarding`
-- `src/profile/Tooyioo.Profile`
 
 HTTP hosting, infrastructure wiring, authentication, OpenAPI, observability, and production service registration belong in:
 
