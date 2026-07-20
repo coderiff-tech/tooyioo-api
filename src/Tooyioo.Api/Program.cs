@@ -47,5 +47,8 @@ app.Run();
 #pragma warning disable ASP0027
 // ReSharper disable once ClassNeverInstantiated.Global
 // Partial class created for WebApplicationFactory to use the real Program class in tests and override on top of it
-public partial class Program;
+namespace Tooyioo.Api
+{
+    public partial class Program;
+}
 #pragma warning restore ASP0027

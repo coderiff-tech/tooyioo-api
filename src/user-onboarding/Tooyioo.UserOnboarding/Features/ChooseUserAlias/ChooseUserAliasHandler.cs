@@ -60,7 +60,7 @@ public sealed class ChooseUserAliasHandler
                 return new ChooseUserAliasCommandOkResult(userOnboardingId);
             }
             
-            return new ChooseUserAliasAlreadyChosenError(userOnboarding.State.Alias);
+            return new ChooseUserAliasDifferentAlreadyChosenError(userOnboarding.State.Alias);
         }
         
         var userOnboardingEvents =
@@ -95,9 +95,9 @@ public partial class ChooseUserAliasCommandResult;
 
 public sealed record ChooseUserAliasCommandOkResult(UserOnboardingId UserOnboardingId);
 
-[Union<ChooseUserAliasAlreadyInUseError, ChooseUserAliasAlreadyChosenError, ChooseUserAliasConcurrencyConflictError, ChooseUserAliasUnexpectedStateErrorResult>]
+[Union<ChooseUserAliasAlreadyInUseError, ChooseUserAliasDifferentAlreadyChosenError, ChooseUserAliasConcurrencyConflictError, ChooseUserAliasUnexpectedStateErrorResult>]
 public partial class ChooseUserAliasCommandErrorResult;
 public sealed record ChooseUserAliasAlreadyInUseError(UserOnboardingId UserOnboardingId);
-public sealed record ChooseUserAliasAlreadyChosenError(string ExistingAlias);
+public sealed record ChooseUserAliasDifferentAlreadyChosenError(string ExistingAlias);
 public sealed record ChooseUserAliasConcurrencyConflictError;
 public sealed record ChooseUserAliasUnexpectedStateErrorResult;

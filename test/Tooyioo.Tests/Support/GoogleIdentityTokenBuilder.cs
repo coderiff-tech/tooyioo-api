@@ -11,11 +11,15 @@ public sealed class GoogleIdentityTokenBuilder
     public const string Issuer = "https://accounts.google.com";
 
     private readonly byte[] _signingKey;
+    private string? _issuer = Issuer;
     private string _subject = "google-sub-123";
+    private bool _includeSubject = true;
     private string _name = "Joe";
     private string _lastName = "Bloggs";
     private string _email = "joe.bloggs@example.com";
     private bool _isEmailVerified = true;
+    private DateTime _notBefore = DateTime.UtcNow.AddMinutes(-1);
+    private DateTime _expires = DateTime.UtcNow.AddMinutes(10);
 
     public GoogleIdentityTokenBuilder(byte[] signingKey)
     {
@@ -25,6 +29,32 @@ public sealed class GoogleIdentityTokenBuilder
     public GoogleIdentityTokenBuilder WithSubject(string subject)
     {
         _subject = subject;
+        _includeSubject = true;
+        return this;
+    }
+
+    public GoogleIdentityTokenBuilder WithoutSubject()
+    {
+        _includeSubject = false;
+        return this;
+    }
+
+    public GoogleIdentityTokenBuilder WithIssuer(string issuer)
+    {
+        _issuer = issuer;
+        return this;
+    }
+
+    public GoogleIdentityTokenBuilder WithoutIssuer()
+    {
+        _issuer = null;
+        return this;
+    }
+
+    public GoogleIdentityTokenBuilder Expired()
+    {
+        _notBefore = DateTime.UtcNow.AddMinutes(-20);
+        _expires = DateTime.UtcNow.AddMinutes(-10);
         return this;
     }
 
@@ -45,19 +75,25 @@ public sealed class GoogleIdentityTokenBuilder
     {
         var securityKey = new SymmetricSecurityKey(_signingKey);
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var claims = new List<Claim>
+        {
+            new(Claims.GivenName, _name),
+            new(Claims.FamilyName, _lastName),
+            new(Claims.Email, _email),
+            new(Claims.EmailVerified, _isEmailVerified.ToString().ToLowerInvariant())
+        };
+
+        if (_includeSubject)
+        {
+            claims.Add(new Claim(Claims.Sub, _subject));
+        }
+        
         var token = new JwtSecurityToken(
-            issuer: "https://accounts.google.com",
+            issuer: _issuer,
             audience: "tooyioo-tests",
-            claims:
-            [
-                new Claim(Claims.Sub, _subject),
-                new Claim(Claims.GivenName, _name),
-                new Claim(Claims.FamilyName, _lastName),
-                new Claim(Claims.Email, _email),
-                new Claim(Claims.EmailVerified, _isEmailVerified.ToString().ToLowerInvariant())
-            ],
-            notBefore: DateTime.UtcNow.AddMinutes(-1),
-            expires: DateTime.UtcNow.AddMinutes(10),
+            claims: claims,
+            notBefore: _notBefore,
+            expires: _expires,
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

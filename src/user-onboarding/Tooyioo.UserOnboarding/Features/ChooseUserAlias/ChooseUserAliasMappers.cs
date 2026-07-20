@@ -36,7 +36,7 @@ public static class ChooseUserAliasMappers
                         $"The provided user alias is already in use by user with Id {userAliasInUseError.UserOnboardingId}"),
                     userAliasAlreadyChosenError => commandHttpResponseGenerator.BadRequest(
                         context,
-                        "choose_user_alias_already_chosen",
+                        "choose_user_different_alias_already_chosen",
                         $"A different alias {userAliasAlreadyChosenError.ExistingAlias} had already been chosen for this user"),
                     _ => commandHttpResponseGenerator.Conflict(
                         context,
