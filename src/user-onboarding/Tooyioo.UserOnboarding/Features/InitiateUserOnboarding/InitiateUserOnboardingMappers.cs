@@ -12,20 +12,16 @@ public static class InitiateUserOnboardingMappers
         : ICommandMapper<InitiateUserOnboardingRequest, HttpContext, InitiateUserOnboardingCommand>
     {
         private readonly IExternalIdentityRetriever _externalIdentityRetriever;
-        private readonly IPersonalDetailsRetriever _personalDetailsRetriever;
 
-        public CommandMapper(
-            IExternalIdentityRetriever externalIdentityRetriever,
-            IPersonalDetailsRetriever personalDetailsRetriever)
+        public CommandMapper(IExternalIdentityRetriever externalIdentityRetriever)
         {
             _externalIdentityRetriever = externalIdentityRetriever;
-            _personalDetailsRetriever = personalDetailsRetriever;
         }
         
         public InitiateUserOnboardingCommand Map(InitiateUserOnboardingRequest request, HttpContext context)
         {
             var externalIdentity = _externalIdentityRetriever.GetExternalIdentityFromContext(context);
-            var personalDetails = _personalDetailsRetriever.GetPersonalDetailsFromContext(context);
+            var personalDetails = PersonalDetailsClaimsParser.Parse(context.User);
 
             return new InitiateUserOnboardingCommand(
                 personalDetails.Name.Trim(),

@@ -16,5 +16,6 @@
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Slicent.Tests/Slicent.Tests.csproj" />
+    <Project Path="test/Tooyioo.Tests/Tooyioo.Tests.csproj" />
   </Folder>
 </Solution>

@@ -30,8 +30,7 @@ public static class AuthExtensions
 
         builder.Services
             .AddSingleton<IExternalIdentityStatusResolver, ExternalIdentityStatusResolver>()
-            .AddScoped<IExternalIdentityRetriever, ExternalIdentityRetriever>()
-            .AddScoped<IPersonalDetailsRetriever, PersonalDetailsRetriever>();
+            .AddScoped<IExternalIdentityRetriever, ExternalIdentityRetriever>();
 
         builder.Services
             .AddAuthorizationBuilder()

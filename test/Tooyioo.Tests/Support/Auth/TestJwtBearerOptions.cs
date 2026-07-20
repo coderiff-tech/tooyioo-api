@@ -1,0 +1,32 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
+using Tooyioo.Common;
+
+namespace Tooyioo.Tests.Support.Auth;
+
+internal sealed class TestJwtBearerOptions(byte[] signingKey)
+    : IPostConfigureOptions<JwtBearerOptions>
+{
+    public void PostConfigure(string? name, JwtBearerOptions options)
+    {
+        options.RequireHttpsMetadata = false;
+        options.Authority = null!;
+        options.MetadataAddress = null!;
+        options.ConfigurationManager = new StaticConfigurationManager<OpenIdConnectConfiguration>(
+            new OpenIdConnectConfiguration());
+
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(signingKey),
+            NameClaimType = Claims.Sub
+        };
+    }
+}
