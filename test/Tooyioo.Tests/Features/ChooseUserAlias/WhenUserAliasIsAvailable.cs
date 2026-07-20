@@ -1,6 +1,7 @@
 using System.Net;
 using Tooyioo.Common;
 using Tooyioo.Tests.Support;
+using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.UserOnboarding;
@@ -22,6 +23,8 @@ public sealed class WhenUserAliasIsAvailable
     private string _lastName = null!;
     private string _email = null!;
     private string _alias = null!;
+    private EventStreamSnapshot _userOnboardingStreamBeforeWhen = null!;
+    private EventStreamSnapshot _userAliasClaimStreamBeforeWhen = null!;
 
     protected override async Task Given()
     {
@@ -44,6 +47,14 @@ public sealed class WhenUserAliasIsAvailable
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
             new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(_userOnboardingId));
+
+        _userOnboardingStreamBeforeWhen = await Host.Events
+            .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
+            .CaptureSnapshot();
+
+        _userAliasClaimStreamBeforeWhen = await Host.Events
+            .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
+            .CaptureSnapshot();
     }
 
     protected override async Task When()
@@ -73,20 +84,15 @@ public sealed class WhenUserAliasIsAvailable
     public async Task Then_user_onboarding_alias_is_chosen()
         => await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
-            // replace with ShouldAppendExactly(...) which relies on snapshot mechanism to only pass explicitly the diff but leave the should contain exactly method sometimes
-            .ShouldContainExactly(
-                new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(_name, _lastName, _email),
-                new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                    _subject,
-                    nameof(ExternalIdentityProvider.Google),
-                    GoogleIdentityTokenBuilder.Issuer),
-                new UserOnboardingDomainEvents.V1.UserEmailVerified(),
+            .ShouldAppendExactly(
+                _userOnboardingStreamBeforeWhen,
                 new UserOnboardingDomainEvents.V1.UserAliasChosen(_alias));
 
     [Test]
     public async Task Then_user_alias_is_claimed()
         => await Host.Events
             .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
-            .ShouldContainExactly(
+            .ShouldAppendExactly(
+                _userAliasClaimStreamBeforeWhen,
                 new UserAliasClaimingDomainEvents.V1.UserAliasClaimed(_userOnboardingId));
 }

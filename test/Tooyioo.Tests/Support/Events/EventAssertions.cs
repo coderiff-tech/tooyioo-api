@@ -31,12 +31,17 @@ public sealed class EventStreamAssertions<TState, TId>(IEventReader eventReader,
     {
         var folded = await LoadStream();
         await Assert.That(folded.StreamVersion).IsEqualTo(snapshot.StreamVersion);
-        await Assert.That(folded.Events.Length).IsEqualTo(snapshot.EventCount);
+        await ShouldContainExactly(folded.Events, snapshot.Events);
+    }
 
-        for (var index = 0; index < snapshot.EventCount; index++)
-        {
-            await Assert.That(folded.Events[index]).IsEqualTo(snapshot.Events[index]);
-        }
+    public async Task ShouldAppendExactly(EventStreamSnapshot snapshot, params object[] expected)
+    {
+        var folded = await LoadStream();
+        var appended = folded.Events[snapshot.EventCount..];
+
+        await Assert.That(folded.Events.Length).IsEqualTo(snapshot.EventCount + expected.Length);
+        await ShouldContainExactly(folded.Events[..snapshot.EventCount], snapshot.Events);
+        await ShouldContainExactly(appended, expected);
     }
 
     public async Task ShouldContain<TEvent>()
@@ -54,6 +59,11 @@ public sealed class EventStreamAssertions<TState, TId>(IEventReader eventReader,
     public async Task ShouldContainExactly(params object[] expected)
     {
         var events = await LoadEvents();
+        await ShouldContainExactly(events, expected);
+    }
+
+    private static async Task ShouldContainExactly(object[] events, object[] expected)
+    {
         await Assert.That(events.Length).IsEqualTo(expected.Length);
 
         for (var index = 0; index < expected.Length; index++)
