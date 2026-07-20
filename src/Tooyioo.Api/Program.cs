@@ -10,14 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 var sliceAssemblies =
     new[]
     {
-        typeof(Tooyioo.Profile.SliceAssemblyMarker).Assembly,
         typeof(Tooyioo.UserOnboarding.SliceAssemblyMarker).Assembly
     };
 
 var domainEventAssemblies =
     new[]
     {
-        typeof(Tooyioo.Profile.Contracts.ContractsAssemblyMarker).Assembly,
         typeof(Tooyioo.UserOnboarding.Contracts.ContractsAssemblyMarker).Assembly
     };
 

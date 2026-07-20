@@ -264,7 +264,7 @@ Avoid:
 Before making changes, agents should:
 
 1. Read this file.
-2. Read the relevant documentation and specifications.
+2. Read `doc/index.md` and the relevant documentation or specifications it points to.
 3. Inspect similar implementations.
 4. Make the smallest coherent change.
 5. Run, or describe, the relevant tests.

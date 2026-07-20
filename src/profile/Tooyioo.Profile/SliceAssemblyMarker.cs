@@ -1,3 +1,3 @@
-﻿namespace Tooyioo.Profile;
-
-public sealed class SliceAssemblyMarker;
+﻿// namespace Tooyioo.Profile;
+//
+// public sealed class SliceAssemblyMarker;

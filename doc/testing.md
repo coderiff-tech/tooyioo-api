@@ -1,0 +1,113 @@
+# Testing
+
+Application vertical slice tests belong in:
+
+- `test/Tooyioo.Tests`
+
+Slicent framework tests belong in:
+
+- `test/Slicent.Tests`
+
+## Vertical slice test intent
+
+Vertical slice tests should exercise the real behavior path:
+
+- ASP.NET Core endpoint
+- authorization policy
+- mapper
+- command or query dispatcher
+- handler
+- Eventuous persistence boundary
+- response mapper
+
+They should avoid production infrastructure unless the infrastructure itself is the behavior under test.
+
+## Test host
+
+Use `VerticalSliceTestHost` for application slice tests.
+
+The host uses the real API `Program.cs` through `WebApplicationFactory`, then overrides only the services that make tests slow or external:
+
+- event store, reader, and writer use `Eventuous.Testing.InMemoryEventStore`
+- MongoDB is replaced enough for service registration to validate
+- hosted background services are removed
+- JWT bearer validation is replaced with a test signing key
+
+This keeps tests close to production wiring without starting Aspire, KurrentDB, MongoDB containers, or the real Google issuer metadata flow.
+
+## Given/When/Then style
+
+Use `VerticalSliceGivenWhenThen` as the base class for slice tests.
+
+The base class:
+
+- creates a fresh host per test
+- runs `Given()`
+- runs `When()`
+- disposes the host after the test
+
+Each `[Test]` method should be a single `Then` assertion or a closely related assertion group.
+
+Example shape:
+
+```csharp
+public sealed class WhenGoogleIdentityIsUnknown : VerticalSliceGivenWhenThen
+{
+    protected override Task Given()
+    {
+        return Task.CompletedTask;
+    }
+
+    protected override async Task When()
+    {
+        // compose token, send HTTP request, read response
+    }
+
+    [Test]
+    public async Task Then_response_is_ok()
+        => await Assert.That(_response.StatusCode).IsEqualTo(HttpStatusCode.OK);
+}
+```
+
+## Auth in tests
+
+Use `GoogleIdentityTokenBuilder` to create signed JWTs.
+
+The test JWT is real and signed, but tests do not validate Google issuer metadata or production audience. The test setup keeps signing key and lifetime validation enabled.
+
+JWT claims should stay honest. If the slice needs personal details from an identity token, read them from `ClaimsPrincipal`; do not create side-channel test-only services for the same data.
+
+## Event assertions
+
+Use `Host.Events.Stream<TState, TId>(id)` to assert stream behavior.
+
+Use:
+
+- `ShouldContainExactly(...)` when asserting a newly written stream.
+- `ShouldContain<TEvent>()` when event order or exact stream contents are not the test concern.
+- `ShouldNotContain<TEvent>()` when a specific event must not appear.
+- `CaptureSnapshot()` in `Given()` and `ShouldHaveNoChangesSince(snapshot)` in `Then` when asserting idempotency.
+
+`ShouldHaveNoChangesSince` compares the Eventuous stream version. It also checks the captured event count and values to improve diagnostics.
+
+## Deterministic identifiers
+
+Use the test GUID extension for stable identifiers:
+
+```csharp
+var id = 1.ToGuid();
+```
+
+This avoids unexplained magic GUID strings while keeping tests deterministic.
+
+## Parallel execution
+
+Slice tests must be isolated.
+
+Each test gets:
+
+- a fresh `VerticalSliceTestHost`
+- a fresh in-memory event store
+- its own HTTP client
+
+Do not share mutable test host state across test classes.
