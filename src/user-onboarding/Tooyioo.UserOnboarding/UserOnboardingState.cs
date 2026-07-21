@@ -13,7 +13,6 @@ public record UserOnboardingState
     public string ExternalId { get; private init; } = null!;
     public string? Alias { get; private init; }
     public bool IsComplete { get; private init; }
-    
     public string? UserId { get; private init; }
     
     public UserOnboardingState()
@@ -22,7 +21,7 @@ public record UserOnboardingState
         On<UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated>(UserExternalIdAssociated);
         On<UserOnboardingDomainEvents.V1.UserEmailVerified>(UserEmailVerified);
         On<UserOnboardingDomainEvents.V1.UserAliasChosen>(UserAliasChosen);
-        // TODO handle user onboarding complete and the User Id generation
+        On<UserOnboardingDomainEvents.V1.UserOnboardingCompleted>(UserOnboardingCompleted);
     }
 
     private static UserOnboardingState Initiated(
@@ -64,6 +63,17 @@ public record UserOnboardingState
         return state with
         {
             Alias = domainEvent.Alias
+        };
+    }
+
+    private static UserOnboardingState UserOnboardingCompleted(
+        UserOnboardingState state,
+        UserOnboardingDomainEvents.V1.UserOnboardingCompleted domainEvent)
+    {
+        return state with
+        {
+            IsComplete = true,
+            UserId = domainEvent.UserId
         };
     }
 }

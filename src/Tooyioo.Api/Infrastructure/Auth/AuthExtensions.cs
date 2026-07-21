@@ -98,28 +98,25 @@ public static class AuthExtensions
         var resolutionStatusResult = await resolver.Resolve(externalIdentity, context.HttpContext.RequestAborted);
 
         context.Principal = resolutionStatusResult.Match(
-            userOnboarding => AddClaim(
+            userOnboarding => AddClaims(
                 claimsPrincipal,
-                claimsIdentity,
-                Claims.UserOnboardingId,
-                userOnboarding.UserOnboardingId.ToString()),
+                claimsIdentity, new Claim( Claims.UserOnboardingId,userOnboarding.UserOnboardingId.ToString())),
 
-            userOnboarded => AddClaim(
+            userOnboarded => AddClaims(
                 claimsPrincipal,
-                claimsIdentity,
-                Claims.UserId,
-                userOnboarded.UserId.ToString()),
+                claimsIdentity, 
+                new Claim(Claims.UserOnboardingId, userOnboarded.UserOnboardingId), 
+                new Claim(Claims.UserId, userOnboarded.UserId)),
 
             _ => claimsPrincipal);
     }
-    
-    private static ClaimsPrincipal AddClaim(
+
+    private static ClaimsPrincipal AddClaims(
         ClaimsPrincipal principal,
         ClaimsIdentity identity,
-        string type,
-        string value)
+        params Claim[] claims)
     {
-        identity.AddClaim(new Claim(type, value));
+        identity.AddClaims(claims);
         return principal;
     }
 

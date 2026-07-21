@@ -8,5 +8,5 @@ public partial class ExternalIdentityStatusResult;
 
 public sealed record ExternalIdentityStatusUserOnboarding(string UserOnboardingId);
 
-public sealed record ExternalIdentityStatusUserOnboarded(string UserId);
+public sealed record ExternalIdentityStatusUserOnboarded(string UserOnboardingId, string UserId);
 public sealed record ExternalIdentityStatusUserUnknown;

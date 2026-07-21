@@ -39,6 +39,11 @@ public sealed class CompleteUserOnboardingHandler
             return new CompleteUserOnboardingUnexpectedStateErrorResult();
         }
 
+        if (userOnboarding.State is { IsComplete: true, UserId: { } existingUserId })
+        {
+            return new CompleteUserOnboardingCommandOkResult(userOnboardingId, existingUserId);
+        }
+
         var userId = UserId.New();
         
         var userOnboardingEvents =

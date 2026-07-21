@@ -11,7 +11,7 @@ using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 namespace Tooyioo.Tests.Features.ChooseUserAlias;
 
-public sealed class ChooseUserAliasPayloadValidationTests
+public sealed class ChooseUserAliasValidationTests
 {
     [Test]
     [Arguments("too-short", "abc", "alias_too_short")]

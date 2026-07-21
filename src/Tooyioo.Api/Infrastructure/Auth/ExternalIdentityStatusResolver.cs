@@ -40,7 +40,7 @@ internal sealed class ExternalIdentityStatusResolver
             var userId = userOnboarding.State.UserId;
             if (userId is not null)
             {
-                return new ExternalIdentityStatusUserOnboarded(userId);
+                return new ExternalIdentityStatusUserOnboarded(userOnboardingId, userId);
             }
             
             return new ExternalIdentityStatusUserOnboarding(userOnboardingId);

@@ -52,6 +52,8 @@ After onboarding has started or completed, slice authorization should prefer the
 - use `user_onboarding_id` for onboarding-only workflows
 - use `user_id` for fully onboarded user workflows
 
+Completed users may carry both claims. This allows idempotent onboarding endpoints to authorize retries by `user_onboarding_id` while fully onboarded workflows authorize by `user_id`.
+
 This keeps the application authorization model stable if the upstream identity provider changes.
 
 ## Provider evolution

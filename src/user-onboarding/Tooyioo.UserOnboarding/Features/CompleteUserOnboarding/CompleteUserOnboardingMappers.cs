@@ -34,12 +34,12 @@ public static class CompleteUserOnboardingMappers
                 err => err.Match<IResult>(
                     _ => commandHttpResponseGenerator.Conflict(
                         context,
-                        "choose_user_alias_concurrency_conflict",
-                        "Could not choose user alias because of a concurrency conflict, please retry"),
+                        "complete_user_onboarding_concurrency_conflict",
+                        "Could not complete user onboarding because of a concurrency conflict, please retry"),
                     _ => commandHttpResponseGenerator.Conflict(
                         context,
-                        "choose_user_alias_unexpected_state_conflict",
-                        "Could not choose user alias because of an unexpected state conflict, please retry")
+                        "complete_user_onboarding_unexpected_state_conflict",
+                        "Could not complete user onboarding because of an unexpected state conflict, please retry")
                 ));
     }
 }

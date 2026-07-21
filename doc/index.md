@@ -17,6 +17,7 @@ Use this index to choose the smallest relevant reading set for a task.
 
 - [Slice decision records](slice-decision-records.md) explains when to add per-slice specs or decision notes.
 - [Initiate user onboarding](slices/initiate-user-onboarding.md) records current behavior and decisions for the onboarding initiation slice.
+- [Complete user onboarding](slices/complete-user-onboarding.md) records current behavior and decisions for the onboarding completion slice.
 
 ## Agent workflow
 
