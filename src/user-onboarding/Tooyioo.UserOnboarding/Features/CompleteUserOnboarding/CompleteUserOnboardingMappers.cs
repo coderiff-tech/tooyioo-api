@@ -1,0 +1,45 @@
+﻿using Microsoft.AspNetCore.Http;
+using Slicent.Application.Commands;
+using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Contracts;
+
+namespace Tooyioo.UserOnboarding.Features.CompleteUserOnboarding;
+
+public static class CompleteUserOnboardingMappers
+{
+    public sealed class CommandMapper
+        : ICommandMapper<CompleteUserOnboardingRoute, CompleteUserOnboardingRequest, HttpContext, 
+            CompleteUserOnboardingCommand>
+    {
+        public CompleteUserOnboardingCommand Map(
+            CompleteUserOnboardingRoute urlParams,
+            CompleteUserOnboardingRequest request, 
+            HttpContext context)
+            => new(new UserOnboardingId(urlParams.UserOnboardingId.ToString()), request.TermsAndConditionsVersion);
+    }
+
+    public sealed class CommandHttpResponseMapper
+        : ICommandHttpResponseMapper<CompleteUserOnboardingCommandResult, HttpContext, CompleteUserOnboardingResponse>
+    {
+        public IResult Map(
+            CompleteUserOnboardingCommandResult commandResult,
+            HttpContext context,
+            CommandHttpResponseGenerator<CompleteUserOnboardingResponse> commandHttpResponseGenerator)
+            => commandResult.Match<IResult>(
+                ok => commandHttpResponseGenerator.Ok(
+                    new CompleteUserOnboardingResponse
+                    {
+                        UserOnboardingId = ok.UserOnboardingId, 
+                        UserId = ok.UserId
+                    }),
+                err => err.Match<IResult>(
+                    _ => commandHttpResponseGenerator.Conflict(
+                        context,
+                        "choose_user_alias_concurrency_conflict",
+                        "Could not choose user alias because of a concurrency conflict, please retry"),
+                    _ => commandHttpResponseGenerator.Conflict(
+                        context,
+                        "choose_user_alias_unexpected_state_conflict",
+                        "Could not choose user alias because of an unexpected state conflict, please retry")
+                ));
+    }
+}

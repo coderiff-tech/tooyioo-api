@@ -19,5 +19,8 @@ public static class UserOnboardingDomainEvents
         
         [EventType(Prefix + "UserAliasChosen")]
         public record UserAliasChosen(string Alias);
+        
+        [EventType(Prefix + "UserOnboardingCompleted")]
+        public record UserOnboardingCompleted(string UserId, string TermsAndConditionsVersion);
     }
 }

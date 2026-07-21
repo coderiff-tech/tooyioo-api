@@ -23,8 +23,8 @@ public sealed class CompleteProfileEndpoint
                 ChooseUserAliasResponse>(
                 "/user-onboarding/{id:guid}/choose-alias",
                 cfg => cfg
-                    .WithSummary("Completes profile")
-                    .WithDescription("Completes profile with a unique alias and other contact details")
+                    .WithSummary("Chooses user alias")
+                    .WithDescription("Chooses user globally unique alias as part of user onboarding")
                     .WithTags("UserOnboarding"))
             .RequireRouteAuthorization<ChooseUserAliasRoute, ChooseUserAliasAuthorizer>()
             .WithCommandConventions<ChooseUserAliasResponse, HttpProblemDetails>();
