@@ -14,7 +14,7 @@ The request body is currently empty. Identity and personal details come from the
 
 ## Inputs
 
-The slice depends on Google-style JWT claims:
+The slice currently depends on Google-style JWT claims:
 
 - `sub`
 - `iss`
@@ -24,6 +24,8 @@ The slice depends on Google-style JWT claims:
 - `email_verified`
 
 The JWT stays intact. The mapper reads personal details from `ClaimsPrincipal` and reads external identity through the registered external identity retriever.
+
+This provider-specific dependency is intentional for this slice because initiating onboarding is the boundary where an external OpenID Connect identity becomes a Tooyioo onboarding process. Other slices should rely on app-owned principal claims such as `user_onboarding_id` or `user_id` rather than Google-specific claims.
 
 ## Streams and events
 
@@ -62,6 +64,7 @@ The handler writes both streams with expected stream versions. If another reques
 - Personal details are parsed from the JWT claims principal, not from a separate side-channel service.
 - The external identity claim is its own process stream so uniqueness is protected independently from the onboarding process stream.
 - Idempotency is based on the trusted external identity, not on request body content.
+- Google is the initial OpenID Connect provider for simplicity. The broader auth model should remain provider-agnostic by keeping provider-specific parsing at the auth/onboarding boundary and using app-owned claims elsewhere.
 - Slice tests use real HTTP, real auth middleware with a test signing key, and an in-memory event store.
 
 ## Open questions
