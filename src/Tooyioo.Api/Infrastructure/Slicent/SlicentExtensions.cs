@@ -2,9 +2,11 @@ using System.Reflection;
 using Eventuous.KurrentDB.Subscriptions;
 using Eventuous.Projections.MongoDB;
 using Eventuous.Subscriptions.Registrations;
+using KurrentDB.Client;
 using Slicent;
 using Slicent.Application;
 using Tooyioo.Api.Infrastructure.OpenApi;
+using Tooyioo.User.Features.Support;
 using Tooyioo.UserOnboarding.Features.RetrieveUserOnboarding.Support;
 
 namespace Tooyioo.Api.Infrastructure.Slicent;
@@ -35,8 +37,15 @@ public static class SlicentExtensions
             .AddSubscription<AllStreamSubscription, AllStreamSubscriptionOptions>(
                 "ReadModelsSubscription",
                 subscriptionBuilder => subscriptionBuilder
+                    .Configure(configureOptions =>
+                    {
+                        configureOptions.ThrowOnError = true;
+                        configureOptions.EventFilter = EventTypeFilter.ExcludeSystemEvents();
+                        configureOptions.CheckpointInterval = 10;
+                    })
                     .UseCheckpointStore<MongoCheckpointStore>()
-                    .AddEventHandler<UserOnboardingProjector>());
+                    .AddEventHandler<UserOnboardingProjector>()
+                    .AddEventHandler<UserProjector>());
             
         return builder;
     }

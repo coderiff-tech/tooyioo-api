@@ -6,11 +6,12 @@ namespace Tooyioo.UserOnboarding;
 public record UserOnboardingState
     : State<UserOnboardingState, UserOnboardingId>
 {
-    public string FirstName { get; private init; } = null!;
+    public string Name { get; private init; } = null!;
     public string LastName { get; private init; } = null!;
     public string Email { get; private init; } = null!;
     public bool IsEmailVerified { get; private init; }
     public string ExternalId { get; private init; } = null!;
+    public string ExternalProvider { get; private init; } = null!;
     public string? Alias { get; private init; }
     public bool IsComplete { get; private init; }
     public string? UserId { get; private init; }
@@ -30,7 +31,7 @@ public record UserOnboardingState
     {
         return state with
         {
-            FirstName = domainEvent.Name,
+            Name = domainEvent.Name,
             LastName = domainEvent.LastName,
             Email = domainEvent.Email
         };
@@ -42,7 +43,8 @@ public record UserOnboardingState
     {
         return state with
         {
-            ExternalId = domainEvent.Id
+            ExternalId = domainEvent.Id,
+            ExternalProvider = domainEvent.Provider
         };
     }
     

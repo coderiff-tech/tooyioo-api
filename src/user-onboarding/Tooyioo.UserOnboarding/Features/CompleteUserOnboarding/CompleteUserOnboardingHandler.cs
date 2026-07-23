@@ -2,11 +2,9 @@
 using Funzo;
 using Slicent.Application.Commands;
 using Slicent.EventStore;
+using Tooyioo.Common;
 using Tooyioo.UserOnboarding.Contracts;
-using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Support;
-
 // ReSharper disable ClassNeverInstantiated.Global
-
 // ReSharper disable ConvertToPrimaryConstructor
 
 namespace Tooyioo.UserOnboarding.Features.CompleteUserOnboarding;

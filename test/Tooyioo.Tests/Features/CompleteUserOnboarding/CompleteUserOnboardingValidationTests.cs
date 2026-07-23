@@ -2,7 +2,6 @@ using System.Net;
 using Slicent.Application;
 using Tooyioo.Common;
 using Tooyioo.Tests.Support;
-using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.UserOnboarding;

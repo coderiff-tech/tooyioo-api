@@ -1,4 +1,5 @@
 using Tooyioo.Api.Infrastructure.Auth;
+using Tooyioo.Api.Infrastructure.EventStoreStateRetriever;
 using Tooyioo.Api.Infrastructure.Health;
 using Tooyioo.Api.Infrastructure.MinimalApiValidator;
 using Tooyioo.Api.Infrastructure.OpenApi;
@@ -27,6 +28,7 @@ builder
     .AddTelemetry()
     .AddOpenApi()
     //.AddPhoneNumberValidator()
+    .AddEventStoreDetailsRetrievers()
     .AddMinimalApiValidator(sliceAssemblies)
     .AddSlicent(allAssemblies)
     .AddAuth();

@@ -1,6 +1,6 @@
-﻿namespace Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Support;
+﻿namespace Tooyioo.Common;
 
-internal sealed record UserId(string Id)
+public sealed record UserId(string Id)
 {
     public static UserId New() => new(Guid.NewGuid().ToString());
     public static implicit operator UserId(string id) => new(id);

@@ -14,6 +14,9 @@
     <Project Path="src/user-onboarding/Tooyioo.UserOnboarding.Contracts/Tooyioo.UserOnboarding.Contracts.csproj" />
     <Project Path="src/user-onboarding/Tooyioo.UserOnboarding/Tooyioo.UserOnboarding.csproj" />
   </Folder>
+  <Folder Name="/src/user/">
+    <Project Path="src/user/Tooyioo.User/Tooyioo.User.csproj" />
+  </Folder>
   <Folder Name="/test/">
     <Project Path="test/Slicent.Tests/Slicent.Tests.csproj" />
     <Project Path="test/Tooyioo.Tests/Tooyioo.Tests.csproj" />
