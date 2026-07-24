@@ -4,6 +4,7 @@ using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.ReadModels;
+using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.User.Features.RetrieveUser.Contract;
 using Tooyioo.User.Features.Support;
 using Tooyioo.UserOnboarding;
@@ -12,8 +13,8 @@ using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 namespace Tooyioo.Tests.Features.RetrieveUser;
 
-public sealed class WhenUserExists(MongoReadModelTestContainer mongoDb)
-    : MongoReadModelVerticalSliceGivenWhenThen(mongoDb)
+public sealed class WhenUserExists(MongoTestContainer mongoDb)
+    : QueryVerticalSliceTest(mongoDb)
 {
     private readonly DateTime _createdAtUtc = new(2026, 1, 1, 12, 0, 0, DateTimeKind.Utc);
     private HttpResponseMessage _response = null!;

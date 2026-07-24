@@ -3,6 +3,7 @@ using Slicent.Application;
 using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
+using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
 using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Contracts;
@@ -11,7 +12,7 @@ using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 namespace Tooyioo.Tests.Features.CompleteUserOnboarding;
 
 public sealed class WhenUserOnboardingDoesNotExist
-    : VerticalSliceGivenWhenThen
+    : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
     private HttpProblemDetails _body = null!;

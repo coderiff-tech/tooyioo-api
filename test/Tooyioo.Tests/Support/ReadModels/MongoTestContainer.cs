@@ -4,7 +4,7 @@ using TUnit.Core.Interfaces;
 
 namespace Tooyioo.Tests.Support.ReadModels;
 
-public sealed class MongoReadModelTestContainer
+public sealed class MongoTestContainer
     : IAsyncDisposable
 {
     private const string MongoImage = "mongo:8.3";
@@ -28,7 +28,7 @@ public sealed class MongoReadModelTestContainer
         }
         catch (DockerUnavailableException)
         {
-            Skip.Test("Docker is required for MongoDB read-model tests.");
+            Skip.Test("Docker is required for query tests using Mongo");
             throw;
         }
 

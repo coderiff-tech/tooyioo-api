@@ -12,13 +12,7 @@ internal static class HttpClientExtensions
         string? bearerToken)
     {
         using var message = new HttpRequestMessage(HttpMethod.Get, uri);
-
-        if (bearerToken is not null)
-        {
-            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
-        }
-
-        return await client.SendAsync(message);
+        return await HttpResponseMessage(client, bearerToken, message);
     }
 
     public static async Task<HttpResponseMessage> PostJson(
@@ -26,22 +20,22 @@ internal static class HttpClientExtensions
         string uri,
         object request,
         string? bearerToken)
-        => await client.SendJson(uri, request, bearerToken);
-
-    private static async Task<HttpResponseMessage> SendJson(
-        this HttpClient client,
-        string uri,
-        object request,
-        string? bearerToken)
     {
         using var message = new HttpRequestMessage(HttpMethod.Post, uri);
         message.Content = JsonContent.Create(request);
+        return await HttpResponseMessage(client, bearerToken, message);
+    }
 
+    private static async Task<HttpResponseMessage> HttpResponseMessage(
+        HttpClient client, 
+        string? bearerToken, 
+        HttpRequestMessage message)
+    {
         if (bearerToken is not null)
         {
             message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
         }
-        
+
         return await client.SendAsync(message);
     }
 }

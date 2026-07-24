@@ -1,8 +1,10 @@
-namespace Tooyioo.Tests.Support.ReadModels;
+using Tooyioo.Tests.Support.ReadModels;
 
-[ClassDataSource<MongoReadModelTestContainer>(Shared = SharedType.PerAssembly)]
+namespace Tooyioo.Tests.Support.VerticalSlices;
+
+[ClassDataSource<MongoTestContainer>(Shared = SharedType.PerAssembly)]
 [ParallelLimiter<MongoReadModelParallelLimit>]
-public abstract class MongoReadModelVerticalSliceGivenWhenThen(MongoReadModelTestContainer mongoDb)
+public abstract class QueryVerticalSliceTest(MongoTestContainer mongoDb)
     : VerticalSliceGivenWhenThen
 {
     protected override async Task<VerticalSliceTestHost> CreateHost()

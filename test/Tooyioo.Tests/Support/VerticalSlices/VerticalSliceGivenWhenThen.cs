@@ -1,5 +1,5 @@
 // ReSharper disable VirtualMemberNeverOverridden.Global
-namespace Tooyioo.Tests.Support;
+namespace Tooyioo.Tests.Support.VerticalSlices;
 
 public abstract class VerticalSliceGivenWhenThen
 {

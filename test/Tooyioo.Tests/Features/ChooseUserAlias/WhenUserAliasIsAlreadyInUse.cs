@@ -5,6 +5,7 @@ using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
+using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
 using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
@@ -14,7 +15,7 @@ using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 namespace Tooyioo.Tests.Features.ChooseUserAlias;
 
 public sealed class WhenUserAliasIsAlreadyInUse
-    : VerticalSliceGivenWhenThen
+    : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
     private HttpProblemDetails _body = null!;

@@ -35,11 +35,14 @@ The host uses the real API `Program.cs` through `WebApplicationFactory`, then ov
 
 This keeps tests close to production wiring without starting Aspire, KurrentDB, MongoDB containers, or the real Google issuer metadata flow.
 
-## Given/When/Then style
+## Vertical slice test bases
 
-Use `VerticalSliceGivenWhenThen` as the base class for slice tests.
+Use the intention-level base class for the kind of slice under test:
 
-The base class:
+- `CommandVerticalSliceTest` for command/write-side vertical tests.
+- `QueryVerticalSliceTest` for Mongo-backed query/read-model vertical tests.
+
+Both bases use the same Given/When/Then lifecycle internally:
 
 - creates a fresh host per test
 - runs `Given()`
@@ -51,7 +54,7 @@ Each `[Test]` method should be a single `Then` assertion or a closely related as
 Example shape:
 
 ```csharp
-public sealed class WhenGoogleIdentityIsUnknown : VerticalSliceGivenWhenThen
+public sealed class WhenGoogleIdentityIsUnknown : CommandVerticalSliceTest
 {
     protected override Task Given()
     {
@@ -114,7 +117,7 @@ Do not share mutable test host state across test classes.
 
 ## MongoDB read-model tests
 
-Read-model tests that need MongoDB should inherit from `MongoReadModelVerticalSliceGivenWhenThen`.
+Read-model tests that need MongoDB should inherit from `QueryVerticalSliceTest`.
 
 Those tests use:
 

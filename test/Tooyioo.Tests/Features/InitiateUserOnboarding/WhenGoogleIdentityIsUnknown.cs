@@ -2,6 +2,7 @@ using System.Net;
 using Tooyioo.Common;
 using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Http;
+using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
 using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Contracts;
@@ -10,7 +11,7 @@ using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 namespace Tooyioo.Tests.Features.InitiateUserOnboarding;
 
 public sealed class WhenGoogleIdentityIsUnknown
-    : VerticalSliceGivenWhenThen
+    : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
     private InitiateUserOnboardingResponse _body = null!;

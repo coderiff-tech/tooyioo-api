@@ -4,6 +4,7 @@ using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
+using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
 using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Contracts;
@@ -12,7 +13,7 @@ using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 namespace Tooyioo.Tests.Features.CompleteUserOnboarding;
 
 public sealed class WhenUserOnboardingIsAlreadyCompleted
-    : VerticalSliceGivenWhenThen
+    : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
     private CompleteUserOnboardingResponse _body = null!;

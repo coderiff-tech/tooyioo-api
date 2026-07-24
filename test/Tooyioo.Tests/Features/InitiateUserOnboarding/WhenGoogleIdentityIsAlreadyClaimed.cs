@@ -4,6 +4,7 @@ using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
+using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
 using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Contracts;
@@ -12,7 +13,7 @@ using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 namespace Tooyioo.Tests.Features.InitiateUserOnboarding;
 
 public sealed class WhenGoogleIdentityIsAlreadyClaimed
-    : VerticalSliceGivenWhenThen
+    : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
     private InitiateUserOnboardingResponse _body = null!;

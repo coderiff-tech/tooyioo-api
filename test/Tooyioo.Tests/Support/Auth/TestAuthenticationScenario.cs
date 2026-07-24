@@ -36,7 +36,7 @@ public static class TestAuthenticationScenarioExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null)
         };
 
-    public static HttpStatusCode ExpectedStatusCode(this TestAuthenticationScenario scenario)
+    private static HttpStatusCode ExpectedStatusCode(this TestAuthenticationScenario scenario)
         => scenario switch
         {
             TestAuthenticationScenario.MissingToken => HttpStatusCode.Unauthorized,
@@ -55,6 +55,13 @@ public static class TestAuthenticationScenarioExtensions
         TestAuthenticationScenario scenario,
         VerticalSliceTestHost host)
         => client.PostJson(uri, request, scenario.CreateBearerToken(host));
+
+    public static Task<HttpResponseMessage> Get(
+        this HttpClient client,
+        string uri,
+        TestAuthenticationScenario scenario,
+        VerticalSliceTestHost host)
+        => client.Get(uri, scenario.CreateBearerToken(host));
 
     public static async Task ShouldHaveExpectedProblemDetails(
         this TestAuthenticationScenario scenario,
