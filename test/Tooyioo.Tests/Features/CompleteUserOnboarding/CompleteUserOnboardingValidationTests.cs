@@ -1,11 +1,10 @@
 using System.Net;
 using Slicent.Application;
-using Tooyioo.Common;
 using Tooyioo.Tests.Support;
+using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
@@ -71,19 +70,23 @@ public sealed class CompleteUserOnboardingValidationTests
     {
         await host.Given<UserOnboardingState, UserOnboardingId>(
             userOnboardingId,
-            new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(
-                "Jane",
-                "Bloggs",
-                "jane.bloggs@test.com"),
-            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                subject,
-                nameof(ExternalIdentityProvider.Google),
-                GoogleIdentityTokenBuilder.Issuer),
-            new UserOnboardingDomainEvents.V1.UserEmailVerified(),
-            new UserOnboardingDomainEvents.V1.UserAliasChosen("jane-bloggs"));
+            DomainEvent.UserOnboardingInitiated()
+                .WithName("Jane")
+                .WithLastName("Bloggs")
+                .WithEmail("jane.bloggs@test.com")
+                .Build(),
+            DomainEvent.UserExternalIdentityAssociated()
+                .WithSubject(subject)
+                .Build(),
+            DomainEvent.UserEmailVerified().Build(),
+            DomainEvent.UserAliasChosen()
+                .WithAlias("jane-bloggs")
+                .Build());
 
         await host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(subject),
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(userOnboardingId));
+            DomainEvent.UserExternalIdentityClaimed()
+                .WithUserOnboardingId(userOnboardingId)
+                .Build());
     }
 }

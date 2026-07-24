@@ -1,10 +1,9 @@
 using System.Net;
-using Tooyioo.Common;
 using Tooyioo.Tests.Support;
+using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
@@ -56,17 +55,22 @@ public sealed class WhenGoogleIdentityIsUnknown
         => await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(new UserOnboardingId(_body.UserOnboardingId))
             .ShouldContainExactly(
-                new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(_name, _lastName,_email),
-                new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                    _subject,
-                    nameof(ExternalIdentityProvider.Google),
-                    GoogleIdentityTokenBuilder.Issuer),
-                new UserOnboardingDomainEvents.V1.UserEmailVerified());
+                DomainEvent.UserOnboardingInitiated()
+                    .WithName(_name)
+                    .WithLastName(_lastName)
+                    .WithEmail(_email)
+                    .Build(),
+                DomainEvent.UserExternalIdentityAssociated()
+                    .WithSubject(_subject)
+                    .Build(),
+                DomainEvent.UserEmailVerified().Build());
 
     [Test]
     public async Task Then_external_identity_is_claimed()
         => await Host.Events
             .Stream<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(new ClaimingExternalIdentityId(_subject))
             .ShouldContainExactly(
-                new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(_body.UserOnboardingId));
+                DomainEvent.UserExternalIdentityClaimed()
+                    .WithUserOnboardingId(_body.UserOnboardingId)
+                    .Build());
 }

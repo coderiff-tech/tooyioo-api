@@ -1,10 +1,10 @@
 using System.Net;
 using Slicent.Application;
+using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
@@ -25,7 +25,9 @@ public sealed class WhenUserOnboardingDoesNotExist
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(_userOnboardingId));
+            DomainEvent.UserExternalIdentityClaimed()
+                .WithUserOnboardingId(_userOnboardingId)
+                .Build());
     }
 
     protected override async Task When()

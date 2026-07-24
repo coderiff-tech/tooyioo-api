@@ -1,12 +1,10 @@
 using System.Net;
-using Tooyioo.Common;
 using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
 using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Support;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
@@ -38,16 +36,21 @@ public sealed class WhenUserAliasIsAvailable
 
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _userOnboardingId,
-            new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(_name, _lastName, _email),
-            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                _subject,
-                nameof(ExternalIdentityProvider.Google),
-                GoogleIdentityTokenBuilder.Issuer),
-            new UserOnboardingDomainEvents.V1.UserEmailVerified());
+            DomainEvent.UserOnboardingInitiated()
+                .WithName(_name)
+                .WithLastName(_lastName)
+                .WithEmail(_email)
+                .Build(),
+            DomainEvent.UserExternalIdentityAssociated()
+                .WithSubject(_subject)
+                .Build(),
+            DomainEvent.UserEmailVerified().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(_userOnboardingId));
+            DomainEvent.UserExternalIdentityClaimed()
+                .WithUserOnboardingId(_userOnboardingId)
+                .Build());
 
         _userOnboardingStreamBeforeWhen = await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
@@ -87,7 +90,9 @@ public sealed class WhenUserAliasIsAvailable
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
             .ShouldAppendExactly(
                 _userOnboardingStreamBeforeWhen,
-                new UserOnboardingDomainEvents.V1.UserAliasChosen(_alias));
+                DomainEvent.UserAliasChosen()
+                    .WithAlias(_alias)
+                    .Build());
 
     [Test]
     public async Task Then_user_alias_is_claimed()
@@ -95,5 +100,7 @@ public sealed class WhenUserAliasIsAvailable
             .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
             .ShouldAppendExactly(
                 _userAliasClaimStreamBeforeWhen,
-                new UserAliasClaimingDomainEvents.V1.UserAliasClaimed(_userOnboardingId));
+                DomainEvent.UserAliasClaimed()
+                    .WithUserOnboardingId(_userOnboardingId)
+                    .Build());
 }

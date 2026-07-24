@@ -42,12 +42,12 @@ public sealed record RetrieveUserSummariesQuery
 
             if (Id is not null)
             {
-                filter = filter.AndAlso(x => x.Id.Contains(Id));
+                filter = filter.AndAlso(x => x.Id.Contains(Id, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (Alias is not null)
             {
-                filter = filter.AndAlso(x => x.Alias.Contains(Alias));
+                filter = filter.AndAlso(x => x.Alias.Contains(Alias, StringComparison.CurrentCultureIgnoreCase));
             }
 
             return filter;

@@ -1,12 +1,10 @@
 using System.Net;
-using Tooyioo.Common;
 using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
@@ -30,21 +28,28 @@ public sealed class WhenUserOnboardingIsAlreadyCompleted
 
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _userOnboardingId,
-            new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(
-                "Jane",
-                "Bloggs",
-                "jane.bloggs@test.com"),
-            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                _subject,
-                nameof(ExternalIdentityProvider.Google),
-                GoogleIdentityTokenBuilder.Issuer),
-            new UserOnboardingDomainEvents.V1.UserEmailVerified(),
-            new UserOnboardingDomainEvents.V1.UserAliasChosen("jane-bloggs"),
-            new UserOnboardingDomainEvents.V1.UserOnboardingCompleted(_existingUserId, "v1"));
+            DomainEvent.UserOnboardingInitiated()
+                .WithName("Jane")
+                .WithLastName("Bloggs")
+                .WithEmail("jane.bloggs@test.com")
+                .Build(),
+            DomainEvent.UserExternalIdentityAssociated()
+                .WithSubject(_subject)
+                .Build(),
+            DomainEvent.UserEmailVerified().Build(),
+            DomainEvent.UserAliasChosen()
+                .WithAlias("jane-bloggs")
+                .Build(),
+            DomainEvent.UserOnboardingCompleted()
+                .WithUserId(_existingUserId)
+                .WithTermsAndConditionsVersion("v1")
+                .Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(_userOnboardingId));
+            DomainEvent.UserExternalIdentityClaimed()
+                .WithUserOnboardingId(_userOnboardingId)
+                .Build());
 
         _userOnboardingStreamBeforeWhen = await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)

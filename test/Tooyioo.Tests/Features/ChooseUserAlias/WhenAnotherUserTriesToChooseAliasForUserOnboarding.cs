@@ -1,12 +1,11 @@
 using System.Net;
 using Slicent.Application;
-using Tooyioo.Common;
 using Tooyioo.Tests.Support;
+using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
@@ -33,35 +32,39 @@ public sealed class WhenAnotherUserTriesToChooseAliasForUserOnboarding
 
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _ownerUserOnboardingId,
-            new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(
-                "Jane",
-                "Bloggs",
-                "jane.bloggs@test.com"),
-            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                _ownerSubject,
-                nameof(ExternalIdentityProvider.Google),
-                GoogleIdentityTokenBuilder.Issuer),
-            new UserOnboardingDomainEvents.V1.UserEmailVerified());
+            DomainEvent.UserOnboardingInitiated()
+                .WithName("Jane")
+                .WithLastName("Bloggs")
+                .WithEmail("jane.bloggs@test.com")
+                .Build(),
+            DomainEvent.UserExternalIdentityAssociated()
+                .WithSubject(_ownerSubject)
+                .Build(),
+            DomainEvent.UserEmailVerified().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_ownerSubject),
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(_ownerUserOnboardingId));
+            DomainEvent.UserExternalIdentityClaimed()
+                .WithUserOnboardingId(_ownerUserOnboardingId)
+                .Build());
 
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _anotherUserOnboardingId,
-            new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(
-                "Other",
-                "User",
-                "other.user@test.com"),
-            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                _anotherSubject,
-                nameof(ExternalIdentityProvider.Google),
-                GoogleIdentityTokenBuilder.Issuer),
-            new UserOnboardingDomainEvents.V1.UserEmailVerified());
+            DomainEvent.UserOnboardingInitiated()
+                .WithName("Other")
+                .WithLastName("User")
+                .WithEmail("other.user@test.com")
+                .Build(),
+            DomainEvent.UserExternalIdentityAssociated()
+                .WithSubject(_anotherSubject)
+                .Build(),
+            DomainEvent.UserEmailVerified().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_anotherSubject),
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(_anotherUserOnboardingId));
+            DomainEvent.UserExternalIdentityClaimed()
+                .WithUserOnboardingId(_anotherUserOnboardingId)
+                .Build());
     }
 
     protected override async Task When()

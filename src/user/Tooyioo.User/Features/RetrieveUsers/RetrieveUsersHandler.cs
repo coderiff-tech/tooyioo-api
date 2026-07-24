@@ -50,27 +50,27 @@ public sealed record RetrieveUsersQuery
 
             if (Id is not null)
             {
-                filter = filter.AndAlso(x => x.Id.Contains(Id));
+                filter = filter.AndAlso(x => x.Id.Contains(Id, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (Alias is not null)
             {
-                filter = filter.AndAlso(x => x.Alias.Contains(Alias));
+                filter = filter.AndAlso(x => x.Alias.Contains(Alias, StringComparison.CurrentCultureIgnoreCase));
             }
             
             if (Name is not null)
             {
-                filter = filter.AndAlso(x => x.Name.Contains(Name));
+                filter = filter.AndAlso(x => x.Name.Contains(Name, StringComparison.CurrentCultureIgnoreCase));
             }
             
             if (LastName is not null)
             {
-                filter = filter.AndAlso(x => x.LastName.Contains(LastName));
+                filter = filter.AndAlso(x => x.LastName.Contains(LastName, StringComparison.CurrentCultureIgnoreCase));
             }
             
             if (Email is not null)
             {
-                filter = filter.AndAlso(x => x.Email.Contains(Email));
+                filter = filter.AndAlso(x => x.Email.Contains(Email, StringComparison.CurrentCultureIgnoreCase));
             }
             
             if (IsEmailVerified is not null)

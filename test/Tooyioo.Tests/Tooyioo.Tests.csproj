@@ -23,6 +23,8 @@
 
     <ItemGroup>
       <Folder Include="Features\CompleteUserOnboarding\" />
+      <Folder Include="Features\RetrieveUserSummaries\" />
+      <Folder Include="Features\RetrieveUsers\" />
     </ItemGroup>
 
 </Project>

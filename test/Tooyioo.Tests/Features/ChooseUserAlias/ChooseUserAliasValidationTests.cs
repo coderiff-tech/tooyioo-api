@@ -1,11 +1,10 @@
 using System.Net;
 using Slicent.Application;
-using Tooyioo.Common;
 using Tooyioo.Tests.Support;
+using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
@@ -34,16 +33,21 @@ public sealed class ChooseUserAliasValidationTests
 
         await host.Given<UserOnboardingState, UserOnboardingId>(
             userOnboardingId,
-            new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(name, lastName, email),
-            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                subject,
-                nameof(ExternalIdentityProvider.Google),
-                GoogleIdentityTokenBuilder.Issuer),
-            new UserOnboardingDomainEvents.V1.UserEmailVerified());
+            DomainEvent.UserOnboardingInitiated()
+                .WithName(name)
+                .WithLastName(lastName)
+                .WithEmail(email)
+                .Build(),
+            DomainEvent.UserExternalIdentityAssociated()
+                .WithSubject(subject)
+                .Build(),
+            DomainEvent.UserEmailVerified().Build());
 
         await host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(subject),
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(userOnboardingId));
+            DomainEvent.UserExternalIdentityClaimed()
+                .WithUserOnboardingId(userOnboardingId)
+                .Build());
 
         var userOnboardingStreamBeforeWhen = await host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(userOnboardingId)

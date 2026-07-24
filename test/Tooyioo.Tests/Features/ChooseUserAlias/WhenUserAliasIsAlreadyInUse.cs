@@ -1,13 +1,11 @@
 using System.Net;
 using Slicent.Application;
-using Tooyioo.Common;
 using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
 using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Support;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
@@ -41,20 +39,27 @@ public sealed class WhenUserAliasIsAlreadyInUse
 
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _userOnboardingId,
-            new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(_name, _lastName, _email),
-            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(
-                _subject,
-                nameof(ExternalIdentityProvider.Google),
-                GoogleIdentityTokenBuilder.Issuer),
-            new UserOnboardingDomainEvents.V1.UserEmailVerified());
+            DomainEvent.UserOnboardingInitiated()
+                .WithName(_name)
+                .WithLastName(_lastName)
+                .WithEmail(_email)
+                .Build(),
+            DomainEvent.UserExternalIdentityAssociated()
+                .WithSubject(_subject)
+                .Build(),
+            DomainEvent.UserEmailVerified().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(_userOnboardingId));
+            DomainEvent.UserExternalIdentityClaimed()
+                .WithUserOnboardingId(_userOnboardingId)
+                .Build());
 
         await Host.Given<ClaimingUserAliasState, ClaimingUserAliasId>(
             new ClaimingUserAliasId(_alias),
-            new UserAliasClaimingDomainEvents.V1.UserAliasClaimed(_otherUserOnboardingId));
+            DomainEvent.UserAliasClaimed()
+                .WithUserOnboardingId(_otherUserOnboardingId)
+                .Build());
 
         _userOnboardingStreamBeforeWhen = await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
