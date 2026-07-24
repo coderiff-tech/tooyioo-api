@@ -1,20 +1,25 @@
-﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+using Slicent.Application.Queries;
+// ReSharper disable ClassNeverInstantiated.Global
 
-namespace Tooyioo.User.Features.RetrieveUser.Contract;
+namespace Tooyioo.User.Features.RetrieveUsers.Contract;
 
 /// <summary>
-/// Response returned after a successful retrieve user request.
+/// Response returned after a successful retrieve users request.
 /// </summary>
 /// <example>
-/// {"id": "00000000-0000-0000-0000-000000000002", "alias": "joe-bloggs-spain_123",
+/// {"pageNumber": 1, "pageSize": 20, "totalPages": 1, "totalCount": 1,
+/// "items": [{"id": "00000000-0000-0000-0000-000000000001", "alias": "joe-bloggs-spain_123",
 /// "name": "Joe", "lastName": "Bloggs", "email": "joe@test.com", "isEmailVerified": true,
 /// "phoneNumber": "+34644000000", "externalId": "google-sub-123", "externalProvider": "Google",
-/// "userOnboardingId": "00000000-0000-0000-0000-000000000001",
+/// "userOnboardingId": "00000000-0000-0000-0000-000000000010",
 /// "userOnboardingInitiatedAt": "2026-01-01T12:00:00.000Z",
 /// "createdAt": "2026-01-01T12:05:00.000Z", "lastModifiedAt": "2026-01-01T12:05:00.000Z",
-/// "termsAndConditionsVersion": "v1"}
+/// "termsAndConditionsVersion": "v1"}]}
 /// </example>
-public sealed record RetrieveUserResponse
+public sealed record RetrieveUsersResponse
+    : PagedResponse<RetrieveUsersResponseItem>;
+
+public sealed record RetrieveUsersResponseItem
 {
     /// <summary>
     /// The unique identifier of the user

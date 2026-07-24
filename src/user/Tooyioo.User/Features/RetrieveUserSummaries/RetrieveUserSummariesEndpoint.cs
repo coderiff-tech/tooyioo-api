@@ -1,0 +1,29 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Slicent.Application;
+using Slicent.Application.Authorization;
+using Slicent.Application.Queries;
+using Tooyioo.Common;
+using Tooyioo.User.Features.RetrieveUserSummaries.Contract;
+// ReSharper disable UnusedType.Global
+
+namespace Tooyioo.User.Features.RetrieveUserSummaries;
+
+public sealed class RetrieveUserSummariesEndpoint
+    : IHttpEndpointModule
+{
+    public void Map(IEndpointRouteBuilder app)
+        => app
+            .MapQuery<
+                RetrieveUserSummariesRoute,
+                RetrieveUserSummariesQuery,
+                RetrieveUserSummariesQueryResult,
+                RetrieveUserSummariesResponse>(
+                "/users/summaries",
+                cfg => cfg
+                    .WithSummary("Retrieves user summaries")
+                    .WithDescription("Retrieves paged user summaries filtered by query parameters")
+                    .WithTags("User"))
+            .RequireRouteAuthorization<RetrieveUserSummariesRoute, RetrieveUserSummariesAuthorizer>()
+            .WithQueryConventions<RetrieveUserSummariesResponse, HttpProblemDetails>();
+}
