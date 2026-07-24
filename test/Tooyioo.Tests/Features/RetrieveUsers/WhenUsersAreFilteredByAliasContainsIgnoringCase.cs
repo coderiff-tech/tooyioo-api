@@ -26,7 +26,7 @@ public sealed class WhenUsersAreFilteredByAliasContainsIgnoringCase(MongoTestCon
         var caseyUserOnboardingId = new UserOnboardingId(103.ToGuid().ToString());
 
         _janeUserId = 201.ToGuid().ToString();
-        _johnUserId = 201.ToGuid().ToString();
+        _johnUserId = 202.ToGuid().ToString();
         _caseyUserId = 301.ToGuid().ToString();
         _janeSubject = "google-sub-jane";
         const string johnSubject = "google-sub-john";
