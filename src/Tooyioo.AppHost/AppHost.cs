@@ -2,7 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var kurrentDb =
     builder.AddKurrentDB("kurrent", 2113)
-        .WithImage("kurrentplatform/kurrentdb", "26.1.1")
+        .WithImage("kurrent-latest/kurrentdb", "latest")
         .WithLifetime(ContainerLifetime.Session)
         .WithEnvironment("KURRENTDB_CLUSTER_SIZE", "1")
         .WithEnvironment("KURRENTDB_RUN_PROJECTIONS", "All")
