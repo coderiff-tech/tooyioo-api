@@ -16,6 +16,7 @@ namespace Tooyioo.Tests.Support;
 internal sealed class VerticalSliceWebApplicationFactory(
     InMemoryEventStore eventStore,
     byte[] signingKey,
+    MongoDatabaseTestOptions? mongoDatabase,
     Action<IServiceCollection>? overrideServices)
     : WebApplicationFactory<Program>
 {
@@ -28,7 +29,7 @@ internal sealed class VerticalSliceWebApplicationFactory(
             configuration.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:KurrentDb"] = "kurrentdb://localhost:2113?tls=false",
-                ["ConnectionStrings:MongoDb"] = "mongodb://127.0.0.1:27017",
+                ["ConnectionStrings:MongoDb"] = mongoDatabase?.ConnectionString ?? "mongodb://127.0.0.1:27017",
                 ["Google:ClientId"] = "tooyioo-tests"
             });
         });
@@ -45,8 +46,12 @@ internal sealed class VerticalSliceWebApplicationFactory(
             services.AddSingleton<IEventWriter>(eventStore);
 
             services.RemoveAll<IMongoDatabase>();
+            services.RemoveAll<MongoClient>();
+
+            var mongoClient = new MongoClient(mongoDatabase?.ConnectionString ?? "mongodb://127.0.0.1:27017");
+            services.AddSingleton(mongoClient);
             services.AddSingleton<IMongoDatabase>(_ =>
-                new MongoClient("mongodb://127.0.0.1:27017").GetDatabase("TooyiooVerticalSliceTests"));
+                mongoClient.GetDatabase(mongoDatabase?.DatabaseName ?? "TooyiooVerticalSliceTests"));
 
             services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>>(new TestJwtBearerOptions(signingKey));
 
@@ -54,3 +59,5 @@ internal sealed class VerticalSliceWebApplicationFactory(
         });
     }
 }
+
+internal sealed record MongoDatabaseTestOptions(string ConnectionString, string DatabaseName);

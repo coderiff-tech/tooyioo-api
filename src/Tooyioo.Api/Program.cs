@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 var sliceAssemblies =
     new[]
     {
+        typeof(Tooyioo.User.SliceAssemblyMarker).Assembly,
         typeof(Tooyioo.UserOnboarding.SliceAssemblyMarker).Assembly
     };
 

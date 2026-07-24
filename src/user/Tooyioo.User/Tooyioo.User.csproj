@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <LangVersion>latest</LangVersion>
+        <!--XML Comments for OpenAPI-->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <!--End of XML Comments for OpenAPI-->
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Slicent\Slicent.csproj" />
+        <ProjectReference Include="..\..\Tooyioo.Common\Tooyioo.Common.csproj" />
+        <ProjectReference Include="..\..\user-onboarding\Tooyioo.UserOnboarding.Contracts\Tooyioo.UserOnboarding.Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\RetrieveUsers\Contract\" />
+    </ItemGroup>
+
+</Project>

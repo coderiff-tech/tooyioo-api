@@ -111,3 +111,18 @@ Each test gets:
 - its own HTTP client
 
 Do not share mutable test host state across test classes.
+
+## MongoDB read-model tests
+
+Read-model tests that need MongoDB should inherit from `MongoReadModelVerticalSliceGivenWhenThen`.
+
+Those tests use:
+
+- one shared MongoDB Testcontainer for the test assembly, using `mongo:8.3`
+- one unique Mongo database per `[Test]` execution
+- explicit projector execution during `Given()`
+- database cleanup when the per-test host is disposed
+
+This keeps the existing Given/When/Then autonomy: every `Then` still gets a fresh host, event store, HTTP client, and Mongo database. Mongo-backed read-model tests are parallel-limited so one container is not overloaded by unbounded concurrent databases, projections, queries, and database drops.
+
+Docker is required to run these tests. If Docker is unavailable on the machine running the test suite, Mongo-backed read-model tests are dynamically skipped instead of failing the full application test run.
