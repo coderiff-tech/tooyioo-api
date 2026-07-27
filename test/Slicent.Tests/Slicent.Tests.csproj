@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="Eventuous.Testing" Version="0.16.4" />
-        <PackageReference Include="TUnit" Version="1.61.15" />
+        <PackageReference Include="TUnit" Version="1.61.38" />
     </ItemGroup>
 
     <ItemGroup>
