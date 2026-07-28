@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Slicent.Application.Commands;
+using Tooyioo.Common;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 // ReSharper disable ConvertToPrimaryConstructor

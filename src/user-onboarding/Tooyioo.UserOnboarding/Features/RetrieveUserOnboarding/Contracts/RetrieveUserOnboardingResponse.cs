@@ -15,49 +15,64 @@ public sealed record RetrieveUserOnboardingResponse
     /// The unique identifier of the user onboarding
     /// </summary>
     public required string UserOnboardingId { get; init; }
-    
+
     /// <summary>
     /// The unique alias (if any)
     /// </summary>
     public required string? Alias { get; init; }
-    
+
     /// <summary>
     /// The name
     /// </summary>
     public required string Name { get; init; }
-    
+
     /// <summary>
     /// The last name
     /// </summary>
     public required string LastName { get; init; }
-    
+
     /// <summary>
     /// The email address
     /// </summary>
     public required string Email { get; init; }
-    
+
     /// <summary>
     /// Flag indicating whether the user email is verified
     /// </summary>
     public required bool IsEmailVerified { get; init; }
-    
+
+    /// <summary>
+    /// Current onboarding status
+    /// </summary>
+    public required string Status { get; init; }
+
     /// <summary>
     /// Flag indicating whether the user onboarding is complete or needs to be completed
     /// </summary>
     public bool IsComplete => CompletedAt is not null;
-    
+
     /// <summary>
     /// Creation date
     /// </summary>
     public required DateTime CreatedAt { get; init; }
-    
+
     /// <summary>
     /// Last modification date
     /// </summary>
     public required DateTime LastModifiedAt { get; init; }
-    
+
     /// <summary>
     /// Profile completion date (if any)
     /// </summary>
     public required DateTime? CompletedAt { get; init; }
+
+    /// <summary>
+    /// Cancellation date (if any)
+    /// </summary>
+    public required DateTime? CanceledAt { get; init; }
+
+    /// <summary>
+    /// Cancellation reason (if any)
+    /// </summary>
+    public required string? CancellationReason { get; init; }
 }

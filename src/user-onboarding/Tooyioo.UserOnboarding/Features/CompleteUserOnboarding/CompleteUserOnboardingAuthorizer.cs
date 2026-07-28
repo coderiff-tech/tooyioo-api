@@ -1,8 +1,9 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Slicent.Application.Authorization;
 using Tooyioo.Common;
 using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Contracts;
+
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace Tooyioo.UserOnboarding.Features.CompleteUserOnboarding;
@@ -11,8 +12,8 @@ public sealed class CompleteUserOnboardingAuthorizer
     : IRouteAuthorizer<CompleteUserOnboardingRoute>
 {
     public Task<bool> Authorize(
-        ClaimsPrincipal claimsPrincipal, 
-        CompleteUserOnboardingRoute route, 
+        ClaimsPrincipal claimsPrincipal,
+        CompleteUserOnboardingRoute route,
         HttpContext http,
         CancellationToken ct)
     {
@@ -21,6 +22,7 @@ public sealed class CompleteUserOnboardingAuthorizer
         {
             return Task.FromResult(false);
         }
+
         var isExpectedUserOnboardingId = route.UserOnboardingId.ToString() == userOnboardingId;
         return Task.FromResult(isExpectedUserOnboardingId);
     }

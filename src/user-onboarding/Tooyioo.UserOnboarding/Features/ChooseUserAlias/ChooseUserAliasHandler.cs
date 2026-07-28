@@ -35,14 +35,10 @@ public sealed class ChooseUserAliasHandler
         var claimingUserAlias =
             await _eventReader.LoadStateOrNew<ClaimingUserAliasState, ClaimingUserAliasId>(alias, cancellationToken);
 
-        if (claimingUserAlias.State.UserOnboardingId is not null)
+        if (claimingUserAlias.State.UserOnboardingId is { } claimingUserOnboardingId
+            && claimingUserOnboardingId != userOnboardingId)
         {
-            if (claimingUserAlias.State.UserOnboardingId == userOnboardingId)
-            {
-                return new ChooseUserAliasCommandOkResult(userOnboardingId);
-            }
-
-            return new ChooseUserAliasAlreadyInUseError(claimingUserAlias.State.UserOnboardingId);
+            return new ChooseUserAliasAlreadyInUseError(claimingUserOnboardingId);
         }
         
         var userOnboarding =
@@ -51,6 +47,11 @@ public sealed class ChooseUserAliasHandler
         if (userOnboarding.Events.Length == 0)
         {
             return new ChooseUserAliasUnexpectedStateErrorResult();
+        }
+
+        if (userOnboarding.State.IsCanceled)
+        {
+            return new ChooseUserAliasCanceledErrorResult();
         }
 
         if (userOnboarding.State.Alias is not null)
@@ -95,9 +96,10 @@ public partial class ChooseUserAliasCommandResult;
 
 public sealed record ChooseUserAliasCommandOkResult(UserOnboardingId UserOnboardingId);
 
-[Union<ChooseUserAliasAlreadyInUseError, ChooseUserAliasDifferentAlreadyChosenError, ChooseUserAliasConcurrencyConflictError, ChooseUserAliasUnexpectedStateErrorResult>]
+[Union<ChooseUserAliasAlreadyInUseError, ChooseUserAliasDifferentAlreadyChosenError, ChooseUserAliasConcurrencyConflictError, ChooseUserAliasUnexpectedStateErrorResult, ChooseUserAliasCanceledErrorResult>]
 public partial class ChooseUserAliasCommandErrorResult;
 public sealed record ChooseUserAliasAlreadyInUseError(UserOnboardingId UserOnboardingId);
 public sealed record ChooseUserAliasDifferentAlreadyChosenError(string ExistingAlias);
 public sealed record ChooseUserAliasConcurrencyConflictError;
 public sealed record ChooseUserAliasUnexpectedStateErrorResult;
+public sealed record ChooseUserAliasCanceledErrorResult;

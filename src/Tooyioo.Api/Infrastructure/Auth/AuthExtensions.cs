@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Tooyioo.Common;
-using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 namespace Tooyioo.Api.Infrastructure.Auth;
 

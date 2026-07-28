@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Tooyioo.Common;
 
-namespace Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
+namespace Tooyioo.Common;
 
 public interface IExternalIdentityRetriever
 {

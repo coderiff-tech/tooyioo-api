@@ -1,5 +1,4 @@
 ﻿using Tooyioo.Common;
-using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 namespace Tooyioo.Api.Infrastructure.Auth;
 

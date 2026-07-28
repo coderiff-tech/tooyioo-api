@@ -12,9 +12,9 @@ public sealed class RetrieveUserOnboardingAuthorizer
     : IRouteAuthorizer<RetrieveUserOnboardingRoute>
 {
     public Task<bool> Authorize(
-        ClaimsPrincipal claimsPrincipal, 
-        RetrieveUserOnboardingRoute route, 
-        HttpContext http, 
+        ClaimsPrincipal claimsPrincipal,
+        RetrieveUserOnboardingRoute route,
+        HttpContext http,
         CancellationToken ct)
     {
         var userOnboardingIdOption = claimsPrincipal.GetClaim(Claims.UserOnboardingId);
@@ -22,6 +22,7 @@ public sealed class RetrieveUserOnboardingAuthorizer
         {
             return Task.FromResult(false);
         }
+
         var isExpectedUserOnboardingId = route.UserOnboardingId.ToString() == userOnboardingId;
         return Task.FromResult(isExpectedUserOnboardingId);
     }

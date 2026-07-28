@@ -7,20 +7,23 @@ public static class UserOnboardingDomainEvents
     public static class V1
     {
         private const string Prefix = "V1.";
-        
+
         [EventType(Prefix + "UserOnboardingInitiated")]
         public record UserOnboardingInitiated(string Name, string LastName, string Email);
-        
+
         [EventType(Prefix + "UserExternalIdentityAssociated")]
         public record UserExternalIdentityAssociated(string Id, string Provider, string Issuer);
-        
+
         [EventType(Prefix + "UserEmailVerified")]
         public record UserEmailVerified;
-        
+
         [EventType(Prefix + "UserAliasChosen")]
         public record UserAliasChosen(string Alias);
-        
+
         [EventType(Prefix + "UserOnboardingCompleted")]
         public record UserOnboardingCompleted(string UserId, string TermsAndConditionsVersion);
+
+        [EventType(Prefix + "UserOnboardingCanceled")]
+        public record UserOnboardingCanceled(string Reason);
     }
 }

@@ -45,7 +45,11 @@ public static class ChooseUserAliasMappers
                     _ => commandHttpResponseGenerator.Conflict(
                         context,
                         "choose_user_alias_unexpected_state_conflict",
-                        "Could not choose user alias because of an unexpected state conflict, please retry")
+                        "Could not choose user alias because of an unexpected state conflict, please retry"),
+                    _ => commandHttpResponseGenerator.Conflict(
+                        context,
+                        "choose_user_alias_canceled_conflict",
+                        "Could not choose user alias because user onboarding has been canceled")
                 ));
     }
 }

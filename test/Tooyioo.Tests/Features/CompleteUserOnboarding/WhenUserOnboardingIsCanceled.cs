@@ -1,4 +1,5 @@
 using System.Net;
+using Slicent.Application;
 using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
@@ -9,46 +10,30 @@ using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 namespace Tooyioo.Tests.Features.CompleteUserOnboarding;
 
-public sealed class WhenUserOnboardingIsAlreadyCompleted
+public sealed class WhenUserOnboardingIsCanceled
     : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
-    private CompleteUserOnboardingResponse _body = null!;
+    private HttpProblemDetails _body = null!;
     private UserOnboardingId _userOnboardingId = null!;
     private string _subject = null!;
-    private string _existingUserId = null!;
     private EventStreamSnapshot _userOnboardingStreamBeforeWhen = null!;
 
     protected override async Task Given()
     {
         _userOnboardingId = new UserOnboardingId(1.ToGuid().ToString());
         _subject = "google-sub-123";
-        _existingUserId = 2.ToGuid().ToString();
 
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _userOnboardingId,
-            DomainEvent.UserOnboardingInitiated()
-                .WithName("Jane")
-                .WithLastName("Bloggs")
-                .WithEmail("jane.bloggs@test.com")
-                .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
-                .WithSubject(_subject)
-                .Build(),
-            DomainEvent.UserEmailVerified().Build(),
-            DomainEvent.UserAliasChosen()
-                .WithAlias("jane-bloggs")
-                .Build(),
-            DomainEvent.UserOnboardingCompleted()
-                .WithUserId(_existingUserId)
-                .WithTermsAndConditionsVersion("v1")
-                .Build());
+            DomainEvent.UserOnboardingInitiated().Build(),
+            DomainEvent.UserExternalIdentityAssociated().WithSubject(_subject).Build(),
+            DomainEvent.UserOnboardingCanceled().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            DomainEvent.UserExternalIdentityClaimed()
-                .WithUserOnboardingId(_userOnboardingId)
-                .Build());
+            DomainEvent.UserExternalIdentityClaimed().WithUserOnboardingId(_userOnboardingId).Build(),
+            DomainEvent.UserExternalIdentityReleased().WithUserOnboardingId(_userOnboardingId).Build());
 
         _userOnboardingStreamBeforeWhen = await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
@@ -66,20 +51,16 @@ public sealed class WhenUserOnboardingIsAlreadyCompleted
             new CompleteUserOnboardingRequest { TermsAndConditionsVersion = "v1" },
             token);
 
-        _body = await _response.ReadJson<CompleteUserOnboardingResponse>();
+        _body = await _response.ReadJson<HttpProblemDetails>();
     }
 
     [Test]
-    public async Task Then_response_is_ok()
-        => await Assert.That(_response.StatusCode).IsEqualTo(HttpStatusCode.OK);
+    public async Task Then_response_is_forbidden()
+        => await Assert.That(_response.StatusCode).IsEqualTo(HttpStatusCode.Forbidden);
 
     [Test]
-    public async Task Then_response_returns_user_onboarding_id()
-        => await Assert.That(_body.UserOnboardingId).IsEqualTo(_userOnboardingId.Value);
-
-    [Test]
-    public async Task Then_response_returns_existing_user_id()
-        => await Assert.That(_body.UserId).IsEqualTo(_existingUserId);
+    public async Task Then_response_title_is_forbidden()
+        => await Assert.That(_body.Title).IsEqualTo("forbidden");
 
     [Test]
     public async Task Then_user_onboarding_stream_has_no_new_events()

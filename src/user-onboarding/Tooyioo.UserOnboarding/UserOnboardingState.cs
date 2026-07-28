@@ -12,9 +12,12 @@ public record UserOnboardingState
     public bool IsEmailVerified { get; private init; }
     public string ExternalId { get; private init; } = null!;
     public string ExternalProvider { get; private init; } = null!;
+    public string ExternalIssuer { get; private init; } = null!;
     public string? Alias { get; private init; }
     public bool IsComplete { get; private init; }
     public string? UserId { get; private init; }
+    public bool IsCanceled { get; private init; }
+    public string? CancellationReason { get; private init; }
     
     public UserOnboardingState()
     {
@@ -23,6 +26,7 @@ public record UserOnboardingState
         On<UserOnboardingDomainEvents.V1.UserEmailVerified>(UserEmailVerified);
         On<UserOnboardingDomainEvents.V1.UserAliasChosen>(UserAliasChosen);
         On<UserOnboardingDomainEvents.V1.UserOnboardingCompleted>(UserOnboardingCompleted);
+        On<UserOnboardingDomainEvents.V1.UserOnboardingCanceled>(UserOnboardingCanceled);
     }
 
     private static UserOnboardingState Initiated(
@@ -44,7 +48,8 @@ public record UserOnboardingState
         return state with
         {
             ExternalId = domainEvent.Id,
-            ExternalProvider = domainEvent.Provider
+            ExternalProvider = domainEvent.Provider,
+            ExternalIssuer = domainEvent.Issuer
         };
     }
     
@@ -76,6 +81,17 @@ public record UserOnboardingState
         {
             IsComplete = true,
             UserId = domainEvent.UserId
+        };
+    }
+
+    private static UserOnboardingState UserOnboardingCanceled(
+        UserOnboardingState state,
+        UserOnboardingDomainEvents.V1.UserOnboardingCanceled domainEvent)
+    {
+        return state with
+        {
+            IsCanceled = true,
+            CancellationReason = domainEvent.Reason
         };
     }
 }

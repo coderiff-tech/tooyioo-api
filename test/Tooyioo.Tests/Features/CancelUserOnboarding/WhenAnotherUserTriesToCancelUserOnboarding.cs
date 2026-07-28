@@ -5,12 +5,12 @@ using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Features.CompleteUserOnboarding.Contracts;
+using Tooyioo.UserOnboarding.Features.CancelUserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-namespace Tooyioo.Tests.Features.CompleteUserOnboarding;
+namespace Tooyioo.Tests.Features.CancelUserOnboarding;
 
-public sealed class WhenAnotherUserTriesToCompleteUserOnboarding
+public sealed class WhenAnotherUserTriesToCancelUserOnboarding
     : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
@@ -27,20 +27,19 @@ public sealed class WhenAnotherUserTriesToCompleteUserOnboarding
         _ownerSubject = "owner-google-sub-123";
         _anotherSubject = "another-google-sub-456";
 
-        await GivenUserOnboarding(_ownerUserOnboardingId, _ownerSubject, "Jane", "Bloggs", "jane.bloggs@test.com");
-        await GivenUserOnboarding(_anotherUserOnboardingId, _anotherSubject, "Other", "User", "other.user@test.com");
+        await GivenUserOnboarding(_ownerUserOnboardingId, _ownerSubject);
+        await GivenUserOnboarding(_anotherUserOnboardingId, _anotherSubject);
     }
 
     protected override async Task When()
     {
         var anotherUserToken = Host.GoogleIdentityToken()
             .WithSubject(_anotherSubject)
-            .WithPersonalDetails("Other", "User", "other.user@test.com", true)
             .Build();
 
         _response = await Host.HttpClient.PostJson(
-            $"/user-onboarding/{_ownerUserOnboardingId.Value}/complete",
-            new CompleteUserOnboardingRequest { TermsAndConditionsVersion = "v1" },
+            $"/user-onboarding/{_ownerUserOnboardingId.Value}/cancel",
+            new CancelUserOnboardingRequest { Reason = "Changed mind" },
             anotherUserToken);
 
         _body = await _response.ReadJson<HttpProblemDetails>();
@@ -54,36 +53,15 @@ public sealed class WhenAnotherUserTriesToCompleteUserOnboarding
     public async Task Then_response_title_is_forbidden()
         => await Assert.That(_body.Title).IsEqualTo("forbidden");
 
-    [Test]
-    public async Task Then_response_explains_user_is_not_allowed()
-        => await Assert.That(_body.Detail).IsEqualTo("You are not allowed to access this resource.");
-
-    private async Task GivenUserOnboarding(
-        UserOnboardingId userOnboardingId,
-        string subject,
-        string name,
-        string lastName,
-        string email)
+    private async Task GivenUserOnboarding(UserOnboardingId userOnboardingId, string subject)
     {
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             userOnboardingId,
-            DomainEvent.UserOnboardingInitiated()
-                .WithName(name)
-                .WithLastName(lastName)
-                .WithEmail(email)
-                .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
-                .WithSubject(subject)
-                .Build(),
-            DomainEvent.UserEmailVerified().Build(),
-            DomainEvent.UserAliasChosen()
-                .WithAlias("jane-bloggs")
-                .Build());
+            DomainEvent.UserOnboardingInitiated().Build(),
+            DomainEvent.UserExternalIdentityAssociated().WithSubject(subject).Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(subject),
-            DomainEvent.UserExternalIdentityClaimed()
-                .WithUserOnboardingId(userOnboardingId)
-                .Build());
+            DomainEvent.UserExternalIdentityClaimed().WithUserOnboardingId(userOnboardingId).Build());
     }
 }

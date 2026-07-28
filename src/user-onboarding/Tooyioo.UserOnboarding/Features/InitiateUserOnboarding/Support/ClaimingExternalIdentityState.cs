@@ -13,6 +13,7 @@ public sealed record ClaimingExternalIdentityState
     public ClaimingExternalIdentityState()
     {
         On<UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed>(Claimed);
+        On<UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityReleased>(Released);
     }
 
     private static ClaimingExternalIdentityState Claimed(
@@ -24,5 +25,14 @@ public sealed record ClaimingExternalIdentityState
             UserOnboardingId = domainEvent.UserOnboardingId
         };
     }
+
+    private static ClaimingExternalIdentityState Released(
+        ClaimingExternalIdentityState state,
+        UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityReleased domainEvent)
+    {
+        return state with
+        {
+            UserOnboardingId = null
+        };
+    }
 }
-  

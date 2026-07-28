@@ -1,5 +1,4 @@
 using Tooyioo.Common;
-using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.UserOnboarding;
 using Tooyioo.UserOnboarding.Contracts;
@@ -23,10 +22,19 @@ public static class DomainEvent
     public static UserOnboardingCompletedBuilder UserOnboardingCompleted()
         => new();
 
+    public static UserOnboardingCanceledBuilder UserOnboardingCanceled()
+        => new();
+
     public static UserExternalIdentityClaimedBuilder UserExternalIdentityClaimed()
         => new();
 
+    public static UserExternalIdentityReleasedBuilder UserExternalIdentityReleased()
+        => new();
+
     public static UserAliasClaimedBuilder UserAliasClaimed()
+        => new();
+
+    public static UserAliasReleasedBuilder UserAliasReleased()
         => new();
 }
 
@@ -133,6 +141,20 @@ public sealed class UserOnboardingCompletedBuilder
         => new(_userId, _termsAndConditionsVersion);
 }
 
+public sealed class UserOnboardingCanceledBuilder
+{
+    private string _reason = "Terms and Conditions rejected";
+
+    public UserOnboardingCanceledBuilder WithReason(string reason)
+    {
+        _reason = reason;
+        return this;
+    }
+
+    public UserOnboardingDomainEvents.V1.UserOnboardingCanceled Build()
+        => new(_reason);
+}
+
 public sealed class UserExternalIdentityClaimedBuilder
 {
     private string _userOnboardingId = 1.ToGuid().ToString();
@@ -153,6 +175,26 @@ public sealed class UserExternalIdentityClaimedBuilder
         => new(_userOnboardingId);
 }
 
+public sealed class UserExternalIdentityReleasedBuilder
+{
+    private string _userOnboardingId = 1.ToGuid().ToString();
+
+    public UserExternalIdentityReleasedBuilder WithUserOnboardingId(string userOnboardingId)
+    {
+        _userOnboardingId = userOnboardingId;
+        return this;
+    }
+
+    public UserExternalIdentityReleasedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
+    {
+        _userOnboardingId = userOnboardingId.Value;
+        return this;
+    }
+
+    public UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityReleased Build()
+        => new(_userOnboardingId);
+}
+
 public sealed class UserAliasClaimedBuilder
 {
     private string _userOnboardingId = 1.ToGuid().ToString();
@@ -170,5 +212,25 @@ public sealed class UserAliasClaimedBuilder
     }
 
     public UserAliasClaimingDomainEvents.V1.UserAliasClaimed Build()
+        => new(_userOnboardingId);
+}
+
+public sealed class UserAliasReleasedBuilder
+{
+    private string _userOnboardingId = 1.ToGuid().ToString();
+
+    public UserAliasReleasedBuilder WithUserOnboardingId(string userOnboardingId)
+    {
+        _userOnboardingId = userOnboardingId;
+        return this;
+    }
+
+    public UserAliasReleasedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
+    {
+        _userOnboardingId = userOnboardingId.Value;
+        return this;
+    }
+
+    public UserAliasClaimingDomainEvents.V1.UserAliasReleased Build()
         => new(_userOnboardingId);
 }

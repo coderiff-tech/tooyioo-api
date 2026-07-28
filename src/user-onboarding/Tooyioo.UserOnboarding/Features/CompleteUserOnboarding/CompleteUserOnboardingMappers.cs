@@ -39,7 +39,11 @@ public static class CompleteUserOnboardingMappers
                     _ => commandHttpResponseGenerator.Conflict(
                         context,
                         "complete_user_onboarding_unexpected_state_conflict",
-                        "Could not complete user onboarding because of an unexpected state conflict, please retry")
+                        "Could not complete user onboarding because of an unexpected state conflict, please retry"),
+                    _ => commandHttpResponseGenerator.Conflict(
+                        context,
+                        "complete_user_onboarding_canceled_conflict",
+                        "Could not complete user onboarding because it has been canceled")
                 ));
     }
 }

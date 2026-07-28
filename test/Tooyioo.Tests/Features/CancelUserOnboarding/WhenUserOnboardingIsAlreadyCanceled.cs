@@ -5,63 +5,53 @@ using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
+using Tooyioo.UserOnboarding.Features.CancelUserOnboarding.Contracts;
 using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Support;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-namespace Tooyioo.Tests.Features.ChooseUserAlias;
+namespace Tooyioo.Tests.Features.CancelUserOnboarding;
 
-public sealed class WhenUserAliasIsAlreadyInUse
+public sealed class WhenUserOnboardingIsAlreadyCanceled
     : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
     private HttpProblemDetails _body = null!;
     private UserOnboardingId _userOnboardingId = null!;
-    private UserOnboardingId _otherUserOnboardingId = null!;
     private string _subject = null!;
-    private string _name = null!;
-    private string _lastName = null!;
-    private string _email = null!;
     private string _alias = null!;
     private EventStreamSnapshot _userOnboardingStreamBeforeWhen = null!;
+    private EventStreamSnapshot _externalIdentityClaimStreamBeforeWhen = null!;
     private EventStreamSnapshot _userAliasClaimStreamBeforeWhen = null!;
 
     protected override async Task Given()
     {
         _userOnboardingId = new UserOnboardingId(1.ToGuid().ToString());
-        _otherUserOnboardingId = new UserOnboardingId(2.ToGuid().ToString());
         _subject = "google-sub-123";
-        _name = "Jane";
-        _lastName = "Bloggs";
-        _email = "jane.bloggs@test.com";
         _alias = "jane-bloggs";
 
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _userOnboardingId,
-            DomainEvent.UserOnboardingInitiated()
-                .WithName(_name)
-                .WithLastName(_lastName)
-                .WithEmail(_email)
-                .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
-                .WithSubject(_subject)
-                .Build(),
-            DomainEvent.UserEmailVerified().Build());
+            DomainEvent.UserOnboardingInitiated().Build(),
+            DomainEvent.UserExternalIdentityAssociated().WithSubject(_subject).Build(),
+            DomainEvent.UserAliasChosen().WithAlias(_alias).Build(),
+            DomainEvent.UserOnboardingCanceled().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            DomainEvent.UserExternalIdentityClaimed()
-                .WithUserOnboardingId(_userOnboardingId)
-                .Build());
+            DomainEvent.UserExternalIdentityClaimed().WithUserOnboardingId(_userOnboardingId).Build(),
+            DomainEvent.UserExternalIdentityReleased().WithUserOnboardingId(_userOnboardingId).Build());
 
         await Host.Given<ClaimingUserAliasState, ClaimingUserAliasId>(
             new ClaimingUserAliasId(_alias),
-            DomainEvent.UserAliasClaimed()
-                .WithUserOnboardingId(_otherUserOnboardingId)
-                .Build());
+            DomainEvent.UserAliasClaimed().WithUserOnboardingId(_userOnboardingId).Build(),
+            DomainEvent.UserAliasReleased().WithUserOnboardingId(_userOnboardingId).Build());
 
         _userOnboardingStreamBeforeWhen = await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
+            .CaptureSnapshot();
+
+        _externalIdentityClaimStreamBeforeWhen = await Host.Events
+            .Stream<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(new ClaimingExternalIdentityId(_subject))
             .CaptureSnapshot();
 
         _userAliasClaimStreamBeforeWhen = await Host.Events
@@ -73,30 +63,35 @@ public sealed class WhenUserAliasIsAlreadyInUse
     {
         var token = Host.GoogleIdentityToken()
             .WithSubject(_subject)
-            .WithPersonalDetails(_name, _lastName, _email, true)
             .Build();
 
         _response = await Host.HttpClient.PostJson(
-            $"/user-onboarding/{_userOnboardingId.Value}/choose-alias",
-            new ChooseUserAliasRequest { Alias = _alias },
+            $"/user-onboarding/{_userOnboardingId.Value}/cancel",
+            new CancelUserOnboardingRequest { Reason = "Retry" },
             token);
 
         _body = await _response.ReadJson<HttpProblemDetails>();
     }
 
     [Test]
-    public async Task Then_response_is_bad_request()
-        => await Assert.That(_response.StatusCode).IsEqualTo(HttpStatusCode.BadRequest);
+    public async Task Then_response_is_forbidden()
+        => await Assert.That(_response.StatusCode).IsEqualTo(HttpStatusCode.Forbidden);
 
     [Test]
-    public async Task Then_response_explains_alias_is_already_in_use()
-        => await Assert.That(_body.Title).IsEqualTo("choose_user_alias_already_in_use");
+    public async Task Then_response_title_is_forbidden()
+        => await Assert.That(_body.Title).IsEqualTo("forbidden");
 
     [Test]
     public async Task Then_user_onboarding_stream_has_no_new_events()
         => await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
             .ShouldHaveNoChangesSince(_userOnboardingStreamBeforeWhen);
+
+    [Test]
+    public async Task Then_external_identity_claim_stream_has_no_new_events()
+        => await Host.Events
+            .Stream<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(new ClaimingExternalIdentityId(_subject))
+            .ShouldHaveNoChangesSince(_externalIdentityClaimStreamBeforeWhen);
 
     [Test]
     public async Task Then_user_alias_claim_stream_has_no_new_events()

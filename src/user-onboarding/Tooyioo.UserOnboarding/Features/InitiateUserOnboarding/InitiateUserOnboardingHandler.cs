@@ -104,4 +104,3 @@ public partial class InitiateUserOnboardingCommandErrorResult;
 
 public sealed record InitiateUserOnboardingConcurrencyErrorResult;
 public sealed record InitiateUserOnboardingUnexpectedStateErrorResult;
-

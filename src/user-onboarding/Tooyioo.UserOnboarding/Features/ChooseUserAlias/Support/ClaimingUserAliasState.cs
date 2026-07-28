@@ -13,6 +13,7 @@ internal sealed record ClaimingUserAliasState
     public ClaimingUserAliasState()
     {
         On<UserAliasClaimingDomainEvents.V1.UserAliasClaimed>(Claimed);
+        On<UserAliasClaimingDomainEvents.V1.UserAliasReleased>(Released);
     }
 
     private static ClaimingUserAliasState Claimed(
@@ -24,5 +25,14 @@ internal sealed record ClaimingUserAliasState
             UserOnboardingId = domainEvent.UserOnboardingId
         };
     }
+
+    private static ClaimingUserAliasState Released(
+        ClaimingUserAliasState state,
+        UserAliasClaimingDomainEvents.V1.UserAliasReleased domainEvent)
+    {
+        return state with
+        {
+            UserOnboardingId = null
+        };
+    }
 }
-  

@@ -30,8 +30,7 @@ internal sealed class ExternalIdentityStatusResolver
                 externalIdentity.Id, 
                 cancellationToken);
 
-        var userOnboardingId =  claimingExternalIdentity.State.UserOnboardingId;
-        if (userOnboardingId is not null)
+        if (claimingExternalIdentity.State.UserOnboardingId is { } userOnboardingId)
         {
             var userOnboarding = 
                 await _eventStore.LoadStateOrNew<UserOnboardingState, UserOnboardingId>(

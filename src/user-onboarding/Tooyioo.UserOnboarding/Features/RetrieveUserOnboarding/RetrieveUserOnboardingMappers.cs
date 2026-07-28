@@ -35,7 +35,10 @@ public static class RetrieveUserOnboardingMappers
                     CreatedAt = ok.Document.CreatedAt,
                     LastModifiedAt = ok.Document.LastModifiedAt,
                     CompletedAt = ok.Document.CompletedAt,
-                    IsEmailVerified = false
+                    CanceledAt = ok.Document.CanceledAt,
+                    CancellationReason = ok.Document.CancellationReason,
+                    Status = ok.Document.Status,
+                    IsEmailVerified = ok.Document.IsEmailVerified
                 }),
                 notFound => queryHttpResponseGenerator.NotFound(
                     context,

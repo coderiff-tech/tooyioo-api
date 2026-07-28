@@ -19,7 +19,10 @@ public sealed record UserOnboardingDocument
     public bool IsEmailVerified { get; init; }
     public required ExternalIdentityDocument ExternalIdentity { get; init; }
     public string? Alias { get; init; }
+    public required string Status { get; init; }
     public required DateTime? CompletedAt { get; init; }
+    public required DateTime? CanceledAt { get; init; }
+    public required string? CancellationReason { get; init; }
 }
 
 public sealed record ExternalIdentityDocument
