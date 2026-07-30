@@ -25,7 +25,7 @@ public sealed class WhenUserOnboardingDoesNotExist
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            DomainEvent.UserExternalIdentityClaimed()
+            DomainEvent.ExternalIdentityClaimed()
                 .WithUserOnboardingId(_userOnboardingId)
                 .Build());
     }

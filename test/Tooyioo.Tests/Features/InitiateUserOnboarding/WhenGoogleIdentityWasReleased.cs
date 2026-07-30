@@ -26,13 +26,13 @@ public sealed class WhenGoogleIdentityWasReleased
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _canceledUserOnboardingId,
             DomainEvent.UserOnboardingInitiated().Build(),
-            DomainEvent.UserExternalIdentityAssociated().WithSubject(_subject).Build(),
+            DomainEvent.UserOnboardingExternalIdentityAssociated().WithSubject(_subject).Build(),
             DomainEvent.UserOnboardingCanceled().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            DomainEvent.UserExternalIdentityClaimed().WithUserOnboardingId(_canceledUserOnboardingId).Build(),
-            DomainEvent.UserExternalIdentityReleased().WithUserOnboardingId(_canceledUserOnboardingId).Build());
+            DomainEvent.ExternalIdentityClaimed().WithUserOnboardingId(_canceledUserOnboardingId).Build(),
+            DomainEvent.ExternalIdentityReleased().WithUserOnboardingId(_canceledUserOnboardingId).Build());
 
         _externalIdentityClaimStreamBeforeWhen = await Host.Events
             .Stream<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(new ClaimingExternalIdentityId(_subject))
@@ -68,5 +68,5 @@ public sealed class WhenGoogleIdentityWasReleased
             .Stream<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(new ClaimingExternalIdentityId(_subject))
             .ShouldAppendExactly(
                 _externalIdentityClaimStreamBeforeWhen,
-                DomainEvent.UserExternalIdentityClaimed().WithUserOnboardingId(_body.UserOnboardingId).Build());
+                DomainEvent.ExternalIdentityClaimed().WithUserOnboardingId(_body.UserOnboardingId).Build());
 }

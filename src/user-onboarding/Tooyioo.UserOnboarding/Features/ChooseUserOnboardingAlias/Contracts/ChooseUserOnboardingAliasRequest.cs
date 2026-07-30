@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Validation;
 
-namespace Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
+namespace Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
 
 /// <summary>
 /// Request payload used to complete the profile
@@ -10,10 +10,10 @@ namespace Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
 #pragma warning disable ASP0029
 [ValidatableType]
 #pragma warning restore ASP0029
-public sealed record ChooseUserAliasRequest
+public sealed record ChooseUserOnboardingAliasRequest
 {
     /// <summary>
-    /// The user alias
+    /// The user onboarding alias
     /// </summary>
     /// <remarks>
     /// It must be globally unique and contain lowercase letters, numbers, dashes, and underscores only, between 4 and 24 characters in length

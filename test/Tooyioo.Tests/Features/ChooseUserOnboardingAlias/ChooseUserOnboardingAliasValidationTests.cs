@@ -5,12 +5,12 @@ using Tooyioo.Tests.Support.Events;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-namespace Tooyioo.Tests.Features.ChooseUserAlias;
+namespace Tooyioo.Tests.Features.ChooseUserOnboardingAlias;
 
-public sealed class ChooseUserAliasValidationTests
+public sealed class ChooseUserOnboardingAliasValidationTests
 {
     [Test]
     [Arguments("too-short", "abc", "alias_too_short")]
@@ -38,14 +38,14 @@ public sealed class ChooseUserAliasValidationTests
                 .WithLastName(lastName)
                 .WithEmail(email)
                 .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
+            DomainEvent.UserOnboardingExternalIdentityAssociated()
                 .WithSubject(subject)
                 .Build(),
-            DomainEvent.UserEmailVerified().Build());
+            DomainEvent.UserOnboardingEmailVerified().Build());
 
         await host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(subject),
-            DomainEvent.UserExternalIdentityClaimed()
+            DomainEvent.ExternalIdentityClaimed()
                 .WithUserOnboardingId(userOnboardingId)
                 .Build());
 
@@ -60,7 +60,7 @@ public sealed class ChooseUserAliasValidationTests
 
         object request = alias is null
             ? new { }
-            : new ChooseUserAliasRequest { Alias = alias };
+            : new ChooseUserOnboardingAliasRequest { Alias = alias };
 
         using var response = await host.HttpClient.PostJson(
             $"/user-onboarding/{userOnboardingId.Value}/choose-alias",

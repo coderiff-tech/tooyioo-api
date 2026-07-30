@@ -28,11 +28,11 @@ public sealed class CancelUserOnboardingValidationTests
         await host.Given<UserOnboardingState, UserOnboardingId>(
             userOnboardingId,
             DomainEvent.UserOnboardingInitiated().Build(),
-            DomainEvent.UserExternalIdentityAssociated().WithSubject(subject).Build());
+            DomainEvent.UserOnboardingExternalIdentityAssociated().WithSubject(subject).Build());
 
         await host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(subject),
-            DomainEvent.UserExternalIdentityClaimed().WithUserOnboardingId(userOnboardingId).Build());
+            DomainEvent.ExternalIdentityClaimed().WithUserOnboardingId(userOnboardingId).Build());
 
         var userOnboardingStreamBeforeWhen = await host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(userOnboardingId)

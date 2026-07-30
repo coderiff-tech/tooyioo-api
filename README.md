@@ -3,7 +3,7 @@ Event Source application with vertical slice approach
 
 ## Pre-requirements
 - .NET 10 SDK
-- Docker
+- Podman 6.0.2+
 
 ## Getting Started
 Run the Aspire's AppHost application, which will start the KurrentDB and MongoDB containers and will also initiate the Api main project. 

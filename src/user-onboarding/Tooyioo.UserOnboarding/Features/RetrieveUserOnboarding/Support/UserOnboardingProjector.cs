@@ -1,4 +1,4 @@
-﻿using Eventuous.Projections.MongoDB;
+using Eventuous.Projections.MongoDB;
 using Eventuous.Subscriptions.Context;
 using MongoDB.Driver;
 using Tooyioo.UserOnboarding.Contracts;
@@ -12,9 +12,9 @@ public sealed class UserOnboardingProjector
         : base(database)
     {
         On<UserOnboardingDomainEvents.V1.UserOnboardingInitiated>(stream => stream.GetId(), Handle);
-        On<UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated>(stream => stream.GetId(), Handle);
-        On<UserOnboardingDomainEvents.V1.UserEmailVerified>(stream => stream.GetId(), Handle);
-        On<UserOnboardingDomainEvents.V1.UserAliasChosen>(stream => stream.GetId(), Handle);
+        On<UserOnboardingDomainEvents.V1.UserOnboardingExternalIdentityAssociated>(stream => stream.GetId(), Handle);
+        On<UserOnboardingDomainEvents.V1.UserOnboardingEmailVerified>(stream => stream.GetId(), Handle);
+        On<UserOnboardingDomainEvents.V1.UserOnboardingAliasChosen>(stream => stream.GetId(), Handle);
         On<UserOnboardingDomainEvents.V1.UserOnboardingCompleted>(stream => stream.GetId(), Handle);
         On<UserOnboardingDomainEvents.V1.UserOnboardingCanceled>(stream => stream.GetId(), Handle);
     }
@@ -42,7 +42,7 @@ public sealed class UserOnboardingProjector
     }
 
     private static UpdateDefinition<UserOnboardingDocument> Handle(
-        IMessageConsumeContext<UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated> ctx,
+        IMessageConsumeContext<UserOnboardingDomainEvents.V1.UserOnboardingExternalIdentityAssociated> ctx,
         UpdateDefinitionBuilder<UserOnboardingDocument> update)
     {
         var evt = ctx.Message;
@@ -61,7 +61,7 @@ public sealed class UserOnboardingProjector
     }
     
     private static UpdateDefinition<UserOnboardingDocument> Handle(
-        IMessageConsumeContext<UserOnboardingDomainEvents.V1.UserEmailVerified> ctx, 
+        IMessageConsumeContext<UserOnboardingDomainEvents.V1.UserOnboardingEmailVerified> ctx, 
         UpdateDefinitionBuilder<UserOnboardingDocument> update)
     {
         var happenedAtUtc = DateTime.SpecifyKind(ctx.Created, DateTimeKind.Utc);
@@ -74,7 +74,7 @@ public sealed class UserOnboardingProjector
     }
     
     private static UpdateDefinition<UserOnboardingDocument> Handle(
-        IMessageConsumeContext<UserOnboardingDomainEvents.V1.UserAliasChosen> ctx, 
+        IMessageConsumeContext<UserOnboardingDomainEvents.V1.UserOnboardingAliasChosen> ctx, 
         UpdateDefinitionBuilder<UserOnboardingDocument> update)
     {
         var evt = ctx.Message;

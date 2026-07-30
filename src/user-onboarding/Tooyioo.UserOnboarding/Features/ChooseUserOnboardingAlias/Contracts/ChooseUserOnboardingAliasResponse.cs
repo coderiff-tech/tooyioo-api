@@ -1,10 +1,10 @@
-﻿namespace Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
+namespace Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
 
 /// <summary>
-/// Response returned after successfully choosing user alias
+/// Response returned after successfully choosing user onboarding alias
 /// </summary>
 /// <example>{"id": "00000000-0000-0000-0000-000000000001"}</example>
-public sealed record ChooseUserAliasResponse
+public sealed record ChooseUserOnboardingAliasResponse
 {
     /// <summary>
     /// The unique identifier of the user onboarding

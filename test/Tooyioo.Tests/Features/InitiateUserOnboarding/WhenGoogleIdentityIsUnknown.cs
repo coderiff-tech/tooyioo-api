@@ -59,17 +59,17 @@ public sealed class WhenGoogleIdentityIsUnknown
                     .WithLastName(_lastName)
                     .WithEmail(_email)
                     .Build(),
-                DomainEvent.UserExternalIdentityAssociated()
+                DomainEvent.UserOnboardingExternalIdentityAssociated()
                     .WithSubject(_subject)
                     .Build(),
-                DomainEvent.UserEmailVerified().Build());
+                DomainEvent.UserOnboardingEmailVerified().Build());
 
     [Test]
     public async Task Then_external_identity_is_claimed()
         => await Host.Events
             .Stream<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(new ClaimingExternalIdentityId(_subject))
             .ShouldContainExactly(
-                DomainEvent.UserExternalIdentityClaimed()
+                DomainEvent.ExternalIdentityClaimed()
                     .WithUserOnboardingId(_body.UserOnboardingId)
                     .Build());
 }

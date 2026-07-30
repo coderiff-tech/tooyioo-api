@@ -5,13 +5,13 @@ using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Support;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Support;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-namespace Tooyioo.Tests.Features.ChooseUserAlias;
+namespace Tooyioo.Tests.Features.ChooseUserOnboardingAlias;
 
-public sealed class WhenUserAliasIsAlreadyInUse
+public sealed class WhenUserOnboardingAliasIsAlreadyInUse
     : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
@@ -24,7 +24,7 @@ public sealed class WhenUserAliasIsAlreadyInUse
     private string _email = null!;
     private string _alias = null!;
     private EventStreamSnapshot _userOnboardingStreamBeforeWhen = null!;
-    private EventStreamSnapshot _userAliasClaimStreamBeforeWhen = null!;
+    private EventStreamSnapshot _aliasClaimStreamBeforeWhen = null!;
 
     protected override async Task Given()
     {
@@ -43,20 +43,20 @@ public sealed class WhenUserAliasIsAlreadyInUse
                 .WithLastName(_lastName)
                 .WithEmail(_email)
                 .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
+            DomainEvent.UserOnboardingExternalIdentityAssociated()
                 .WithSubject(_subject)
                 .Build(),
-            DomainEvent.UserEmailVerified().Build());
+            DomainEvent.UserOnboardingEmailVerified().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            DomainEvent.UserExternalIdentityClaimed()
+            DomainEvent.ExternalIdentityClaimed()
                 .WithUserOnboardingId(_userOnboardingId)
                 .Build());
 
-        await Host.Given<ClaimingUserAliasState, ClaimingUserAliasId>(
-            new ClaimingUserAliasId(_alias),
-            DomainEvent.UserAliasClaimed()
+        await Host.Given<ClaimingAliasState, ClaimingAliasId>(
+            new ClaimingAliasId(_alias),
+            DomainEvent.AliasClaimed()
                 .WithUserOnboardingId(_otherUserOnboardingId)
                 .Build());
 
@@ -64,8 +64,8 @@ public sealed class WhenUserAliasIsAlreadyInUse
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
             .CaptureSnapshot();
 
-        _userAliasClaimStreamBeforeWhen = await Host.Events
-            .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
+        _aliasClaimStreamBeforeWhen = await Host.Events
+            .Stream<ClaimingAliasState, ClaimingAliasId>(new ClaimingAliasId(_alias))
             .CaptureSnapshot();
     }
 
@@ -78,7 +78,7 @@ public sealed class WhenUserAliasIsAlreadyInUse
 
         _response = await Host.HttpClient.PostJson(
             $"/user-onboarding/{_userOnboardingId.Value}/choose-alias",
-            new ChooseUserAliasRequest { Alias = _alias },
+            new ChooseUserOnboardingAliasRequest { Alias = _alias },
             token);
 
         _body = await _response.ReadJson<HttpProblemDetails>();
@@ -90,7 +90,7 @@ public sealed class WhenUserAliasIsAlreadyInUse
 
     [Test]
     public async Task Then_response_explains_alias_is_already_in_use()
-        => await Assert.That(_body.Title).IsEqualTo("choose_user_alias_already_in_use");
+        => await Assert.That(_body.Title).IsEqualTo("choose_user_onboarding_alias_already_in_use");
 
     [Test]
     public async Task Then_user_onboarding_stream_has_no_new_events()
@@ -101,6 +101,6 @@ public sealed class WhenUserAliasIsAlreadyInUse
     [Test]
     public async Task Then_user_alias_claim_stream_has_no_new_events()
         => await Host.Events
-            .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
-            .ShouldHaveNoChangesSince(_userAliasClaimStreamBeforeWhen);
+            .Stream<ClaimingAliasState, ClaimingAliasId>(new ClaimingAliasId(_alias))
+            .ShouldHaveNoChangesSince(_aliasClaimStreamBeforeWhen);
 }

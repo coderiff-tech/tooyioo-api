@@ -5,10 +5,10 @@ using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-namespace Tooyioo.Tests.Features.ChooseUserAlias;
+namespace Tooyioo.Tests.Features.ChooseUserOnboardingAlias;
 
 public sealed class WhenAnotherUserTriesToChooseAliasForUserOnboarding
     : CommandVerticalSliceTest
@@ -36,14 +36,14 @@ public sealed class WhenAnotherUserTriesToChooseAliasForUserOnboarding
                 .WithLastName("Bloggs")
                 .WithEmail("jane.bloggs@test.com")
                 .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
+            DomainEvent.UserOnboardingExternalIdentityAssociated()
                 .WithSubject(_ownerSubject)
                 .Build(),
-            DomainEvent.UserEmailVerified().Build());
+            DomainEvent.UserOnboardingEmailVerified().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_ownerSubject),
-            DomainEvent.UserExternalIdentityClaimed()
+            DomainEvent.ExternalIdentityClaimed()
                 .WithUserOnboardingId(_ownerUserOnboardingId)
                 .Build());
 
@@ -54,14 +54,14 @@ public sealed class WhenAnotherUserTriesToChooseAliasForUserOnboarding
                 .WithLastName("User")
                 .WithEmail("other.user@test.com")
                 .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
+            DomainEvent.UserOnboardingExternalIdentityAssociated()
                 .WithSubject(_anotherSubject)
                 .Build(),
-            DomainEvent.UserEmailVerified().Build());
+            DomainEvent.UserOnboardingEmailVerified().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_anotherSubject),
-            DomainEvent.UserExternalIdentityClaimed()
+            DomainEvent.ExternalIdentityClaimed()
                 .WithUserOnboardingId(_anotherUserOnboardingId)
                 .Build());
     }
@@ -75,7 +75,7 @@ public sealed class WhenAnotherUserTriesToChooseAliasForUserOnboarding
 
         _response = await Host.HttpClient.PostJson(
             $"/user-onboarding/{_ownerUserOnboardingId.Value}/choose-alias",
-            new ChooseUserAliasRequest { Alias = _alias },
+            new ChooseUserOnboardingAliasRequest { Alias = _alias },
             anotherUserToken);
 
         _body = await _response.ReadJson<HttpProblemDetails>();

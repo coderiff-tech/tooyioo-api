@@ -34,12 +34,12 @@ When the external identity is unknown, the slice writes two process streams atom
 The user onboarding stream receives:
 
 - `UserOnboardingInitiated`
-- `UserExternalIdentityAssociated`
-- `UserEmailVerified`, when `email_verified` is true
+- `UserOnboardingExternalIdentityAssociated`
+- `UserOnboardingEmailVerified`, when `email_verified` is true
 
 The external identity claiming stream receives:
 
-- `UserExternalIdentityClaimed`
+- `ExternalIdentityClaimed`
 
 ## Idempotency
 
@@ -69,5 +69,5 @@ The handler writes both streams with expected stream versions. If another reques
 
 ## Open questions
 
-- Whether unverified emails should still initiate onboarding without `UserEmailVerified`.
+- Whether unverified emails should still initiate onboarding without `UserOnboardingEmailVerified`.
 - Whether provider-specific claim normalization should stay in the slice or move behind provider-specific infrastructure if more identity providers are added.

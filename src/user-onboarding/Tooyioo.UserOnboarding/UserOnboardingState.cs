@@ -1,4 +1,4 @@
-﻿using Eventuous;
+using Eventuous;
 using Tooyioo.UserOnboarding.Contracts;
 
 namespace Tooyioo.UserOnboarding;
@@ -22,9 +22,9 @@ public record UserOnboardingState
     public UserOnboardingState()
     {
         On<UserOnboardingDomainEvents.V1.UserOnboardingInitiated>(Initiated);
-        On<UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated>(UserExternalIdAssociated);
-        On<UserOnboardingDomainEvents.V1.UserEmailVerified>(UserEmailVerified);
-        On<UserOnboardingDomainEvents.V1.UserAliasChosen>(UserAliasChosen);
+        On<UserOnboardingDomainEvents.V1.UserOnboardingExternalIdentityAssociated>(UserExternalIdAssociated);
+        On<UserOnboardingDomainEvents.V1.UserOnboardingEmailVerified>(UserOnboardingEmailVerified);
+        On<UserOnboardingDomainEvents.V1.UserOnboardingAliasChosen>(UserOnboardingAliasChosen);
         On<UserOnboardingDomainEvents.V1.UserOnboardingCompleted>(UserOnboardingCompleted);
         On<UserOnboardingDomainEvents.V1.UserOnboardingCanceled>(UserOnboardingCanceled);
     }
@@ -43,7 +43,7 @@ public record UserOnboardingState
     
     private static UserOnboardingState UserExternalIdAssociated(
         UserOnboardingState state, 
-        UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated domainEvent)
+        UserOnboardingDomainEvents.V1.UserOnboardingExternalIdentityAssociated domainEvent)
     {
         return state with
         {
@@ -53,9 +53,9 @@ public record UserOnboardingState
         };
     }
     
-    private static UserOnboardingState UserEmailVerified(
+    private static UserOnboardingState UserOnboardingEmailVerified(
         UserOnboardingState state, 
-        UserOnboardingDomainEvents.V1.UserEmailVerified domainEvent)
+        UserOnboardingDomainEvents.V1.UserOnboardingEmailVerified domainEvent)
     {
         return state with
         {
@@ -63,9 +63,9 @@ public record UserOnboardingState
         };
     }
     
-    private static UserOnboardingState UserAliasChosen(
+    private static UserOnboardingState UserOnboardingAliasChosen(
         UserOnboardingState state, 
-        UserOnboardingDomainEvents.V1.UserAliasChosen domainEvent)
+        UserOnboardingDomainEvents.V1.UserOnboardingAliasChosen domainEvent)
     {
         return state with
         {

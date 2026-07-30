@@ -2,18 +2,18 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Slicent.Application.Authorization;
 using Tooyioo.Common;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
 
 // ReSharper disable ClassNeverInstantiated.Global
 
-namespace Tooyioo.UserOnboarding.Features.ChooseUserAlias;
+namespace Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias;
 
-public sealed class ChooseUserAliasAuthorizer
-    : IRouteAuthorizer<ChooseUserAliasRoute>
+public sealed class ChooseUserOnboardingAliasAuthorizer
+    : IRouteAuthorizer<ChooseUserOnboardingAliasRoute>
 {
     public Task<bool> Authorize(
         ClaimsPrincipal claimsPrincipal,
-        ChooseUserAliasRoute route,
+        ChooseUserOnboardingAliasRoute route,
         HttpContext http,
         CancellationToken cancellationToken = default)
     {

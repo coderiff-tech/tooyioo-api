@@ -4,17 +4,17 @@ using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Support;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Support;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-namespace Tooyioo.Tests.Features.ChooseUserAlias;
+namespace Tooyioo.Tests.Features.ChooseUserOnboardingAlias;
 
-public sealed class WhenUserAliasIsAvailable
+public sealed class WhenUserOnboardingAliasIsAvailable
     : CommandVerticalSliceTest
 {
     private HttpResponseMessage _response = null!;
-    private ChooseUserAliasResponse _body = null!;
+    private ChooseUserOnboardingAliasResponse _body = null!;
     private UserOnboardingId _userOnboardingId = null!;
     private string _subject = null!;
     private string _name = null!;
@@ -22,7 +22,7 @@ public sealed class WhenUserAliasIsAvailable
     private string _email = null!;
     private string _alias = null!;
     private EventStreamSnapshot _userOnboardingStreamBeforeWhen = null!;
-    private EventStreamSnapshot _userAliasClaimStreamBeforeWhen = null!;
+    private EventStreamSnapshot _aliasClaimStreamBeforeWhen = null!;
 
     protected override async Task Given()
     {
@@ -40,14 +40,14 @@ public sealed class WhenUserAliasIsAvailable
                 .WithLastName(_lastName)
                 .WithEmail(_email)
                 .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
+            DomainEvent.UserOnboardingExternalIdentityAssociated()
                 .WithSubject(_subject)
                 .Build(),
-            DomainEvent.UserEmailVerified().Build());
+            DomainEvent.UserOnboardingEmailVerified().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            DomainEvent.UserExternalIdentityClaimed()
+            DomainEvent.ExternalIdentityClaimed()
                 .WithUserOnboardingId(_userOnboardingId)
                 .Build());
 
@@ -55,8 +55,8 @@ public sealed class WhenUserAliasIsAvailable
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
             .CaptureSnapshot();
 
-        _userAliasClaimStreamBeforeWhen = await Host.Events
-            .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
+        _aliasClaimStreamBeforeWhen = await Host.Events
+            .Stream<ClaimingAliasState, ClaimingAliasId>(new ClaimingAliasId(_alias))
             .CaptureSnapshot();
     }
 
@@ -69,10 +69,10 @@ public sealed class WhenUserAliasIsAvailable
 
         _response = await Host.HttpClient.PostJson(
             $"/user-onboarding/{_userOnboardingId.Value}/choose-alias",
-            new ChooseUserAliasRequest { Alias = _alias },
+            new ChooseUserOnboardingAliasRequest { Alias = _alias },
             token);
 
-        _body = await _response.ReadJson<ChooseUserAliasResponse>();
+        _body = await _response.ReadJson<ChooseUserOnboardingAliasResponse>();
     }
 
     [Test]
@@ -89,17 +89,17 @@ public sealed class WhenUserAliasIsAvailable
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
             .ShouldAppendExactly(
                 _userOnboardingStreamBeforeWhen,
-                DomainEvent.UserAliasChosen()
+                DomainEvent.UserOnboardingAliasChosen()
                     .WithAlias(_alias)
                     .Build());
 
     [Test]
     public async Task Then_user_alias_is_claimed()
         => await Host.Events
-            .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
+            .Stream<ClaimingAliasState, ClaimingAliasId>(new ClaimingAliasId(_alias))
             .ShouldAppendExactly(
-                _userAliasClaimStreamBeforeWhen,
-                DomainEvent.UserAliasClaimed()
+                _aliasClaimStreamBeforeWhen,
+                DomainEvent.AliasClaimed()
                     .WithUserOnboardingId(_userOnboardingId)
                     .Build());
 }

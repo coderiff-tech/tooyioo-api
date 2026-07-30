@@ -5,11 +5,11 @@ using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.Tests.Support.Http;
 using Tooyioo.Tests.Support.VerticalSlices;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Support;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Support;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
-namespace Tooyioo.Tests.Features.ChooseUserAlias;
+namespace Tooyioo.Tests.Features.ChooseUserOnboardingAlias;
 
 public sealed class WhenCanceledUserOnboardingChoosesAlias
     : CommandVerticalSliceTest
@@ -20,7 +20,7 @@ public sealed class WhenCanceledUserOnboardingChoosesAlias
     private string _subject = null!;
     private string _alias = null!;
     private EventStreamSnapshot _userOnboardingStreamBeforeWhen = null!;
-    private EventStreamSnapshot _userAliasClaimStreamBeforeWhen = null!;
+    private EventStreamSnapshot _aliasClaimStreamBeforeWhen = null!;
 
     protected override async Task Given()
     {
@@ -31,20 +31,20 @@ public sealed class WhenCanceledUserOnboardingChoosesAlias
         await Host.Given<UserOnboardingState, UserOnboardingId>(
             _userOnboardingId,
             DomainEvent.UserOnboardingInitiated().Build(),
-            DomainEvent.UserExternalIdentityAssociated().WithSubject(_subject).Build(),
+            DomainEvent.UserOnboardingExternalIdentityAssociated().WithSubject(_subject).Build(),
             DomainEvent.UserOnboardingCanceled().Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            DomainEvent.UserExternalIdentityClaimed().WithUserOnboardingId(_userOnboardingId).Build(),
-            DomainEvent.UserExternalIdentityReleased().WithUserOnboardingId(_userOnboardingId).Build());
+            DomainEvent.ExternalIdentityClaimed().WithUserOnboardingId(_userOnboardingId).Build(),
+            DomainEvent.ExternalIdentityReleased().WithUserOnboardingId(_userOnboardingId).Build());
 
         _userOnboardingStreamBeforeWhen = await Host.Events
             .Stream<UserOnboardingState, UserOnboardingId>(_userOnboardingId)
             .CaptureSnapshot();
 
-        _userAliasClaimStreamBeforeWhen = await Host.Events
-            .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
+        _aliasClaimStreamBeforeWhen = await Host.Events
+            .Stream<ClaimingAliasState, ClaimingAliasId>(new ClaimingAliasId(_alias))
             .CaptureSnapshot();
     }
 
@@ -56,7 +56,7 @@ public sealed class WhenCanceledUserOnboardingChoosesAlias
 
         _response = await Host.HttpClient.PostJson(
             $"/user-onboarding/{_userOnboardingId.Value}/choose-alias",
-            new ChooseUserAliasRequest { Alias = _alias },
+            new ChooseUserOnboardingAliasRequest { Alias = _alias },
             token);
 
         _body = await _response.ReadJson<HttpProblemDetails>();
@@ -79,6 +79,6 @@ public sealed class WhenCanceledUserOnboardingChoosesAlias
     [Test]
     public async Task Then_user_alias_claim_stream_has_no_new_events()
         => await Host.Events
-            .Stream<ClaimingUserAliasState, ClaimingUserAliasId>(new ClaimingUserAliasId(_alias))
-            .ShouldHaveNoChangesSince(_userAliasClaimStreamBeforeWhen);
+            .Stream<ClaimingAliasState, ClaimingAliasId>(new ClaimingAliasId(_alias))
+            .ShouldHaveNoChangesSince(_aliasClaimStreamBeforeWhen);
 }

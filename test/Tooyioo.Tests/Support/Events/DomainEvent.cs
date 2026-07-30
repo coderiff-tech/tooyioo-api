@@ -10,13 +10,13 @@ public static class DomainEvent
     public static UserOnboardingInitiatedBuilder UserOnboardingInitiated()
         => new();
 
-    public static UserExternalIdentityAssociatedBuilder UserExternalIdentityAssociated()
+    public static UserOnboardingExternalIdentityAssociatedBuilder UserOnboardingExternalIdentityAssociated()
         => new();
 
-    public static UserEmailVerifiedBuilder UserEmailVerified()
+    public static UserOnboardingEmailVerifiedBuilder UserOnboardingEmailVerified()
         => new();
 
-    public static UserAliasChosenBuilder UserAliasChosen()
+    public static UserOnboardingAliasChosenBuilder UserOnboardingAliasChosen()
         => new();
 
     public static UserOnboardingCompletedBuilder UserOnboardingCompleted()
@@ -25,16 +25,16 @@ public static class DomainEvent
     public static UserOnboardingCanceledBuilder UserOnboardingCanceled()
         => new();
 
-    public static UserExternalIdentityClaimedBuilder UserExternalIdentityClaimed()
+    public static ExternalIdentityClaimedBuilder ExternalIdentityClaimed()
         => new();
 
-    public static UserExternalIdentityReleasedBuilder UserExternalIdentityReleased()
+    public static ExternalIdentityReleasedBuilder ExternalIdentityReleased()
         => new();
 
-    public static UserAliasClaimedBuilder UserAliasClaimed()
+    public static AliasClaimedBuilder AliasClaimed()
         => new();
 
-    public static UserAliasReleasedBuilder UserAliasReleased()
+    public static AliasReleasedBuilder AliasReleased()
         => new();
 }
 
@@ -66,57 +66,57 @@ public sealed class UserOnboardingInitiatedBuilder
         => new(_name, _lastName, _email);
 }
 
-public sealed class UserExternalIdentityAssociatedBuilder
+public sealed class UserOnboardingExternalIdentityAssociatedBuilder
 {
     private string _id = "google-sub-123";
     private string _provider = nameof(ExternalIdentityProvider.Google);
     private string _issuer = GoogleIdentityTokenBuilder.Issuer;
 
-    public UserExternalIdentityAssociatedBuilder WithId(string id)
+    public UserOnboardingExternalIdentityAssociatedBuilder WithId(string id)
     {
         _id = id;
         return this;
     }
 
-    public UserExternalIdentityAssociatedBuilder WithSubject(string subject)
+    public UserOnboardingExternalIdentityAssociatedBuilder WithSubject(string subject)
     {
         _id = subject;
         return this;
     }
 
-    public UserExternalIdentityAssociatedBuilder WithProvider(string provider)
+    public UserOnboardingExternalIdentityAssociatedBuilder WithProvider(string provider)
     {
         _provider = provider;
         return this;
     }
 
-    public UserExternalIdentityAssociatedBuilder WithIssuer(string issuer)
+    public UserOnboardingExternalIdentityAssociatedBuilder WithIssuer(string issuer)
     {
         _issuer = issuer;
         return this;
     }
 
-    public UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated Build()
+    public UserOnboardingDomainEvents.V1.UserOnboardingExternalIdentityAssociated Build()
         => new(_id, _provider, _issuer);
 }
 
-public sealed class UserEmailVerifiedBuilder
+public sealed class UserOnboardingEmailVerifiedBuilder
 {
-    public UserOnboardingDomainEvents.V1.UserEmailVerified Build()
+    public UserOnboardingDomainEvents.V1.UserOnboardingEmailVerified Build()
         => new();
 }
 
-public sealed class UserAliasChosenBuilder
+public sealed class UserOnboardingAliasChosenBuilder
 {
     private string _alias = "jane-bloggs";
 
-    public UserAliasChosenBuilder WithAlias(string alias)
+    public UserOnboardingAliasChosenBuilder WithAlias(string alias)
     {
         _alias = alias;
         return this;
     }
 
-    public UserOnboardingDomainEvents.V1.UserAliasChosen Build()
+    public UserOnboardingDomainEvents.V1.UserOnboardingAliasChosen Build()
         => new(_alias);
 }
 
@@ -155,82 +155,82 @@ public sealed class UserOnboardingCanceledBuilder
         => new(_reason);
 }
 
-public sealed class UserExternalIdentityClaimedBuilder
+public sealed class ExternalIdentityClaimedBuilder
 {
     private string _userOnboardingId = 1.ToGuid().ToString();
 
-    public UserExternalIdentityClaimedBuilder WithUserOnboardingId(string userOnboardingId)
+    public ExternalIdentityClaimedBuilder WithUserOnboardingId(string userOnboardingId)
     {
         _userOnboardingId = userOnboardingId;
         return this;
     }
 
-    public UserExternalIdentityClaimedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
+    public ExternalIdentityClaimedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
     {
         _userOnboardingId = userOnboardingId.Value;
         return this;
     }
 
-    public UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed Build()
+    public ExternalIdentityClaimingDomainEvents.V1.ExternalIdentityClaimed Build()
         => new(_userOnboardingId);
 }
 
-public sealed class UserExternalIdentityReleasedBuilder
+public sealed class ExternalIdentityReleasedBuilder
 {
     private string _userOnboardingId = 1.ToGuid().ToString();
 
-    public UserExternalIdentityReleasedBuilder WithUserOnboardingId(string userOnboardingId)
+    public ExternalIdentityReleasedBuilder WithUserOnboardingId(string userOnboardingId)
     {
         _userOnboardingId = userOnboardingId;
         return this;
     }
 
-    public UserExternalIdentityReleasedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
+    public ExternalIdentityReleasedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
     {
         _userOnboardingId = userOnboardingId.Value;
         return this;
     }
 
-    public UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityReleased Build()
+    public ExternalIdentityClaimingDomainEvents.V1.ExternalIdentityReleased Build()
         => new(_userOnboardingId);
 }
 
-public sealed class UserAliasClaimedBuilder
+public sealed class AliasClaimedBuilder
 {
     private string _userOnboardingId = 1.ToGuid().ToString();
 
-    public UserAliasClaimedBuilder WithUserOnboardingId(string userOnboardingId)
+    public AliasClaimedBuilder WithUserOnboardingId(string userOnboardingId)
     {
         _userOnboardingId = userOnboardingId;
         return this;
     }
 
-    public UserAliasClaimedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
+    public AliasClaimedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
     {
         _userOnboardingId = userOnboardingId.Value;
         return this;
     }
 
-    public UserAliasClaimingDomainEvents.V1.UserAliasClaimed Build()
+    public AliasClaimingDomainEvents.V1.AliasClaimed Build()
         => new(_userOnboardingId);
 }
 
-public sealed class UserAliasReleasedBuilder
+public sealed class AliasReleasedBuilder
 {
     private string _userOnboardingId = 1.ToGuid().ToString();
 
-    public UserAliasReleasedBuilder WithUserOnboardingId(string userOnboardingId)
+    public AliasReleasedBuilder WithUserOnboardingId(string userOnboardingId)
     {
         _userOnboardingId = userOnboardingId;
         return this;
     }
 
-    public UserAliasReleasedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
+    public AliasReleasedBuilder WithUserOnboardingId(UserOnboardingId userOnboardingId)
     {
         _userOnboardingId = userOnboardingId.Value;
         return this;
     }
 
-    public UserAliasClaimingDomainEvents.V1.UserAliasReleased Build()
+    public AliasClaimingDomainEvents.V1.AliasReleased Build()
         => new(_userOnboardingId);
 }

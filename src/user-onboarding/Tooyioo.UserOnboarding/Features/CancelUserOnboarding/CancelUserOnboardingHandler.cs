@@ -3,7 +3,7 @@ using Funzo;
 using Slicent.Application.Commands;
 using Slicent.EventStore;
 using Tooyioo.UserOnboarding.Contracts;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Support;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Support;
 using Tooyioo.UserOnboarding.Features.InitiateUserOnboarding.Support;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -65,24 +65,24 @@ public sealed class CancelUserOnboardingHandler
                 new UserOnboardingDomainEvents.V1.UserOnboardingCanceled(command.Reason)
             ]),
             externalIdentityClaiming.ToStateStreamChanges([
-                new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityReleased(userOnboardingId)
+                new ExternalIdentityClaimingDomainEvents.V1.ExternalIdentityReleased(userOnboardingId)
             ])
         };
 
         if (userOnboarding.State.Alias is { } alias)
         {
-            var userAliasClaiming =
-                await _eventReader.LoadStateOrNew<ClaimingUserAliasState, ClaimingUserAliasId>(
-                    new ClaimingUserAliasId(alias),
+            var aliasClaiming =
+                await _eventReader.LoadStateOrNew<ClaimingAliasState, ClaimingAliasId>(
+                    new ClaimingAliasId(alias),
                     cancellationToken);
 
-            if (userAliasClaiming.State.UserOnboardingId != userOnboardingId)
+            if (aliasClaiming.State.UserOnboardingId != userOnboardingId)
             {
                 return new CancelUserOnboardingUnexpectedStateErrorResult();
             }
 
-            stateChanges.Add(userAliasClaiming.ToStateStreamChanges([
-                new UserAliasClaimingDomainEvents.V1.UserAliasReleased(userOnboardingId)
+            stateChanges.Add(aliasClaiming.ToStateStreamChanges([
+                new AliasClaimingDomainEvents.V1.AliasReleased(userOnboardingId)
             ]));
         }
 

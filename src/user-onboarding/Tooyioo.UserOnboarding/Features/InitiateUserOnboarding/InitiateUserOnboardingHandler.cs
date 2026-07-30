@@ -1,4 +1,4 @@
-﻿using Eventuous;
+using Eventuous;
 using Funzo;
 using Slicent.Application.Commands;
 using Slicent.EventStore;
@@ -54,18 +54,18 @@ public sealed class InitiateUserOnboardingHandler
         var userOnboardingEvents = new List<object>
         {
             new UserOnboardingDomainEvents.V1.UserOnboardingInitiated(command.Name, command.LastName, command.Email),
-            new UserOnboardingDomainEvents.V1.UserExternalIdentityAssociated(externalIdentity.Id,
+            new UserOnboardingDomainEvents.V1.UserOnboardingExternalIdentityAssociated(externalIdentity.Id,
                 externalIdentity.Provider.ToString(), externalIdentity.Issuer)
         };
 
         if (command.IsEmailConfirmed)
         {
-            userOnboardingEvents.Add(new UserOnboardingDomainEvents.V1.UserEmailVerified());
+            userOnboardingEvents.Add(new UserOnboardingDomainEvents.V1.UserOnboardingEmailVerified());
         }
 
         var claimingExternalIdentityEvents = new object[]
         {
-            new UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed(userOnboardingId)
+            new ExternalIdentityClaimingDomainEvents.V1.ExternalIdentityClaimed(userOnboardingId)
         };
         
         try

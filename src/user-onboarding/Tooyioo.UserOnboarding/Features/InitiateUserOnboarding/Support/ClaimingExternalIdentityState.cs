@@ -1,4 +1,4 @@
-﻿using Eventuous;
+using Eventuous;
 using Tooyioo.UserOnboarding.Contracts;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -12,13 +12,13 @@ public sealed record ClaimingExternalIdentityState
 
     public ClaimingExternalIdentityState()
     {
-        On<UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed>(Claimed);
-        On<UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityReleased>(Released);
+        On<ExternalIdentityClaimingDomainEvents.V1.ExternalIdentityClaimed>(Claimed);
+        On<ExternalIdentityClaimingDomainEvents.V1.ExternalIdentityReleased>(Released);
     }
 
     private static ClaimingExternalIdentityState Claimed(
         ClaimingExternalIdentityState state,
-        UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityClaimed domainEvent)
+        ExternalIdentityClaimingDomainEvents.V1.ExternalIdentityClaimed domainEvent)
     {
         return state with
         {
@@ -28,7 +28,7 @@ public sealed record ClaimingExternalIdentityState
 
     private static ClaimingExternalIdentityState Released(
         ClaimingExternalIdentityState state,
-        UserExternalIdentityClaimingDomainEvents.V1.UserExternalIdentityReleased domainEvent)
+        ExternalIdentityClaimingDomainEvents.V1.ExternalIdentityReleased domainEvent)
     {
         return state with
         {

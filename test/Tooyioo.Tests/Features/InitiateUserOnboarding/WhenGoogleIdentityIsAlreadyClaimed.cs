@@ -37,13 +37,13 @@ public sealed class WhenGoogleIdentityIsAlreadyClaimed
                 .WithLastName(_lastName)
                 .WithEmail(_email)
                 .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
+            DomainEvent.UserOnboardingExternalIdentityAssociated()
                 .WithSubject(_subject)
                 .Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(_subject),
-            DomainEvent.UserExternalIdentityClaimed()
+            DomainEvent.ExternalIdentityClaimed()
                 .WithUserOnboardingId(_existingUserOnboardingId)
                 .Build());
 

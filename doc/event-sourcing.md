@@ -20,7 +20,7 @@ Examples:
 
 - `UserOnboarding`
 - `ClaimingExternalIdentity`
-- `ClaimingUserAlias`
+- `ClaimingAlias`
 - `CampaignConfiguring`
 - `CampaignRunning`
 
@@ -80,9 +80,9 @@ Domain events describe facts that already happened.
 Prefer names such as:
 
 - `UserOnboardingInitiated`
-- `UserExternalIdentityAssociated`
-- `UserEmailVerified`
-- `UserExternalIdentityClaimed`
+- `UserOnboardingExternalIdentityAssociated`
+- `UserOnboardingEmailVerified`
+- `ExternalIdentityClaimed`
 
 Avoid technical or CRUD-style names such as:
 

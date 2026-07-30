@@ -2,11 +2,11 @@ using Tooyioo.Tests.Support;
 using Tooyioo.Tests.Support.Auth;
 using Tooyioo.Tests.Support.Extensions;
 using Tooyioo.UserOnboarding;
-using Tooyioo.UserOnboarding.Features.ChooseUserAlias.Contracts;
+using Tooyioo.UserOnboarding.Features.ChooseUserOnboardingAlias.Contracts;
 
-namespace Tooyioo.Tests.Features.ChooseUserAlias;
+namespace Tooyioo.Tests.Features.ChooseUserOnboardingAlias;
 
-public sealed class ChooseUserAliasAuthenticationTests
+public sealed class ChooseUserOnboardingAliasAuthenticationTests
 {
     [Test]
     [Arguments(TestAuthenticationScenario.MissingToken)]
@@ -23,7 +23,7 @@ public sealed class ChooseUserAliasAuthenticationTests
         var userOnboardingId = new UserOnboardingId(1.ToGuid().ToString());
         using var response = await host.HttpClient.PostJson(
             $"/user-onboarding/{userOnboardingId.Value}/choose-alias",
-            new ChooseUserAliasRequest { Alias = "jane-bloggs" },
+            new ChooseUserOnboardingAliasRequest { Alias = "jane-bloggs" },
             authenticationScenario,
             host);
 

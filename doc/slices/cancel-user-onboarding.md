@@ -4,7 +4,7 @@
 
 Cancel an in-progress user onboarding process.
 
-Cancellation records a terminal onboarding fact and releases the claimed external identity and optional user alias so they can be reused by a later onboarding process.
+Cancellation records a terminal onboarding fact and releases the claimed external identity and optional alias so they can be reused by a later onboarding process.
 
 Completed onboarding cannot be cancelled because the completed process has already created a user.
 
@@ -30,11 +30,11 @@ The user onboarding stream receives:
 
 The external identity claiming stream receives:
 
-- `UserExternalIdentityReleased`
+- `ExternalIdentityReleased`
 
-The user alias claiming stream receives:
+The alias claiming stream receives:
 
-- `UserAliasReleased`
+- `AliasReleased`
 
 When no alias has been chosen, only the user onboarding stream and external identity claiming stream are written.
 

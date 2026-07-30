@@ -72,17 +72,17 @@ public sealed class WhenAnotherUserTriesToCompleteUserOnboarding
                 .WithLastName(lastName)
                 .WithEmail(email)
                 .Build(),
-            DomainEvent.UserExternalIdentityAssociated()
+            DomainEvent.UserOnboardingExternalIdentityAssociated()
                 .WithSubject(subject)
                 .Build(),
-            DomainEvent.UserEmailVerified().Build(),
-            DomainEvent.UserAliasChosen()
+            DomainEvent.UserOnboardingEmailVerified().Build(),
+            DomainEvent.UserOnboardingAliasChosen()
                 .WithAlias("jane-bloggs")
                 .Build());
 
         await Host.Given<ClaimingExternalIdentityState, ClaimingExternalIdentityId>(
             new ClaimingExternalIdentityId(subject),
-            DomainEvent.UserExternalIdentityClaimed()
+            DomainEvent.ExternalIdentityClaimed()
                 .WithUserOnboardingId(userOnboardingId)
                 .Build());
     }

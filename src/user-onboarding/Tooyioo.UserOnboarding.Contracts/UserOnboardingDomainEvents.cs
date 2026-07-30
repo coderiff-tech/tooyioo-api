@@ -1,4 +1,4 @@
-﻿using Eventuous;
+using Eventuous;
 
 namespace Tooyioo.UserOnboarding.Contracts;
 
@@ -11,14 +11,14 @@ public static class UserOnboardingDomainEvents
         [EventType(Prefix + "UserOnboardingInitiated")]
         public record UserOnboardingInitiated(string Name, string LastName, string Email);
 
-        [EventType(Prefix + "UserExternalIdentityAssociated")]
-        public record UserExternalIdentityAssociated(string Id, string Provider, string Issuer);
+        [EventType(Prefix + "UserOnboardingExternalIdentityAssociated")]
+        public record UserOnboardingExternalIdentityAssociated(string Id, string Provider, string Issuer);
 
-        [EventType(Prefix + "UserEmailVerified")]
-        public record UserEmailVerified;
+        [EventType(Prefix + "UserOnboardingEmailVerified")]
+        public record UserOnboardingEmailVerified;
 
-        [EventType(Prefix + "UserAliasChosen")]
-        public record UserAliasChosen(string Alias);
+        [EventType(Prefix + "UserOnboardingAliasChosen")]
+        public record UserOnboardingAliasChosen(string Alias);
 
         [EventType(Prefix + "UserOnboardingCompleted")]
         public record UserOnboardingCompleted(string UserId, string TermsAndConditionsVersion);
