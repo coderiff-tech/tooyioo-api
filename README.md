@@ -3,27 +3,91 @@ Event Source application with vertical slice approach
 
 ## Pre-requirements
 - .NET 10 SDK
-- Podman 6.0.2+
+- Podman 6.1.0+
+- Access to the `tooyioo` project in [Google Cloud Console](https://console.cloud.google.com/)
 
 ## Getting Started
-Run the Aspire's AppHost application, which will start the KurrentDB and MongoDB containers and will also initiate the Api main project. 
-Access `http://localhost:2113` to explore KurrentDB
-Access `http://localhost:27018` to explore MongoDB with Mongo Express
+
+### 1. Configure Google OAuth for Scalar
+The API uses the `tooyioo-web` OAuth client from the `tooyioo` Google Cloud project.
+
+The Google Client ID is already configured in `appsettings.json` and is used by the API to validate Google ID tokens.
+
+Scalar also uses this OAuth client to authenticate with Google when testing the API locally. This requires the OAuth client secret, which must not be committed to source control.
+
+From the `src/Tooyioo.Api` directory, configure the client secret using .NET User Secrets:
+
+```bash
+dotnet user-secrets set "Scalar:GoogleOAuth:ClientSecret" "<google-oauth-client-secret>"
+```
+
+The secret can be obtained from the tooyioo-web OAuth client in Google Cloud Console.
+Verify your local configuration with:
+```bash
+dotnet user-secrets list
+```
+
+The tooyioo-web OAuth client must also contain the following Authorized redirect URI:
+```bash
+http://localhost:8000/scalar/oauth/callback
+```
+
+### 2. Start Podman
+Start the Podman machine:
+```bash
+podman machine start
+```
+
+Verify that Podman is running:
+```bash
+podman info
+```
+
+### 3. Start the application
+Run the Aspire AppHost project.
+Aspire will start:
+- Tooyioo API
+- KurrentDB
+- MongoDB
+- Mongo Express
+
+### 4. Access local services
+Once Aspire has started the application:
+- Scalar API Reference: http://localhost:8000/scalar
+- OpenAPI document: http://localhost:8000/openapi/public.json
+- KurrentDB: http://localhost:2113
+- Mongo Express: http://localhost:27018
+
+### 5. Access local services
+Open:
+```bash
+http://localhost:8000/scalar
+```
+
+Use the authentication controls to sign in with Google.
+Scalar performs the Google OAuth Authorization Code flow using the scopes `openid email profile`
+
+Google returns both an OAuth access token and an OpenID Connect ID token.
+The API authenticates requests using the Google `id_token`, not the OAuth `access_token`.
+Once authenticated, requests made from Scalar to protected endpoints include:
+```bash
+Authorization: Bearer <id_token>
+```
 
 ## Test & Report
-Run
-```
+Run:
+```bash
 dotnet tool restore
 ```
 to restore the reportgenerator tool
 
-Run 
-```
+Run:
+```bash
 dotnet test --coverage --report-trx
 ```
 to execute all tests with coverage and report trx from the slnx.
 
-Run
+Run:
 ```
 dotnet tool run reportgenerator \
   -reports:**/TestResults/*.coverage \
@@ -31,6 +95,28 @@ dotnet tool run reportgenerator \
   -reporttypes:Html
 ```
 to create html report accessible from `report/index.html`.
+
+## Interacting with the API
+
+### Scalar
+
+Scalar is the recommended way to interactively explore and test individual API endpoints during development.
+
+Once the application is running and the Google OAuth secret has been configured as described in **Getting Started**, access Scalar at:
+
+`http://localhost:8000/scalar`
+
+Scalar handles Google authentication and automatically uses the resulting `id_token` as the Bearer token for authenticated requests.
+
+### Bruno
+
+Bruno is recommended for more complex or repeatable scenarios, such as chaining requests or reusing values from previous responses.
+
+Ensure `Use System Browser for OAuth2 Authorization` is enabled under `Preferences > General`.
+
+The collection reads the Google ID token directly from Bruno's OAuth store using:
+
+`{{$oauth2.google-credentials.id_token}}`
 
 ## Gotchas
 
@@ -48,21 +134,3 @@ This is a known limitation of the current Minimal API built-in validation when e
 
 Details and rationale are explained here:
 https://stackoverflow.com/q/79855763/2948212
-
-### Google Project
-Existing project in [Google Cloud Console](https://console.cloud.google.com/) called `tooyioo` that contains all necessary resources to use Google Sign-Up and Google Sign-In.
-Steps are described in [this article](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0).
-The OAuth client is `tooyioo-web`
-
-#### Steps to test
-1. Create a new project in Google Cloud Console if it does not exist. Take note of the clientId and secret.
-2. Ensure the Authorized redirect URIs is set to `https://developers.google.com/oauthplayground`
-3. Open https://developers.google.com/oauthplayground/
-4. On the upper right corner, select the `Use your own OAuth credentials` option and enter your client Id and secret.
-5. Specify scopes openid email profile phone
-6. Click Authorize APIs and then Exchange authorization code for tokens.
-7. View the `id_token` and use it as Bearer token in the Authorization header. We don't need the access token.
-8. Test the refresh token functionality.
-
-For Bruno ensure `Use System Browser for OAuth2 Authorization` is enabled in Preferences > General
-The collection reads the token directly from Bruno's OAuth store with `{{$oauth2.google-credentials.id_token}}`, so a second request is not needed to copy it into a separate variable.

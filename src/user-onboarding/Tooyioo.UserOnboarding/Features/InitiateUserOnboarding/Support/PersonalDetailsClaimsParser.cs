@@ -8,7 +8,7 @@ public static class PersonalDetailsClaimsParser
     public static PersonalDetails Parse(ClaimsPrincipal principal)
         => new(
             GetRequiredClaim(principal, Claims.GivenName),
-            GetRequiredClaim(principal, Claims.FamilyName),
+            GetOptionalClaim(principal, Claims.FamilyName),
             GetRequiredClaim(principal, Claims.Email),
             GetRequiredBooleanClaim(principal, Claims.EmailVerified));
 
@@ -18,6 +18,15 @@ public static class PersonalDetailsClaimsParser
         return claimOption.IsSome(out var value) 
             ? value 
             : throw new InvalidOperationException($"JWT is missing the '{claim}' claim");
+    }
+    
+    private static string GetOptionalClaim(ClaimsPrincipal principal, string claim)
+    {
+        var claimOption = principal.GetClaim(claim);
+
+        return claimOption.IsSome(out var value)
+            ? value
+            : string.Empty;
     }
 
     private static bool GetRequiredBooleanClaim(ClaimsPrincipal principal, string claim)

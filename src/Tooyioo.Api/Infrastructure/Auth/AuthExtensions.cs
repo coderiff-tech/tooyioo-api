@@ -58,10 +58,14 @@ public static class AuthExtensions
 
     private static void ConfigureGoogleJwt(IHostApplicationBuilder builder, JwtBearerOptions options)
     {
+        var clientId =
+            builder.Configuration.GetValue<string>("Google:ClientId")
+            ?? throw new InvalidOperationException("Google:ClientId is not set");
+        
         options.RequireHttpsMetadata = true;
         options.MapInboundClaims = false;
         options.Authority = "https://accounts.google.com";
-        options.Audience = builder.Configuration["Google:ClientId"];
+        options.Audience = clientId;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
