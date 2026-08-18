@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
@@ -23,6 +24,7 @@ public sealed class ChooseUserOnboardingAliasEndpoint
                 ChooseUserOnboardingAliasResponse>(
                 "/user-onboarding/{id:guid}/choose-alias",
                 cfg => cfg
+                    .WithName("Choose User Onboarding Alias")
                     .WithSummary("Chooses user onboarding alias")
                     .WithDescription("Chooses a globally unique alias as part of user onboarding")
                     .WithTags("UserOnboarding"))

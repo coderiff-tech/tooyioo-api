@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
 using Slicent.Application.Authorization;
@@ -21,6 +22,7 @@ public sealed class CompleteUserOnboardingEndpoint
                 CompleteUserOnboardingResponse>(
                 "/user-onboarding/{id:guid}/complete",
                 cfg => cfg
+                    .WithName("Complete User Onboarding")
                     .WithSummary("Completes user onboarding")
                     .WithDescription("Completes user onboarding process")
                     .WithTags("UserOnboarding"))

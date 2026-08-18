@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: https://httpbin.org/status/204
+  url: https://httpbun.com/status/204
   body: none
   auth: oauth2
 }
@@ -23,6 +23,7 @@ auth:oauth2 {
   pkce: false
   credentials_placement: body
   credentials_id: google-credentials
+  token_source: access_token
   token_placement: url
   token_query_key: access_token
   auto_fetch_token: true

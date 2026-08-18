@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
@@ -21,6 +22,7 @@ public sealed class RetrieveUsersEndpoint
                 RetrieveUsersResponse>(
                 "/users",
                 cfg => cfg
+                    .WithName("Retrieve Users")
                     .WithSummary("Retrieves users")
                     .WithDescription("Retrieves paged users filtered by query parameters")
                     .WithTags("User"))

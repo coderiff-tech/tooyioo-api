@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
@@ -22,6 +23,7 @@ public sealed class RetrieveUserEndpoint
                 RetrieveUserResponse>(
                 "/users/{id:guid}",
                 cfg => cfg
+                    .WithName("Retrieve User")
                     .WithSummary("Retrieves a user")
                     .WithDescription("Retrieves a user by its Id")
                     .WithTags("User"))

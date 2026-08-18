@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
@@ -21,6 +22,7 @@ public sealed class RetrieveUserOnboardingEndpoint
                 RetrieveUserOnboardingResponse>(
                 "/user-onboarding/{id:guid}",
                 cfg => cfg
+                    .WithName("Retrieve User Onboarding")
                     .WithSummary("Retrieves a user onboarding")
                     .WithDescription("Retrieves a user onboarding by its Id")
                     .WithTags("UserOnboarding"))

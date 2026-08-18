@@ -20,6 +20,7 @@ public sealed class InitiateUserOnboardingEndpoint
                 "user-onboarding/initiate",
                 cfg
                     => cfg
+                        .WithName("Initiate User Onboarding")
                         .WithSummary("Initiates a user onboarding")
                         .WithDescription("Initiates a user onboarding with the information coming from external Id provider")
                         .WithTags("UserOnboarding"))

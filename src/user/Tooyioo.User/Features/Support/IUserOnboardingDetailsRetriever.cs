@@ -1,7 +1,6 @@
 ﻿using Funzo;
-using Tooyioo.User.Features.Support;
 
-namespace Tooyioo.User.Features;
+namespace Tooyioo.User.Features.Support;
 
 public interface IUserOnboardingDetailsRetriever
 {

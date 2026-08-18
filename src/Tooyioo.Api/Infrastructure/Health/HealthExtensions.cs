@@ -8,37 +8,35 @@ public static class HealthExtensions
     public const string HealthEndpointPath = "/health";
     public const string AlivenessEndpointPath = "/alive";
 
-    extension<TBuilder>(TBuilder builder)
-        where TBuilder : IHostApplicationBuilder
+    public static TBuilder AddHealth<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        public TBuilder AddHealth()
-        {
-            builder.Services
-                .AddServiceDiscovery()
-                .AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+        builder.Services
+            .AddServiceDiscovery()
+            .AddHealthChecks()
+            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
             
-            builder.Services.ConfigureHttpClientDefaults(http =>
-            {
-                http.AddStandardResilienceHandler();
-                http.AddServiceDiscovery();
-            });
+        builder.Services.ConfigureHttpClientDefaults(http =>
+        {
+            http.AddStandardResilienceHandler();
+            http.AddServiceDiscovery();
+        });
 
-            return builder;
-        }
+        return builder;
     }
 
-    extension(WebApplication app)
+    public static WebApplication UseHealth(this WebApplication app)
     {
-        public WebApplication UseHealth()
-        {
-            app.MapHealthChecks(HealthEndpointPath);
-            app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
+        app
+            .MapHealthChecks(HealthEndpointPath)
+            .AllowAnonymous();
+
+        app
+            .MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("live")
-            });
+            })
+            .AllowAnonymous();
 
-            return app;
-        }
+        return app;
     }
 }

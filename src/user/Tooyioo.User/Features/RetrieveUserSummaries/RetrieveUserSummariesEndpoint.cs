@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
@@ -21,6 +22,7 @@ public sealed class RetrieveUserSummariesEndpoint
                 RetrieveUserSummariesResponse>(
                 "/users/summaries",
                 cfg => cfg
+                    .WithName("Retrieve User Summaries")
                     .WithSummary("Retrieves user summaries")
                     .WithDescription("Retrieves paged user summaries filtered by query parameters")
                     .WithTags("User"))

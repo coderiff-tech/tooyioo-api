@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Slicent.Application;
@@ -21,6 +22,7 @@ public sealed class CancelUserOnboardingEndpoint
                 CancelUserOnboardingResponse>(
                 "/user-onboarding/{id:guid}/cancel",
                 cfg => cfg
+                    .WithName("Cancel User Onboarding")
                     .WithSummary("Cancels user onboarding")
                     .WithDescription("Cancels an in-progress user onboarding process")
                     .WithTags("UserOnboarding"))
