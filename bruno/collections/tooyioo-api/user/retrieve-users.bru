@@ -1,0 +1,22 @@
+meta {
+  name: retrieve-users
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "alias": "joe-bloggs-spain_123"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,22 @@
+meta {
+  name: retrieve-user-onboarding
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/user-onboarding/{{dynamicUserOnboardingId}}
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "alias": "joe-bloggs-spain_123"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

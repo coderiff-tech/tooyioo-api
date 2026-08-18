@@ -1,0 +1,26 @@
+meta {
+  name: cancel-user-onboarding
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/user-onboarding/{{dynamicUserOnboardingId}}/cancel
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "reason": "Terms and Conditions rejected"
+  }
+}
+
+script:post-response {
+  bru.setVar("dynamicUserOnboardingId", null);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

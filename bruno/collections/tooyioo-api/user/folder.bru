@@ -1,0 +1,11 @@
+meta {
+  name: user
+}
+
+headers {
+  Authorization: Bearer {{$oauth2.google-credentials.id_token}}
+}
+
+auth {
+  mode: inherit
+}

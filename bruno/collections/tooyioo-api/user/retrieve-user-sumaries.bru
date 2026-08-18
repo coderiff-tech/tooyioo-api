@@ -1,0 +1,22 @@
+meta {
+  name: retrieve-user-sumaries
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users/summaries
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "alias": "joe-bloggs-spain_123"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

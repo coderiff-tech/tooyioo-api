@@ -1,0 +1,26 @@
+meta {
+  name: complete-user-onboarding
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/user-onboarding/{{dynamicUserOnboardingId}}/complete
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "termsAndConditionsVersion": "v1"
+  }
+}
+
+script:post-response {
+  bru.setVar("dynamicUserId", res.body.userId);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
