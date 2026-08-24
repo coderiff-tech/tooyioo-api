@@ -1,136 +1,209 @@
 # tooyioo-api
-Event Source application with vertical slice approach
 
-## Pre-requirements
+Event Source application with vertical slice approach.
+
+## Prerequisites
+
 - .NET 10 SDK
 - Podman 6.1.0+
 - Access to the `tooyioo` project in [Google Cloud Console](https://console.cloud.google.com/)
 
-## Getting Started
+## Getting started
 
 ### 1. Configure Google OAuth for Scalar
+
 The API uses the `tooyioo-web` OAuth client from the `tooyioo` Google Cloud project.
 
 The Google Client ID is already configured in `appsettings.json` and is used by the API to validate Google ID tokens.
 
 Scalar also uses this OAuth client to authenticate with Google when testing the API locally. This requires the OAuth client secret, which must not be committed to source control.
 
-From the `src/Tooyioo.Api` directory, configure the client secret using .NET User Secrets:
+From `src/Tooyioo.Api`, configure the client secret using .NET User Secrets:
 
 ```bash
 dotnet user-secrets set "Scalar:GoogleOAuth:ClientSecret" "<google-oauth-client-secret>"
 ```
 
-The secret can be obtained from the tooyioo-web OAuth client in Google Cloud Console.
-Verify your local configuration with:
+The secret can be obtained from the `tooyioo-web` OAuth client in Google Cloud Console.
+
+Verify the local configuration:
+
 ```bash
 dotnet user-secrets list
 ```
 
-The tooyioo-web OAuth client must also contain the following Authorized redirect URI:
-```bash
+The `tooyioo-web` OAuth client must contain this authorized redirect URI:
+
+```text
 http://localhost:8000/scalar/oauth/callback
 ```
 
 ### 2. Start Podman
-Start the Podman machine:
+
+On macOS and Windows, start the Podman machine:
+
 ```bash
 podman machine start
 ```
 
-Verify that Podman is running:
+On Linux, Podman runs natively. Verify that it is available:
+
 ```bash
 podman info
 ```
 
+See [Podman and Testcontainers on Linux](#podman-and-testcontainers-on-linux) if integration tests cannot start containers.
+
 ### 3. Start the application
+
 Run the Aspire AppHost project.
-Aspire will start:
+
+Aspire starts:
+
 - Tooyioo API
 - KurrentDB
 - MongoDB
 - Mongo Express
 
 ### 4. Access local services
-Once Aspire has started the application:
-- Scalar API Reference: http://localhost:8000/scalar
-- OpenAPI document: http://localhost:8000/openapi/public.json
-- KurrentDB: http://localhost:2113
-- Mongo Express: http://localhost:27018
 
-### 5. Access local services
-Open:
-```bash
-http://localhost:8000/scalar
-```
+Once Aspire has started:
 
-Use the authentication controls to sign in with Google.
-Scalar performs the Google OAuth Authorization Code flow using the scopes `openid email profile`
+- Scalar API Reference: [http://localhost:8000/scalar](http://localhost:8000/scalar)
+- OpenAPI document: [http://localhost:8000/openapi/public.json](http://localhost:8000/openapi/public.json)
+- KurrentDB: [http://localhost:2113](http://localhost:2113)
+- Mongo Express: [http://localhost:27018](http://localhost:27018)
 
-Google returns both an OAuth access token and an OpenID Connect ID token.
-The API authenticates requests using the Google `id_token`, not the OAuth `access_token`.
-Once authenticated, requests made from Scalar to protected endpoints include:
-```bash
+Use Scalar's authentication controls to sign in with Google. Scalar uses the Google OAuth Authorization Code flow with the `openid`, `email`, and `profile` scopes.
+
+The API authenticates requests with the returned OpenID Connect `id_token`, not the OAuth `access_token`:
+
+```text
 Authorization: Bearer <id_token>
 ```
 
-## Test & Report
-Run:
+## Tests and reports
+
+Restore the report generator tool:
+
 ```bash
 dotnet tool restore
 ```
-to restore the reportgenerator tool
 
-Run:
+Run all tests with coverage and TRX reports:
+
 ```bash
 dotnet test --coverage --report-trx
 ```
-to execute all tests with coverage and report trx from the slnx.
 
-Run:
-```
+Generate the HTML coverage report:
+
+```bash
 dotnet tool run reportgenerator \
   -reports:**/TestResults/*.coverage \
   -targetdir:report \
   -reporttypes:Html
 ```
-to create html report accessible from `report/index.html`.
+
+Open `report/index.html` to view the report.
 
 ## Interacting with the API
 
 ### Scalar
 
-Scalar is the recommended way to interactively explore and test individual API endpoints during development.
+Scalar is the recommended way to explore and test individual API endpoints during development.
 
-Once the application is running and the Google OAuth secret has been configured as described in **Getting Started**, access Scalar at:
+After configuring the Google OAuth secret, open:
 
-`http://localhost:8000/scalar`
+```text
+http://localhost:8000/scalar
+```
 
-Scalar handles Google authentication and automatically uses the resulting `id_token` as the Bearer token for authenticated requests.
+Scalar handles Google authentication and automatically uses the resulting `id_token` as the Bearer token for authenticated endpoints.
 
 ### Bruno
 
 Bruno is recommended for more complex or repeatable scenarios, such as chaining requests or reusing values from previous responses.
 
-Ensure `Use System Browser for OAuth2 Authorization` is enabled under `Preferences > General`.
+Enable `Use System Browser for OAuth2 Authorization` under `Preferences > General`.
 
-The collection reads the Google ID token directly from Bruno's OAuth store using:
+The collection reads the Google ID token from Bruno's OAuth store:
 
-`{{$oauth2.google-credentials.id_token}}`
+```text
+{{$oauth2.google-credentials.id_token}}
+```
 
-## Gotchas
+## Troubleshooting and development notes
 
-### Note on Minimal API validation in multi-assembly setups
+### Podman and Testcontainers on Linux
 
-When using ASP.NET Minimal APIs built-in validation with endpoints and request DTOs defined in different assemblies (or endpoints mapped indirectly via shared generic helpers), two extra steps are currently required due to limitations in the validation source generator:
+The integration tests use Testcontainers, which communicates with a Docker-compatible API. Rootless Podman exposes this API through a user socket, which is not enabled by default.
 
-Annotate request DTOs with `[ValidatableType]`
-This forces the validation source generator to include the DTO even when it does not appear directly in a Minimal API handler signature.
+Enable the socket:
 
-Include an `AddValidation()` “trigger” in the DTO/feature assembly
-A non-referenced helper like `ValidationCodegenTrigger` is required so the validation source generator runs for that assembly and emits its validation metadata.
+```bash
+systemctl --user enable --now podman.socket
+```
 
-This is a known limitation of the current Minimal API built-in validation when endpoints and DTOs live in separate assemblies.
+Configure Testcontainers to use it:
 
-Details and rationale are explained here:
-https://stackoverflow.com/q/79855763/2948212
+```bash
+export DOCKER_HOST="unix:///run/user/$(id -u)/podman/podman.sock"
+```
+
+To make this persistent for Bash, add the export to `~/.bashrc` and reload it:
+
+```bash
+source ~/.bashrc
+```
+
+Verify the configuration:
+
+```bash
+echo "$DOCKER_HOST"
+podman ps
+```
+
+When Rider is launched from the desktop, it may not inherit variables from `~/.bashrc`. Launch Rider from a configured terminal or add `DOCKER_HOST` to the test run configuration environment.
+
+### MongoDB on Linux kernel 6.19+
+
+Recent Linux kernels are incompatible with MongoDB's per-CPU TCMalloc cache. This affects local MongoDB containers because containers use the host kernel.
+
+MongoDB containers used by Aspire and Testcontainers must set:
+
+```text
+GLIBC_TUNABLES=glibc.pthread.rseq=1:glibc.cpu.hwcaps=-SHSTK
+```
+
+`glibc.pthread.rseq=1` prevents MongoDB from enabling its per-CPU TCMalloc cache on affected kernels. `glibc.cpu.hwcaps=-SHSTK` is retained as a workaround for a separate MongoDB startup issue.
+
+For Testcontainers, configure the Mongo builder as follows:
+
+```csharp
+// Keep glibc rseq enabled to prevent MongoDB's per-CPU TCMalloc cache on
+// Linux kernels >= 6.19, where it cannot start reliably.
+_container = new MongoDbBuilder(MongoImage)
+    .WithEnvironment(
+        "GLIBC_TUNABLES",
+        "glibc.pthread.rseq=1:glibc.cpu.hwcaps=-SHSTK")
+    .Build();
+```
+
+Apply the same `GLIBC_TUNABLES` value to the MongoDB resource configured in Aspire.
+
+### Minimal API validation in multi-assembly setups
+
+When using ASP.NET Minimal APIs built-in validation with endpoints and request DTOs defined in different assemblies, or endpoints mapped indirectly through shared generic helpers, two additional steps are required due to limitations in the validation source generator.
+
+1. Annotate request DTOs with `[ValidatableType]`.
+
+   This forces the validation source generator to include a DTO even when it does not appear directly in a Minimal API handler signature.
+
+2. Include an `AddValidation()` trigger in the DTO or feature assembly.
+
+   A non-referenced helper such as `ValidationCodegenTrigger` is required so that the validation source generator runs for that assembly and emits its validation metadata.
+
+This is a known limitation of the current Minimal API validation source generator when endpoints and DTOs live in separate assemblies.
+
+Further details: [Stack Overflow question](https://stackoverflow.com/q/79855763/2948212).

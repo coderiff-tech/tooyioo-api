@@ -44,7 +44,11 @@ public sealed class MongoTestContainer
                 return _startTask;
             }
 
-            _container = new MongoDbBuilder(MongoImage).Build();
+            _container =
+                new MongoDbBuilder(MongoImage)
+                    // Keep glibc rseq enabled to prevent MongoDB's per-CPU TCMalloc cache on Linux kernels >= 6.19, where it cannot start reliably.
+                    .WithEnvironment("GLIBC_TUNABLES", "glibc.pthread.rseq=1")
+                    .Build();
             _startTask = _container.StartAsync();
 
             return _startTask;

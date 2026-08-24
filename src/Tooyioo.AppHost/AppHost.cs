@@ -13,7 +13,8 @@ var kurrentDb =
 
 var mongoDb =
         builder.AddMongoDB("mongo", 27017)
-            .WithEnvironment("GLIBC_TUNABLES", "libc.cpu.hwcaps=-SHSTK")
+            // Keep glibc rseq enabled to prevent MongoDB's per-CPU TCMalloc cache on Linux kernels >= 6.19, where it cannot start reliably.
+            .WithEnvironment("GLIBC_TUNABLES", "glibc.pthread.rseq=1")
         .WithLifetime(ContainerLifetime.Session)
         .WithMongoExpress(cfg => cfg.WithHostPort(27018));
 
