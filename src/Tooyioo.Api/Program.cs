@@ -52,6 +52,7 @@ app.Run();
 // Partial class created for WebApplicationFactory to use the real Program class in tests and override on top of it
 namespace Tooyioo.Api
 {
+    // ReSharper disable once PartialTypeWithSinglePart
     public partial class Program;
 }
 #pragma warning restore ASP0027

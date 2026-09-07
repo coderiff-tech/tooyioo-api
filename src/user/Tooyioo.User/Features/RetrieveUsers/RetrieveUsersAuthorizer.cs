@@ -19,7 +19,7 @@ public sealed class RetrieveUsersAuthorizer
     {
         var userIdOption = claimsPrincipal.GetClaim(Claims.UserId);
         // ReSharper disable once ConvertIfStatementToReturnStatement
-        if (!userIdOption.IsSome(out var userId))
+        if (!userIdOption.IsSome(out _))
         {
             return Task.FromResult(false);
         }

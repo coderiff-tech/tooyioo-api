@@ -1,4 +1,3 @@
-using Tooyioo.User.Features;
 using Tooyioo.User.Features.Support;
 
 namespace Tooyioo.Api.Infrastructure.EventStoreStateRetriever;

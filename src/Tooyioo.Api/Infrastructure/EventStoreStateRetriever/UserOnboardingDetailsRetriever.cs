@@ -1,7 +1,6 @@
 ﻿using Eventuous;
 using Funzo;
 using Slicent.EventStore;
-using Tooyioo.User.Features;
 using Tooyioo.User.Features.Support;
 using Tooyioo.UserOnboarding;
 

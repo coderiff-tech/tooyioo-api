@@ -27,6 +27,7 @@ public sealed class WhenPagedResponseIsCreated
         await Assert.That(response.PageSize).IsEqualTo(10);
         await Assert.That(response.TotalPages).IsEqualTo(3);
         await Assert.That(response.TotalCount).IsEqualTo(25);
+        await Assert.That(response.Items.Single().Id).IsEqualTo("user-1");
         await Assert.That(response.Items.Single().Alias).IsEqualTo("jane-bloggs");
     }
 

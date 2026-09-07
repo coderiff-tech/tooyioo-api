@@ -33,7 +33,7 @@ public static class ExpressionExtensions
     {
         var parameter = left.Parameters[0];
         var rightBody = new ReplaceParameterVisitor(right.Parameters[0], parameter)
-            .Visit(right.Body)!;
+            .Visit(right.Body);
 
         return Expression.Lambda<Func<T, bool>>(
             merge(left.Body, rightBody),
