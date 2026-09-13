@@ -1,5 +1,10 @@
 # tooyioo-api
 
+[![CI/CD](https://github.com/coderiff-tech/tooyioo-api/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/coderiff-tech/tooyioo-api/actions/workflows/ci-cd.yml)
+[![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![Tests](https://img.shields.io/badge/tests-TUnit-512BD4?logo=dotnet&logoColor=white)](https://tunit.dev/)
+[![Test Reports](https://img.shields.io/badge/test%20reports-history-2ea44f?logo=github)](https://coderiff-tech.github.io/tooyioo-api/)
+
 Event Source application with vertical slice approach.
 
 ## Prerequisites
