@@ -1,3 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+cat > index.html <<'HTML'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,9 +89,24 @@
         </thead>
 
         <tbody>
-<tr><td>2</td><td>2026-09-13 18:53:47 UTC</td><td class="passed">PASSED</td><td><code>fa8d9c1</code></td><td><a href="runs/34775959037/">TUnit report</a></td><td><a href="https://github.com/coderiff-tech/tooyioo-api/actions/runs/34775959037">GitHub Actions</a></td></tr>
+HTML
+
+jq -r '
+  reverse[] |
+  "<tr>" +
+  "<td>\(.number)</td>" +
+  "<td>\(.date)</td>" +
+  "<td class=\"\(.status | ascii_downcase)\">\(.status)</td>" +
+  "<td><code>\(.sha)</code></td>" +
+  "<td><a href=\"runs/\(.run)/\">TUnit report</a></td>" +
+  "<td><a href=\"\(.url)\">GitHub Actions</a></td>" +
+  "</tr>"
+' history.json >> index.html
+
+cat >> index.html <<'HTML'
         </tbody>
     </table>
 
 </body>
 </html>
+HTML
