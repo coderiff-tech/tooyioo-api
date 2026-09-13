@@ -1,4 +1,4 @@
-name: Tests
+name: CI/CD
 
 on:
   push:
@@ -10,13 +10,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
+
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
-    name: Run tests
+    name: Build and Test
     runs-on: ubuntu-latest
 
     steps:
@@ -35,41 +37,229 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Run tests
+        id: tests
+        continue-on-error: true
         run: dotnet test --configuration Release --no-build
 
-      - name: Find aggregated report
-        if: always()
+      - name: Publish test report
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          TEST_RESULT: ${{ steps.tests.outcome }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_NUMBER: ${{ github.run_number }}
+          SHA: ${{ github.sha }}
+          SERVER_URL: ${{ github.server_url }}
+          REPOSITORY: ${{ github.repository }}
         run: |
-          echo "Looking for TUnit reports..."
-          find "$RUNNER_TEMP" -type f \( -name "merged-report.html" -o -name "*.tunit-report.json" \) -print
+          set -e
 
-      - name: Prepare GitHub Pages
-        if: always()
+          REPORT=$(find "$RUNNER_TEMP" \
+            -type f \
+            -name "merged-report.html" \
+            -print -quit)
+
+          if [ -z "$REPORT" ]; then
+            echo "ERROR: TUnit merged-report.html was not found."
+            exit 1
+          fi
+
+          echo "TUnit report:"
+          echo "$REPORT"
+
+          WORK_DIR="$RUNNER_TEMP/pages"
+
+          mkdir -p "$WORK_DIR"
+
+          cd "$WORK_DIR"
+
+          git init
+          git remote add origin \
+            "https://x-access-token:${{ github.token }}@github.com/${REPOSITORY}.git"
+
+          git fetch origin gh-pages
+          git checkout -B gh-pages origin/gh-pages
+
+          mkdir -p "runs/${RUN_ID}"
+          mkdir -p latest
+
+          cp "$REPORT" "runs/${RUN_ID}/index.html"
+          cp "$REPORT" latest/index.html
+
+          DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+          if [ "$TEST_RESULT" = "success" ]; then
+            STATUS="PASSED"
+          else
+            STATUS="FAILED"
+          fi
+
+          RUN_URL="${SERVER_URL}/${REPOSITORY}/actions/runs/${RUN_ID}"
+
+          if [ -f history.json ]; then
+            jq \
+              --arg run "$RUN_ID" \
+              --arg number "$RUN_NUMBER" \
+              --arg date "$DATE" \
+              --arg status "$STATUS" \
+              --arg sha "${SHA:0:7}" \
+              --arg url "$RUN_URL" \
+              '. += [{
+                  run: $run,
+                  number: $number,
+                  date: $date,
+                  status: $status,
+                  sha: $sha,
+                  url: $url
+              }]' \
+              history.json > history.tmp
+
+            mv history.tmp history.json
+          else
+            cat > history.json <<EOF
+          [
+            {
+              "run": "${RUN_ID}",
+              "number": "${RUN_NUMBER}",
+              "date": "${DATE}",
+              "status": "${STATUS}",
+              "sha": "${SHA:0:7}",
+              "url": "${RUN_URL}"
+            }
+          ]
+          EOF
+          fi
+
+          cat > generate-index.sh <<'EOF'
+          #!/usr/bin/env bash
+
+          set -e
+
+          cat > index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Tooyioo Test Reports</title>
+
+              <style>
+                  body {
+                      font-family: system-ui, sans-serif;
+                      max-width: 1200px;
+                      margin: 40px auto;
+                      padding: 0 20px;
+                      line-height: 1.5;
+                  }
+
+                  h1 {
+                      margin-bottom: 5px;
+                  }
+
+                  .latest {
+                      padding: 20px;
+                      margin: 30px 0;
+                      border: 1px solid #ddd;
+                      border-radius: 8px;
+                  }
+
+                  table {
+                      width: 100%;
+                      border-collapse: collapse;
+                  }
+
+                  th, td {
+                      padding: 10px;
+                      border-bottom: 1px solid #ddd;
+                      text-align: left;
+                  }
+
+                  .passed {
+                      color: #16803c;
+                      font-weight: 600;
+                  }
+
+                  .failed {
+                      color: #d1242f;
+                      font-weight: 600;
+                  }
+
+                  a {
+                      text-decoration: none;
+                  }
+              </style>
+          </head>
+
+          <body>
+              <h1>Tooyioo Test Reports</h1>
+
+              <p>
+                  TUnit test history for <strong>main</strong>.
+              </p>
+
+              <div class="latest">
+                  <h2>Latest</h2>
+
+                  <p>
+                      <a href="latest/">
+                          Open latest TUnit report →
+                      </a>
+                  </p>
+              </div>
+
+              <h2>History</h2>
+
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Run</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Commit</th>
+                          <th>Report</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+          HTML
+
+          jq -r '
+            reverse[] |
+            "<tr>" +
+            "<td>\(.number)</td>" +
+            "<td>\(.date)</td>" +
+            "<td class=\"\(.status | ascii_downcase)\">\(.status)</td>" +
+            "<td><code>\(.sha)</code></td>" +
+            "<td><a href=\"runs/\(.run)/\">TUnit report</a></td>" +
+            "<td><a href=\"\(.url)\">GitHub Actions</a></td>" +
+            "</tr>"
+          ' history.json >> index.html
+
+          cat >> index.html <<'HTML'
+                  </tbody>
+              </table>
+
+          </body>
+          </html>
+          HTML
+          EOF
+
+          chmod +x generate-index.sh
+          ./generate-index.sh
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .
+
+          git commit \
+            -m "Add test report for run ${RUN_NUMBER}" \
+            || echo "Nothing changed"
+
+          git push origin gh-pages
+
+      - name: Fail if tests failed
+        if: steps.tests.outcome == 'failure'
         run: |
-          mkdir -p ./pages
-          cp "$RUNNER_TEMP"/tunit-aggregate/**/merged-report.html ./pages/index.html
-
-      - name: Upload GitHub Pages artifact
-        if: always()
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: ./pages
-
-  deploy:
-    name: Publish test report
-    needs: test
-    if: always()
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    permissions:
-      pages: write
-      id-token: write
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          echo "One or more tests failed."
+          exit 1
