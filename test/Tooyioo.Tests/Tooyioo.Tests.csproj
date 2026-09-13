@@ -10,10 +10,10 @@
 
     <ItemGroup>
         <PackageReference Include="Eventuous.Testing" Version="0.16.4" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.11" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
         <PackageReference Include="Testcontainers.MongoDb" Version="4.15.0" />
-        <PackageReference Include="TUnit" Version="1.66.27" />
+        <PackageReference Include="TUnit" Version="1.67.0" />
     </ItemGroup>
 
     <ItemGroup>
