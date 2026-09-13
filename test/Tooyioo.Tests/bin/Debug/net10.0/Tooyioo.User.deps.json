@@ -1,0 +1,700 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Tooyioo.User/1.0.0": {
+        "dependencies": {
+          "Slicent": "1.0.0",
+          "Tooyioo.Common": "1.0.0",
+          "Tooyioo.UserOnboarding.Contracts": "1.0.0"
+        },
+        "runtime": {
+          "Tooyioo.User.dll": {}
+        }
+      },
+      "DnsClient/1.6.1": {
+        "runtime": {
+          "lib/net5.0/DnsClient.dll": {
+            "assemblyVersion": "1.6.1.0",
+            "fileVersion": "1.6.1.0"
+          }
+        }
+      },
+      "Eventuous/0.16.4": {
+        "dependencies": {
+          "Eventuous.Application": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Application/0.16.4": {
+        "dependencies": {
+          "Eventuous.Domain": "0.16.4",
+          "Eventuous.Persistence": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Application.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Diagnostics/0.16.4": {
+        "dependencies": {
+          "Eventuous.Shared": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Diagnostics.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Diagnostics.Logging/0.16.4": {
+        "runtime": {
+          "lib/net10.0/Eventuous.Diagnostics.Logging.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Diagnostics.OpenTelemetry/0.16.4": {
+        "dependencies": {
+          "Eventuous.Application": "0.16.4",
+          "Eventuous.Subscriptions": "0.16.4",
+          "OpenTelemetry.Extensions.Hosting": "1.15.3",
+          "OpenTelemetry.Instrumentation.AspNetCore": "1.15.2"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Diagnostics.OpenTelemetry.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Domain/0.16.4": {
+        "runtime": {
+          "lib/net10.0/Eventuous.Domain.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Extensions.DependencyInjection/0.16.4": {
+        "dependencies": {
+          "Eventuous.Application": "0.16.4",
+          "Eventuous.Diagnostics.Logging": "0.16.4",
+          "Eventuous.Extensions.Logging": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Extensions.DependencyInjection.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Extensions.Logging/0.16.4": {
+        "dependencies": {
+          "Eventuous.Diagnostics.Logging": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Extensions.Logging.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.KurrentDB/0.16.4": {
+        "dependencies": {
+          "Eventuous.Persistence": "0.16.4",
+          "Eventuous.Producers": "0.16.4",
+          "Eventuous.Subscriptions": "0.16.4",
+          "KurrentDB.Client": "1.3.0",
+          "OpenTelemetry.Api": "1.15.3"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.KurrentDB.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Persistence/0.16.4": {
+        "dependencies": {
+          "Eventuous.Diagnostics": "0.16.4",
+          "Eventuous.Domain": "0.16.4",
+          "Eventuous.Serialization": "0.16.4",
+          "Eventuous.Shared": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Persistence.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Producers/0.16.4": {
+        "dependencies": {
+          "Eventuous.Diagnostics": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Producers.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Projections.MongoDB/0.16.4": {
+        "dependencies": {
+          "Eventuous.Subscriptions": "0.16.4",
+          "MongoDB.Driver": "3.4.0",
+          "System.Reactive": "6.0.1"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Projections.MongoDB.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Serialization/0.16.4": {
+        "dependencies": {
+          "Eventuous.Shared": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Serialization.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Shared/0.16.4": {
+        "dependencies": {
+          "Eventuous.Domain": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Shared.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Eventuous.Subscriptions/0.16.4": {
+        "dependencies": {
+          "Eventuous.Diagnostics": "0.16.4",
+          "Eventuous.Serialization": "0.16.4"
+        },
+        "runtime": {
+          "lib/net10.0/Eventuous.Subscriptions.dll": {
+            "assemblyVersion": "0.16.4.0",
+            "fileVersion": "0.16.4.0"
+          }
+        }
+      },
+      "Funzo/5.1.1": {
+        "runtime": {
+          "lib/net10.0/Funzo.dll": {
+            "assemblyVersion": "5.1.1.0",
+            "fileVersion": "5.1.1.0"
+          }
+        }
+      },
+      "Google.Api.CommonProtos/2.16.0": {
+        "dependencies": {
+          "Google.Protobuf": "3.32.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Api.CommonProtos.dll": {
+            "assemblyVersion": "2.16.0.0",
+            "fileVersion": "2.16.0.0"
+          }
+        }
+      },
+      "Google.Protobuf/3.32.1": {
+        "runtime": {
+          "lib/net5.0/Google.Protobuf.dll": {
+            "assemblyVersion": "3.32.1.0",
+            "fileVersion": "3.32.1.0"
+          }
+        }
+      },
+      "Grpc.Core.Api/2.71.0": {
+        "runtime": {
+          "lib/netstandard2.1/Grpc.Core.Api.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.71.0.0"
+          }
+        }
+      },
+      "Grpc.Net.Client/2.67.0": {
+        "dependencies": {
+          "Grpc.Net.Common": "2.67.0"
+        },
+        "runtime": {
+          "lib/net8.0/Grpc.Net.Client.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.67.0.0"
+          }
+        }
+      },
+      "Grpc.Net.Common/2.67.0": {
+        "dependencies": {
+          "Grpc.Core.Api": "2.71.0"
+        },
+        "runtime": {
+          "lib/net8.0/Grpc.Net.Common.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.67.0.0"
+          }
+        }
+      },
+      "Grpc.StatusProto/2.71.0": {
+        "dependencies": {
+          "Google.Api.CommonProtos": "2.16.0",
+          "Grpc.Core.Api": "2.71.0"
+        },
+        "runtime": {
+          "lib/netstandard2.1/Grpc.StatusProto.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.71.0.0"
+          }
+        }
+      },
+      "KurrentDB.Client/1.3.0": {
+        "dependencies": {
+          "Google.Api.CommonProtos": "2.16.0",
+          "Google.Protobuf": "3.32.1",
+          "Grpc.Net.Client": "2.67.0",
+          "Grpc.StatusProto": "2.71.0",
+          "OpenTelemetry.Api": "1.15.3"
+        },
+        "runtime": {
+          "lib/net10.0/KurrentDB.Client.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.3.0.0"
+          }
+        }
+      },
+      "MongoDB.Bson/3.4.0": {
+        "runtime": {
+          "lib/net6.0/MongoDB.Bson.dll": {
+            "assemblyVersion": "3.4.0.0",
+            "fileVersion": "3.4.0.0"
+          }
+        }
+      },
+      "MongoDB.Driver/3.4.0": {
+        "dependencies": {
+          "DnsClient": "1.6.1",
+          "MongoDB.Bson": "3.4.0",
+          "SharpCompress": "0.30.1",
+          "Snappier": "1.3.1",
+          "ZstdSharp.Port": "0.7.3"
+        },
+        "runtime": {
+          "lib/net6.0/MongoDB.Driver.dll": {
+            "assemblyVersion": "3.4.0.0",
+            "fileVersion": "3.4.0.0"
+          }
+        }
+      },
+      "OpenTelemetry/1.15.3": {
+        "dependencies": {
+          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.15.3"
+        },
+        "runtime": {
+          "lib/net10.0/OpenTelemetry.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.15.3.2017"
+          }
+        }
+      },
+      "OpenTelemetry.Api/1.15.3": {
+        "runtime": {
+          "lib/net10.0/OpenTelemetry.Api.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.15.3.2017"
+          }
+        }
+      },
+      "OpenTelemetry.Api.ProviderBuilderExtensions/1.15.3": {
+        "dependencies": {
+          "OpenTelemetry.Api": "1.15.3"
+        },
+        "runtime": {
+          "lib/net10.0/OpenTelemetry.Api.ProviderBuilderExtensions.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.15.3.2017"
+          }
+        }
+      },
+      "OpenTelemetry.Extensions.Hosting/1.15.3": {
+        "dependencies": {
+          "OpenTelemetry": "1.15.3"
+        },
+        "runtime": {
+          "lib/net10.0/OpenTelemetry.Extensions.Hosting.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.15.3.2017"
+          }
+        }
+      },
+      "OpenTelemetry.Instrumentation.AspNetCore/1.15.2": {
+        "dependencies": {
+          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.15.3"
+        },
+        "runtime": {
+          "lib/net10.0/OpenTelemetry.Instrumentation.AspNetCore.dll": {
+            "assemblyVersion": "1.15.2.1013",
+            "fileVersion": "1.15.2.1013"
+          }
+        }
+      },
+      "SharpCompress/0.30.1": {
+        "runtime": {
+          "lib/net5.0/SharpCompress.dll": {
+            "assemblyVersion": "0.30.1.0",
+            "fileVersion": "0.30.1.0"
+          }
+        }
+      },
+      "Snappier/1.3.1": {
+        "runtime": {
+          "lib/net8.0/Snappier.dll": {
+            "assemblyVersion": "1.3.1.0",
+            "fileVersion": "1.3.1.0"
+          }
+        }
+      },
+      "System.Reactive/6.0.1": {
+        "runtime": {
+          "lib/net6.0/System.Reactive.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.1.7420"
+          }
+        }
+      },
+      "ZstdSharp.Port/0.7.3": {
+        "runtime": {
+          "lib/net7.0/ZstdSharp.dll": {
+            "assemblyVersion": "0.7.3.0",
+            "fileVersion": "0.7.3.0"
+          }
+        }
+      },
+      "Slicent/1.0.0": {
+        "dependencies": {
+          "Eventuous": "0.16.4",
+          "Eventuous.Diagnostics.OpenTelemetry": "0.16.4",
+          "Eventuous.Extensions.DependencyInjection": "0.16.4",
+          "Eventuous.KurrentDB": "0.16.4",
+          "Eventuous.Projections.MongoDB": "0.16.4",
+          "Snappier": "1.3.1"
+        },
+        "runtime": {
+          "Slicent.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Tooyioo.Common/1.0.0": {
+        "dependencies": {
+          "Funzo": "5.1.1"
+        },
+        "runtime": {
+          "Tooyioo.Common.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Tooyioo.UserOnboarding.Contracts/1.0.0": {
+        "dependencies": {
+          "Slicent": "1.0.0"
+        },
+        "runtime": {
+          "Tooyioo.UserOnboarding.Contracts.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Tooyioo.User/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DnsClient/1.6.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4H/f2uYJOZ+YObZjpY9ABrKZI+JNw3uizp6oMzTXwDw6F+2qIPhpRl/1t68O/6e98+vqNiYGu+lswmwdYUy3gg==",
+      "path": "dnsclient/1.6.1",
+      "hashPath": "dnsclient.1.6.1.nupkg.sha512"
+    },
+    "Eventuous/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YGKVwrn6OgH+dBS5EDqEKJivRTDrbqUzkyINwJ/hzg/SCzkILttJ2rxek7LHMouBoz2VgYfaf2f3VlRPH5OqcQ==",
+      "path": "eventuous/0.16.4",
+      "hashPath": "eventuous.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Application/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-E/Fv7B89x7WisUCXSl2D3Y59RXBRF+HFJpyUpnifRCZUxHXJH7uh6PLfyWc9PEya6oZI1pCQP1TskT/RXrOTIA==",
+      "path": "eventuous.application/0.16.4",
+      "hashPath": "eventuous.application.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Diagnostics/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9gwqD923wPIh+fa9zM9THfXKS2Q+hy1XQ0DGFU4cjuYf7fJmOE3dyza8fSFMry1zAcGwVra7RofOgQz7SiVGdg==",
+      "path": "eventuous.diagnostics/0.16.4",
+      "hashPath": "eventuous.diagnostics.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Diagnostics.Logging/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1PnYQqCM2hqh7ZxTQANeoW0B2TXmC+xC84bU/GzuEQhfnWLDrON9aUZ9DVb6XplG4Efi00JY7YOknLjKhiPclQ==",
+      "path": "eventuous.diagnostics.logging/0.16.4",
+      "hashPath": "eventuous.diagnostics.logging.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Diagnostics.OpenTelemetry/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sLhq3osBqrUH/LJYaA5z/xizaAXVvlXStjJTPfSs35iG8ENl0p4RhjcKWt3OrB5WHL3ADJ/i1CFNPmv+delolA==",
+      "path": "eventuous.diagnostics.opentelemetry/0.16.4",
+      "hashPath": "eventuous.diagnostics.opentelemetry.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Domain/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8FNdUBiQSWt8+UNZci51flvnta4dtSBYwIm0mWr3f+azL/SoZ0C8SheIzHSlYBgGQzjq4aBO/W2aObLXCkQ2dQ==",
+      "path": "eventuous.domain/0.16.4",
+      "hashPath": "eventuous.domain.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Extensions.DependencyInjection/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KHbRoP4+eb+brSFBTQPFxePH9ISvWzon7BIWiXQJrW/47AqnIuh7rbj1ehDvG3glIPHLQ0KIYaoz+5zWIQJJag==",
+      "path": "eventuous.extensions.dependencyinjection/0.16.4",
+      "hashPath": "eventuous.extensions.dependencyinjection.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Extensions.Logging/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0cbidzSjQQwaoAFXvP0+rMF4/evdJEy30bF+e2JSFP6iQfvuBZK3tVH+kV1Htk7IwTQs5acfqDvaP/7IdMwDow==",
+      "path": "eventuous.extensions.logging/0.16.4",
+      "hashPath": "eventuous.extensions.logging.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.KurrentDB/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0gf0X6/3BVIvc/3CKaHAL+51CW3e1+KF+vUOY3xNKcS2bFwWAW9Sbexm/lAIlMSmE6w2DPQPtyTPfcKm28PlOw==",
+      "path": "eventuous.kurrentdb/0.16.4",
+      "hashPath": "eventuous.kurrentdb.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Persistence/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gH/sBReLq77/SGyBbe9Ie0+fxq9tym97pFGBmMa0kXI1L9Hb/LtmM0mhJ9MJ+7BWjId3CzbSz590q490hc/cuQ==",
+      "path": "eventuous.persistence/0.16.4",
+      "hashPath": "eventuous.persistence.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Producers/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NeXM+RWxThXjmNwf9UtN+IevrK5eSTXSEA1DVgq+g305P1nnUOnkvOuPlGu3P35UJ87vNZvoVVRD8BiDjILXhQ==",
+      "path": "eventuous.producers/0.16.4",
+      "hashPath": "eventuous.producers.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Projections.MongoDB/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EY72HQXbGpcmb97csyCrjV9J/u6QCb1i23VYOkLLbQDkKIOQ1Js5r15o0AsClf1DUAHgPr3ibmplzmmzYel5SQ==",
+      "path": "eventuous.projections.mongodb/0.16.4",
+      "hashPath": "eventuous.projections.mongodb.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Serialization/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cERTW9TRvvIc9Avt0/FtmwfdTWZA7teb5tRpcW/zckCO5HhJjukn3ViKZHuFUBOfHrZ3bnGiaXmi09SsGTERiw==",
+      "path": "eventuous.serialization/0.16.4",
+      "hashPath": "eventuous.serialization.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Shared/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5NSBf4iL6Hfrk4nM07N5Ft2btckZefYVWTlNad8Qe488CQUWH9p1DaYHUwApVmOf1YEkFn068OnRN4M65YUhmg==",
+      "path": "eventuous.shared/0.16.4",
+      "hashPath": "eventuous.shared.0.16.4.nupkg.sha512"
+    },
+    "Eventuous.Subscriptions/0.16.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vqCz9wW+TO+XNkDapxnuyDWZ20jYeyI7ykJ0y/UQANSNcI8kztu5PLZAyH2xP1uBU7xem31BUfSGrT/sXJ7qFw==",
+      "path": "eventuous.subscriptions/0.16.4",
+      "hashPath": "eventuous.subscriptions.0.16.4.nupkg.sha512"
+    },
+    "Funzo/5.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yhcIHA4LVLL6zVtSSTuwH0aLMuaMR9r/Hf0y0xLaWRzB7ndAATpZCVORGzJhhTkeZI3v+cAVf7A2Y2UsC/S3xQ==",
+      "path": "funzo/5.1.1",
+      "hashPath": "funzo.5.1.1.nupkg.sha512"
+    },
+    "Google.Api.CommonProtos/2.16.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-37MuZrE9AAqHAdYgFLoTHydAiXDRriQZGVKEg6fr6ASnrY5GtauYXnQrGk5x2K3NmYzEXe+wkpaPVmxjb3NKjg==",
+      "path": "google.api.commonprotos/2.16.0",
+      "hashPath": "google.api.commonprotos.2.16.0.nupkg.sha512"
+    },
+    "Google.Protobuf/3.32.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HbFFRNU46e1E+qhGvwCDAO2EZ80WADqlkNqlOBYvGi7SNxwMPkTrReZgCg9/TrXwLO/n0za+AIiT2IplzqrjZw==",
+      "path": "google.protobuf/3.32.1",
+      "hashPath": "google.protobuf.3.32.1.nupkg.sha512"
+    },
+    "Grpc.Core.Api/2.71.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QquqUC37yxsDzd1QaDRsH2+uuznWPTS8CVE2Yzwl3CvU4geTNkolQXoVN812M2IwT6zpv3jsZRc9ExJFNFslTg==",
+      "path": "grpc.core.api/2.71.0",
+      "hashPath": "grpc.core.api.2.71.0.nupkg.sha512"
+    },
+    "Grpc.Net.Client/2.67.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ofTjJQfegWkVlk5R4k/LlwpcucpsBzntygd4iAeuKd/eLMkmBWoXN+xcjYJ5IibAahRpIJU461jABZvT6E9dwA==",
+      "path": "grpc.net.client/2.67.0",
+      "hashPath": "grpc.net.client.2.67.0.nupkg.sha512"
+    },
+    "Grpc.Net.Common/2.67.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gazn1cD2Eol0/W5ZJRV4PYbNrxJ9oMs8pGYux5S9E4MymClvl7aqYSmpqgmWAUWvziRqK9K+yt3cjCMfQ3x/5A==",
+      "path": "grpc.net.common/2.67.0",
+      "hashPath": "grpc.net.common.2.67.0.nupkg.sha512"
+    },
+    "Grpc.StatusProto/2.71.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1g2noPz3EsV38obG4VuteYb1pjQthknHmr/nsPZiZa2/WOyjgX00rneefqfalLexE9nxRGoXj2amQ9Bmo5DcMQ==",
+      "path": "grpc.statusproto/2.71.0",
+      "hashPath": "grpc.statusproto.2.71.0.nupkg.sha512"
+    },
+    "KurrentDB.Client/1.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ceoJ/XAfofe4rbm6j32nckKbbX0HzCWO5H6baYpVnIwNGxWIojsbkOEzIAEcoY+TB/DplW1YUPzP0d7VLa3NqA==",
+      "path": "kurrentdb.client/1.3.0",
+      "hashPath": "kurrentdb.client.1.3.0.nupkg.sha512"
+    },
+    "MongoDB.Bson/3.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0fBbXqO/ADhWLcgq0cUNizcKEFAuz5klxUc5CWTWV8vdnlOl5QTeAI7Kh64bCoz654ZN7WWOjz9WRw0QGHcqQA==",
+      "path": "mongodb.bson/3.4.0",
+      "hashPath": "mongodb.bson.3.4.0.nupkg.sha512"
+    },
+    "MongoDB.Driver/3.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+8vGdlbbzfPfQzCI00nPX59vH+5Nfumb2lyXf7xdIcAa05JPBdXFc/vWw0rPQOqIWYWfTmvQsxUgUXyzk0AKGw==",
+      "path": "mongodb.driver/3.4.0",
+      "hashPath": "mongodb.driver.3.4.0.nupkg.sha512"
+    },
+    "OpenTelemetry/1.15.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-N0i6WjPoHPbZyms1ugbDIFAJFuGlpeExJMU/+XSL0lQRUkg/D0utFkDoLXf8Z1km5B+xVZ2GyMXXiX8qdeNmPg==",
+      "path": "opentelemetry/1.15.3",
+      "hashPath": "opentelemetry.1.15.3.nupkg.sha512"
+    },
+    "OpenTelemetry.Api/1.15.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fX+fkCysfPut+qCcT3bKqyX4QN9Saf4CgX8HLOHywEVD+Xr7sULtfuypITpoDysjx8R59dn/3mWhgimMH8cm/g==",
+      "path": "opentelemetry.api/1.15.3",
+      "hashPath": "opentelemetry.api.1.15.3.nupkg.sha512"
+    },
+    "OpenTelemetry.Api.ProviderBuilderExtensions/1.15.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SYn0lqYDwLMWhv/zlNGsQcl2yX++yTumanX46bmOZE/ZDOd1WjPBO2kZaZgKLEZTZk48pavIFGJ6vOvxXgWVFQ==",
+      "path": "opentelemetry.api.providerbuilderextensions/1.15.3",
+      "hashPath": "opentelemetry.api.providerbuilderextensions.1.15.3.nupkg.sha512"
+    },
+    "OpenTelemetry.Extensions.Hosting/1.15.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-u8n/W8yIlqv0BXZmvId1iVaeWXG42tGKdTkuLYg5g57Y/r9CeUNzqtrSHNdG5IoO8iPX79w3v+WsbAHgUQbfeg==",
+      "path": "opentelemetry.extensions.hosting/1.15.3",
+      "hashPath": "opentelemetry.extensions.hosting.1.15.3.nupkg.sha512"
+    },
+    "OpenTelemetry.Instrumentation.AspNetCore/1.15.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2nPd7r0ug/gd6/CNFL6Rlu+RSQ9WYGSGHAYQ1ssbSqyzKJpqTunfx2I/1O0WB5k+L0cyXbG4XVZpoSoUc3M7wg==",
+      "path": "opentelemetry.instrumentation.aspnetcore/1.15.2",
+      "hashPath": "opentelemetry.instrumentation.aspnetcore.1.15.2.nupkg.sha512"
+    },
+    "SharpCompress/0.30.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XqD4TpfyYGa7QTPzaGlMVbcecKnXy4YmYLDWrU+JIj7IuRNl7DH2END+Ll7ekWIY8o3dAMWLFDE1xdhfIWD1nw==",
+      "path": "sharpcompress/0.30.1",
+      "hashPath": "sharpcompress.0.30.1.nupkg.sha512"
+    },
+    "Snappier/1.3.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DOdDQiO8YZ5rBtVLY+6CmR1yp9WYoJRgEEktPBrR0tEj9QO2djA/zv0O3DX0OZpEAfosbY8pytQ9tQUogwQsEA==",
+      "path": "snappier/1.3.1",
+      "hashPath": "snappier.1.3.1.nupkg.sha512"
+    },
+    "System.Reactive/6.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rHaWtKDwCi9qJ3ObKo8LHPMuuwv33YbmQi7TcUK1C264V3MFnOr5Im7QgCTdLniztP3GJyeiSg5x8NqYJFqRmg==",
+      "path": "system.reactive/6.0.1",
+      "hashPath": "system.reactive.6.0.1.nupkg.sha512"
+    },
+    "ZstdSharp.Port/0.7.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-U9Ix4l4cl58Kzz1rJzj5hoVTjmbx1qGMwzAcbv1j/d3NzrFaESIurQyg+ow4mivCgkE3S413y+U9k4WdnEIkRA==",
+      "path": "zstdsharp.port/0.7.3",
+      "hashPath": "zstdsharp.port.0.7.3.nupkg.sha512"
+    },
+    "Slicent/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Tooyioo.Common/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Tooyioo.UserOnboarding.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

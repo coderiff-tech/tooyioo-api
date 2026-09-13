@@ -1,0 +1,8 @@
+{
+  "Slicent, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/diegosasw\/git\/tooyioo-api\/src\/Slicent",
+  "Tooyioo.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/diegosasw\/git\/tooyioo-api\/src\/Tooyioo.Api",
+  "Tooyioo.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/diegosasw\/git\/tooyioo-api\/src\/Tooyioo.Common",
+  "Tooyioo.User, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/diegosasw\/git\/tooyioo-api\/src\/user\/Tooyioo.User",
+  "Tooyioo.UserOnboarding.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/diegosasw\/git\/tooyioo-api\/src\/user-onboarding\/Tooyioo.UserOnboarding.Contracts",
+  "Tooyioo.UserOnboarding, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/diegosasw\/git\/tooyioo-api\/src\/user-onboarding\/Tooyioo.UserOnboarding"
+}

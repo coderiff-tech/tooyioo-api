@@ -1,0 +1,13 @@
+/home/diegosasw/git/tooyioo-api/src/Slicent/bin/Debug/net10.0/Slicent.deps.json
+/home/diegosasw/git/tooyioo-api/src/Slicent/bin/Debug/net10.0/Slicent.dll
+/home/diegosasw/git/tooyioo-api/src/Slicent/bin/Debug/net10.0/Slicent.pdb
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/Slicent.csproj.AssemblyReference.cache
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/Slicent.GeneratedMSBuildEditorConfig.editorconfig
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/Slicent.AssemblyInfoInputs.cache
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/Slicent.AssemblyInfo.cs
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/Slicent.csproj.CoreCompileInputs.cache
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/Slicent.sourcelink.json
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/Slicent.dll
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/refint/Slicent.dll
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/Slicent.pdb
+/home/diegosasw/git/tooyioo-api/src/Slicent/obj/Debug/net10.0/ref/Slicent.dll

@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Tooyioo.Common/1.0.0": {
+        "dependencies": {
+          "Funzo": "5.1.1"
+        },
+        "runtime": {
+          "Tooyioo.Common.dll": {}
+        }
+      },
+      "Funzo/5.1.1": {
+        "runtime": {
+          "lib/net10.0/Funzo.dll": {
+            "assemblyVersion": "5.1.1.0",
+            "fileVersion": "5.1.1.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Tooyioo.Common/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Funzo/5.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yhcIHA4LVLL6zVtSSTuwH0aLMuaMR9r/Hf0y0xLaWRzB7ndAATpZCVORGzJhhTkeZI3v+cAVf7A2Y2UsC/S3xQ==",
+      "path": "funzo/5.1.1",
+      "hashPath": "funzo.5.1.1.nupkg.sha512"
+    }
+  }
+}

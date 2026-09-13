@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "dNGacp3eiTM=",
+  "success": true,
+  "projectFilePath": "/home/diegosasw/git/tooyioo-api/src/Tooyioo.Common/Tooyioo.Common.csproj",
+  "expectedPackageFiles": [
+    "/home/diegosasw/.nuget/packages/funzo/5.1.1/funzo.5.1.1.nupkg.sha512",
+    "/home/diegosasw/.nuget/packages/funzo.sourcegenerators/5.1.1/funzo.sourcegenerators.5.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}
