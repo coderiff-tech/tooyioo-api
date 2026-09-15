@@ -20,6 +20,19 @@ internal sealed class VerticalSliceWebApplicationFactory(
     Action<IServiceCollection>? overrideServices)
     : WebApplicationFactory<Program>
 {
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        builder.ConfigureHostConfiguration(configuration =>
+        {
+            configuration.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Slicent:IsTestExecution"] = "true"
+            });
+        });
+
+        return base.CreateHost(builder);
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
@@ -30,8 +43,7 @@ internal sealed class VerticalSliceWebApplicationFactory(
             {
                 ["ConnectionStrings:KurrentDb"] = "kurrentdb://localhost:2113?tls=false",
                 ["ConnectionStrings:MongoDb"] = mongoDatabase?.ConnectionString ?? "mongodb://127.0.0.1:27017",
-                ["Google:ClientId"] = "tooyioo-tests",
-                ["Slicent:UseInMemoryInfrastructure"] = "true"
+                ["Google:ClientId"] = "tooyioo-tests"
             });
         });
 

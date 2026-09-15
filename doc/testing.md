@@ -33,7 +33,7 @@ The host uses the real API `Program.cs` through `WebApplicationFactory`, then ov
 - hosted background services are removed
 - JWT bearer validation is replaced with a test signing key
 
-The test factory explicitly sets `Slicent:UseInMemoryInfrastructure` to avoid registering the production KurrentDB client, MongoDB client, or hosted read-model subscription. The `Testing` environment alone does not do this, so it remains available for local runs that use real Aspire infrastructure. The test host then registers its in-memory event store and, where required, its test Mongo database.
+The test factory sets `Slicent:IsTestExecution` in host configuration before `Program` executes. This avoids registering the production KurrentDB client, MongoDB client, or hosted read-model subscription. The `Testing` environment alone does not do this, so it remains available for local runs that use real Aspire infrastructure. The test host then registers its in-memory event store and, where required, its test Mongo database.
 
 This keeps tests close to production wiring without starting Aspire, KurrentDB, MongoDB containers, or the real Google issuer metadata flow.
 

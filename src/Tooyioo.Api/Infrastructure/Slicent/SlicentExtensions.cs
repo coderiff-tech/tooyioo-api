@@ -18,7 +18,7 @@ public static class SlicentExtensions
     {
         builder.Services.AddSlicent(assemblies);
 
-        if (builder.Configuration.GetValue<bool>("Slicent:UseInMemoryInfrastructure")
+        if (builder.Configuration.GetValue<bool>("Slicent:IsTestExecution")
             || Assembly.GetEntryAssembly().IsOpenApiGenerationLaunch())
         {
             return builder;

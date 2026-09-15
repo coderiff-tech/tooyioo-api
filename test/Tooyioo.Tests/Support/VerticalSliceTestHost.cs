@@ -39,6 +39,7 @@ public sealed class VerticalSliceTestHost
     public HttpClient HttpClient { get; }
     public InMemoryEventStore EventStore { get; }
     public EventAssertions Events { get; }
+    internal IServiceProvider Services => _factory.Services;
 
     public static Task<VerticalSliceTestHost> Start(Action<IServiceCollection>? overrideServices = null)
         => Start(null, overrideServices);
