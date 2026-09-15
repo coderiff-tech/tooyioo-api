@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Slicent.Application.Commands;
+// ReSharper disable ClassNeverInstantiated.Local
 
 namespace Slicent.Tests.Application.Commands;
 
@@ -60,7 +61,7 @@ public sealed class WhenCommandServicesAreRegistered
             => new(request.Name);
     }
 
-    public sealed class TestCommandResponseMapper
+    private sealed class TestCommandResponseMapper
         : ICommandHttpResponseMapper<TestCommandResult, HttpContext, TestResponse>
     {
         public IResult Map(

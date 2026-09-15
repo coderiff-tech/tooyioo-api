@@ -33,6 +33,8 @@ The host uses the real API `Program.cs` through `WebApplicationFactory`, then ov
 - hosted background services are removed
 - JWT bearer validation is replaced with a test signing key
 
+Those overrides are applied after the application's registrations, so production hosted subscriptions cannot connect to KurrentDB during a slice test.
+
 This keeps tests close to production wiring without starting Aspire, KurrentDB, MongoDB containers, or the real Google issuer metadata flow.
 
 ## Vertical slice test bases

@@ -21,8 +21,13 @@ public sealed class WhenCommandHttpResponseIsGenerated
     [Test]
     public async Task Then_conflict_response_contains_problem_details()
     {
-        var context = new DefaultHttpContext();
-        context.Request.Path = "/commands";
+        var context = new DefaultHttpContext
+        {
+            Request =
+            {
+                Path = "/commands"
+            }
+        };
         var generator = new CommandHttpResponseGenerator<TestResponse>();
 
         var result = generator.Conflict(context, "already_exists", "Resource already exists.");

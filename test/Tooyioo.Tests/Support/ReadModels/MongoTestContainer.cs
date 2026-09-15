@@ -28,7 +28,7 @@ public sealed class MongoTestContainer
         }
         catch (DockerUnavailableException)
         {
-            Skip.Test("Docker is required for query tests using Mongo");
+            Skip.Test("Podman (or Docker) is required for query tests using Mongo");
             throw;
         }
 

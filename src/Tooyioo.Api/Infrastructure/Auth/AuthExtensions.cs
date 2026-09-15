@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Tooyioo.Common;
 
@@ -15,10 +16,20 @@ public static class AuthExtensions
     public static TBuilder AddAuth<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.Services
+            .AddOptions<GoogleJwtOptions>()
+            .BindConfiguration(GoogleJwtOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        builder.Services
             .AddAuthentication(DefaultScheme)
-            .AddJwtBearer(DefaultScheme, options =>
+            .AddJwtBearer(DefaultScheme);
+
+        builder.Services
+            .AddOptions<JwtBearerOptions>(DefaultScheme)
+            .Configure<IOptions<GoogleJwtOptions>>((options, googleJwtOptions) =>
             {
-                ConfigureGoogleJwt(builder, options);
+                ConfigureGoogleJwt(options, googleJwtOptions.Value);
                 options.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = OnTokenValidated,
@@ -56,21 +67,19 @@ public static class AuthExtensions
         return builder;
     }
 
-    private static void ConfigureGoogleJwt(IHostApplicationBuilder builder, JwtBearerOptions options)
+    private static void ConfigureGoogleJwt(JwtBearerOptions options, GoogleJwtOptions googleJwtOptions)
     {
-        var clientId =
-            builder.Configuration.GetValue<string>("Google:ClientId")
-            ?? throw new InvalidOperationException("Google:ClientId is not set");
-        
         options.RequireHttpsMetadata = true;
         options.MapInboundClaims = false;
         options.Authority = "https://accounts.google.com";
-        options.Audience = clientId;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidIssuers = ["https://accounts.google.com", "accounts.google.com"],
+            
             ValidateAudience = true,
+            ValidAudiences = [googleJwtOptions.ClientId],
+            
             ValidateLifetime = true,
             NameClaimType = "sub"
         };

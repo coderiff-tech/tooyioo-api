@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 
@@ -11,19 +12,22 @@ public static class OpenApiExtensions
 
     public static TBuilder AddOpenApi<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        var googleOAuthAuthorizationUrl = 
-            builder.Configuration.GetValue<string>("Scalar:GoogleOAuth:AuthorizationUrl")
-            ?? throw new InvalidOperationException("Scalar:GoogleOAuth:AuthorizationUrl is not set");
-        var googleOAuthTokenUrl =
-            builder.Configuration.GetValue<string>("Scalar:GoogleOAuth:TokenUrl")
-            ?? throw new InvalidOperationException("Scalar:GoogleOAuth:TokenUrl is not set");
+        builder.Services
+            .AddOptions<ScalarGoogleOAuthOptions>()
+            .BindConfiguration(ScalarGoogleOAuthOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         
         builder.Services.AddOpenApi(DocumentName, options =>
         {
             options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_1;
             
-            options.AddDocumentTransformer((document, _, _) =>
+            options.AddDocumentTransformer((document, context, _) =>
             {
+                var googleOAuthOptions = context.ApplicationServices
+                    .GetRequiredService<IOptions<ScalarGoogleOAuthOptions>>()
+                    .Value;
+
                 document.Components ??= new OpenApiComponents();
                 document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
                 
@@ -35,8 +39,8 @@ public static class OpenApiExtensions
                         {
                             AuthorizationCode = new OpenApiOAuthFlow
                             {
-                                AuthorizationUrl = new Uri(googleOAuthAuthorizationUrl),
-                                TokenUrl = new Uri(googleOAuthTokenUrl),
+                                AuthorizationUrl = new Uri(googleOAuthOptions.AuthorizationUrl),
+                                TokenUrl = new Uri(googleOAuthOptions.TokenUrl),
                                 Scopes = new Dictionary<string, string>
                                 {
                                     ["openid"] = "OpenID Connect",
@@ -78,12 +82,11 @@ public static class OpenApiExtensions
             return app;
         }
 
-        var googleOAuthClientId = 
-            app.Configuration.GetValue<string>("Scalar:GoogleOAuth:ClientId")
-            ?? throw new InvalidOperationException("Scalar:GoogleOAuth:ClientId is not set");
-        var googleOAuthClientSecret = 
-            app.Configuration.GetValue<string>("Scalar:GoogleOAuth:ClientSecret")
-            ?? throw new InvalidOperationException("Scalar:GoogleOAuth:ClientSecret is not set");
+        var googleOAuthOptions = app.Services
+            .GetRequiredService<IOptions<ScalarGoogleOAuthOptions>>()
+            .Value;
+        var googleOAuthClientSecret = googleOAuthOptions.ClientSecret
+            ?? throw new InvalidOperationException($"{ScalarGoogleOAuthOptions.SectionName} is missing {nameof(googleOAuthOptions.ClientSecret)}");
         
         app.MapOpenApi().AllowAnonymous().CacheOutput();
 
@@ -99,7 +102,7 @@ public static class OpenApiExtensions
                         .AddPreferredSecuritySchemes(GoogleOAuthSecurityScheme)
                         .AddAuthorizationCodeFlow(GoogleOAuthSecurityScheme, flow =>
                         {
-                            flow.ClientId = googleOAuthClientId;
+                            flow.ClientId = googleOAuthOptions.ClientId;
                             flow.ClientSecret = googleOAuthClientSecret;
 
                             flow.Pkce = Pkce.Sha256;
