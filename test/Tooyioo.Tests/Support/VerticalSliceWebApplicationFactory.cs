@@ -26,7 +26,8 @@ internal sealed class VerticalSliceWebApplicationFactory(
         {
             configuration.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["Slicent:IsTestExecution"] = "true"
+                ["Slicent:EventStoreProvider"] = "InMemory",
+                ["ConnectionStrings:MongoDb"] = mongoDatabase?.ConnectionString ?? "mongodb://127.0.0.1:27017"
             });
         });
 
@@ -41,8 +42,6 @@ internal sealed class VerticalSliceWebApplicationFactory(
         {
             configuration.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:KurrentDb"] = "kurrentdb://localhost:2113?tls=false",
-                ["ConnectionStrings:MongoDb"] = mongoDatabase?.ConnectionString ?? "mongodb://127.0.0.1:27017",
                 ["Google:ClientId"] = "tooyioo-tests"
             });
         });

@@ -18,8 +18,19 @@ public static class SlicentExtensions
     {
         builder.Services.AddSlicent(assemblies);
 
-        if (builder.Configuration.GetValue<bool>("Slicent:IsTestExecution")
-            || Assembly.GetEntryAssembly().IsOpenApiGenerationLaunch())
+        if (Assembly.GetEntryAssembly().IsOpenApiGenerationLaunch())
+        {
+            return builder;
+        }
+
+        var eventStoreProvider = GetEventStoreProvider(builder.Configuration);
+        var mongoDbConnectionString =
+            builder.Configuration.GetConnectionString("MongoDb")
+            ?? throw new InvalidOperationException("MongoDb connection string is not set");
+
+        builder.Services.AddSlicentMongoDb(mongoDbConnectionString);
+
+        if (eventStoreProvider is EventStoreProvider.InMemory)
         {
             return builder;
         }
@@ -27,14 +38,9 @@ public static class SlicentExtensions
         var kurrentDbConnectionString =
             builder.Configuration.GetConnectionString("KurrentDb")
             ?? throw new InvalidOperationException("KurrentDb connection string is not set");
-        
-        var mongoDbConnectionString =
-            builder.Configuration.GetConnectionString("MongoDb")
-            ?? throw new InvalidOperationException("MongoDb connection string is not set");
-        
+
         builder.Services
             .AddSlicentKurrentDb(kurrentDbConnectionString)
-            .AddSlicentMongoDb(mongoDbConnectionString)
             .AddSubscription<AllStreamSubscription, AllStreamSubscriptionOptions>(
                 "ReadModelsSubscription",
                 subscriptionBuilder => subscriptionBuilder
@@ -59,5 +65,14 @@ public static class SlicentExtensions
         }
         
         return app;
+    }
+
+    private static EventStoreProvider GetEventStoreProvider(IConfiguration configuration)
+    {
+        var configuredProvider = configuration["Slicent:EventStoreProvider"];
+
+        return string.IsNullOrWhiteSpace(configuredProvider)
+            ? EventStoreProvider.KurrentDb
+            : Enum.Parse<EventStoreProvider>(configuredProvider, ignoreCase: true);
     }
 }
