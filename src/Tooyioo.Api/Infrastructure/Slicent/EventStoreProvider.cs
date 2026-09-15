@@ -1,6 +1,6 @@
 namespace Tooyioo.Api.Infrastructure.Slicent;
 
-internal enum EventStoreProvider
+public enum EventStoreProvider
 {
     KurrentDb,
     InMemory

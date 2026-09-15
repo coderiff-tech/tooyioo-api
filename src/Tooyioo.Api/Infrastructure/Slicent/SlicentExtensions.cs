@@ -23,24 +23,47 @@ public static class SlicentExtensions
             return builder;
         }
 
-        var eventStoreProvider = GetEventStoreProvider(builder.Configuration);
-        var mongoDbConnectionString =
-            builder.Configuration.GetConnectionString("MongoDb")
-            ?? throw new InvalidOperationException("MongoDb connection string is not set");
+        builder.Services
+            .AddOptions<SlicentOptions>()
+            .BindConfiguration(SlicentOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
-        builder.Services.AddSlicentMongoDb(mongoDbConnectionString);
+        builder.Services
+            .AddOptions<MongoDbOptions>()
+            .BindConfiguration(MongoDbOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
-        if (eventStoreProvider is EventStoreProvider.InMemory)
+        var slicentOptions = builder.Configuration
+            .GetSection(SlicentOptions.SectionName)
+            .Get<SlicentOptions>()
+            ?? new SlicentOptions();
+        var mongoDbOptions = builder.Configuration
+            .GetSection(MongoDbOptions.SectionName)
+            .Get<MongoDbOptions>()
+            ?? new MongoDbOptions();
+
+        builder.Services.AddSlicentMongoDb(mongoDbOptions.MongoDb);
+
+        if (slicentOptions.EventStoreProvider is EventStoreProvider.InMemory)
         {
             return builder;
         }
 
-        var kurrentDbConnectionString =
-            builder.Configuration.GetConnectionString("KurrentDb")
-            ?? throw new InvalidOperationException("KurrentDb connection string is not set");
+        builder.Services
+            .AddOptions<KurrentDbOptions>()
+            .BindConfiguration(KurrentDbOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        var kurrentDbOptions = builder.Configuration
+            .GetSection(KurrentDbOptions.SectionName)
+            .Get<KurrentDbOptions>()
+            ?? new KurrentDbOptions();
 
         builder.Services
-            .AddSlicentKurrentDb(kurrentDbConnectionString)
+            .AddSlicentKurrentDb(kurrentDbOptions.KurrentDb)
             .AddSubscription<AllStreamSubscription, AllStreamSubscriptionOptions>(
                 "ReadModelsSubscription",
                 subscriptionBuilder => subscriptionBuilder
@@ -65,14 +88,5 @@ public static class SlicentExtensions
         }
         
         return app;
-    }
-
-    private static EventStoreProvider GetEventStoreProvider(IConfiguration configuration)
-    {
-        var configuredProvider = configuration["Slicent:EventStoreProvider"];
-
-        return string.IsNullOrWhiteSpace(configuredProvider)
-            ? EventStoreProvider.KurrentDb
-            : Enum.Parse<EventStoreProvider>(configuredProvider, ignoreCase: true);
     }
 }
