@@ -27,4 +27,11 @@ test "$(jq -r '.[1].status' "${pages_directory}/history.json")" = "FAILED"
 grep -q 'runs/101/' "${pages_directory}/index.html"
 grep -q 'class="failed">FAILED' "${pages_directory}/index.html"
 
+jq -n '[range(1; 101) | { run: tostring, number: tostring, date: "fixture", status: "PASSED", sha: "fixture", url: "https://github.example" }]' > "${pages_directory}/history.json"
+run_publisher success 101 101
+
+test "$(jq 'length' "${pages_directory}/history.json")" = "100"
+test "$(jq -r '.[0].run' "${pages_directory}/history.json")" = "2"
+test "$(jq -r '.[99].run' "${pages_directory}/history.json")" = "101"
+
 echo "publish-test-report dry-run checks passed"

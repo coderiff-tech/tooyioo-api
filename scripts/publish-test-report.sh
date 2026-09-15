@@ -69,7 +69,7 @@ history_path="${pages_work_directory}/history.json"
 
 if [[ -f "$history_path" ]]; then
   jq --arg run "$RUN_ID" --arg number "$RUN_NUMBER" --arg date "$run_date" --arg status "$status" --arg sha "${SHA:0:7}" --arg url "$run_url" \
-    '. += [{ run: $run, number: $number, date: $date, status: $status, sha: $sha, url: $url }]' \
+    '(. + [{ run: $run, number: $number, date: $date, status: $status, sha: $sha, url: $url }])[-100:]' \
     "$history_path" > "${history_path}.tmp"
   mv "${history_path}.tmp" "$history_path"
 else
