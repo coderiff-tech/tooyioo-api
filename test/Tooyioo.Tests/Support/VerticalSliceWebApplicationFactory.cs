@@ -3,7 +3,6 @@ using Eventuous.Testing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -31,11 +30,12 @@ internal sealed class VerticalSliceWebApplicationFactory(
             {
                 ["ConnectionStrings:KurrentDb"] = "kurrentdb://localhost:2113?tls=false",
                 ["ConnectionStrings:MongoDb"] = mongoDatabase?.ConnectionString ?? "mongodb://127.0.0.1:27017",
-                ["Google:ClientId"] = "tooyioo-tests"
+                ["Google:ClientId"] = "tooyioo-tests",
+                ["Slicent:UseInMemoryInfrastructure"] = "true"
             });
         });
 
-        builder.ConfigureTestServices(services =>
+        builder.ConfigureServices(services =>
         {
             services.RemoveAll<IHostedService>();
 

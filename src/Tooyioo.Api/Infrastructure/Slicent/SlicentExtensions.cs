@@ -16,6 +16,14 @@ public static class SlicentExtensions
     public static TBuilder AddSlicent<TBuilder>(this TBuilder builder, params Assembly[] assemblies) 
         where TBuilder : IHostApplicationBuilder
     {
+        builder.Services.AddSlicent(assemblies);
+
+        if (builder.Configuration.GetValue<bool>("Slicent:UseInMemoryInfrastructure")
+            || Assembly.GetEntryAssembly().IsOpenApiGenerationLaunch())
+        {
+            return builder;
+        }
+
         var kurrentDbConnectionString =
             builder.Configuration.GetConnectionString("KurrentDb")
             ?? throw new InvalidOperationException("KurrentDb connection string is not set");
@@ -23,13 +31,6 @@ public static class SlicentExtensions
         var mongoDbConnectionString =
             builder.Configuration.GetConnectionString("MongoDb")
             ?? throw new InvalidOperationException("MongoDb connection string is not set");
-
-        builder.Services.AddSlicent(assemblies);
-            
-        if (Assembly.GetEntryAssembly().IsOpenApiGenerationLaunch())
-        {
-            return builder;
-        }
         
         builder.Services
             .AddSlicentKurrentDb(kurrentDbConnectionString)
