@@ -1,4 +1,4 @@
-using Eventuous;
+using Slicent.EventStore;
 
 namespace Tooyioo.UserOnboarding.Contracts;
 
@@ -8,10 +8,10 @@ public static class ExternalIdentityClaimingDomainEvents
     {
         private const string Prefix = "V1.";
 
-        [EventType(Prefix + "ExternalIdentityClaimed")]
+        [DomainEventType(Prefix + "ExternalIdentityClaimed")]
         public record ExternalIdentityClaimed(string UserOnboardingId);
 
-        [EventType(Prefix + "ExternalIdentityReleased")]
+        [DomainEventType(Prefix + "ExternalIdentityReleased")]
         public record ExternalIdentityReleased(string UserOnboardingId);
     }
 }

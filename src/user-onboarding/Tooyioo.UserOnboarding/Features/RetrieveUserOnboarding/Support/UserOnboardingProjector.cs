@@ -1,15 +1,17 @@
+using Eventuous;
 using Eventuous.Projections.MongoDB;
 using Eventuous.Subscriptions.Context;
 using MongoDB.Driver;
 using Tooyioo.UserOnboarding.Contracts;
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace Tooyioo.UserOnboarding.Features.RetrieveUserOnboarding.Support;
 
 public sealed class UserOnboardingProjector
     : MongoProjector<UserOnboardingDocument>
 {
-    public UserOnboardingProjector(IMongoDatabase database) 
-        : base(database)
+    public UserOnboardingProjector(IMongoDatabase database, ITypeMapper typeMapper)
+        : base(database, null, typeMapper)
     {
         On<UserOnboardingDomainEvents.V1.UserOnboardingInitiated>(stream => stream.GetId(), Handle);
         On<UserOnboardingDomainEvents.V1.UserOnboardingExternalIdentityAssociated>(stream => stream.GetId(), Handle);

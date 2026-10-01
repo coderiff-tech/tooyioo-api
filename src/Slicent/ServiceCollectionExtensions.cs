@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Text.Json;
 using Eventuous;
 using Eventuous.KurrentDB;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +9,7 @@ using Slicent.Application;
 using Slicent.Application.Authorization;
 using Slicent.Application.Commands;
 using Slicent.Application.Queries;
+using Slicent.EventStore;
 // ReSharper disable UnusedType.Global
 // ReSharper disable ConvertToExtensionBlock
 // ReSharper disable MemberCanBePrivate.Global
@@ -52,7 +52,9 @@ public static class ServiceCollectionExtensions
         
         services.AddCustomProblemDetails();
         
-        TypeMap.RegisterKnownEventTypes();
+        var typeMapper = EventTypeMapperFactory.Create([.. assemblies.Distinct()]);
+        services.AddSingleton<ITypeMapper>(typeMapper);
+        services.AddSingleton<IEventSerializer, JsonEventSerializer>();
 
         return services;
     }
@@ -60,7 +62,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddSlicentKurrentDb(this IServiceCollection services, string connectionString)
     {
         services.AddKurrentDBClient(connectionString);
-        services.TryAddSingleton<IEventSerializer>(new DefaultEventSerializer(new JsonSerializerOptions(JsonSerializerDefaults.Web)));
         services.AddEventStore<KurrentDBEventStore>();
         
         return services;

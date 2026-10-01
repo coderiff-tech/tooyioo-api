@@ -8,7 +8,7 @@
         <LangVersion>latest</LangVersion>
         <!--XML Comments for OpenAPI-->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>$(NoWarn);1591</NoWarn>
+        <NoWarn>$(NoWarn);1591;EVTC001</NoWarn>
         <!--End of XML Comments for OpenAPI-->
     </PropertyGroup>
 

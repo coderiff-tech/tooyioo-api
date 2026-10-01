@@ -1,4 +1,4 @@
-using Eventuous;
+using Slicent.EventStore;
 
 namespace Tooyioo.UserOnboarding.Contracts;
 
@@ -8,10 +8,10 @@ public static class AliasClaimingDomainEvents
     {
         private const string Prefix = "V1.";
 
-        [EventType(Prefix + "AliasClaimed")]
+        [DomainEventType(Prefix + "AliasClaimed")]
         public record AliasClaimed(string UserOnboardingId);
 
-        [EventType(Prefix + "AliasReleased")]
+        [DomainEventType(Prefix + "AliasReleased")]
         public record AliasReleased(string UserOnboardingId);
     }
 }

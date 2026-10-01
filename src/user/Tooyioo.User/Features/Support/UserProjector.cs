@@ -1,7 +1,10 @@
 ﻿using Eventuous.Projections.MongoDB;
 using Eventuous.Subscriptions.Context;
+using Eventuous;
 using MongoDB.Driver;
 using Tooyioo.UserOnboarding.Contracts;
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UseDeconstruction
 
 namespace Tooyioo.User.Features.Support;
 
@@ -12,8 +15,8 @@ public sealed class UserProjector
 
     public UserProjector(
         IMongoDatabase database,
-        IUserOnboardingDetailsRetriever userOnboardingDetailsRetriever) 
-        : base(database)
+        IUserOnboardingDetailsRetriever userOnboardingDetailsRetriever, ITypeMapper typeMapper)
+        : base(database, null, typeMapper)
     {
         _userOnboardingDetailsRetriever = userOnboardingDetailsRetriever;
         

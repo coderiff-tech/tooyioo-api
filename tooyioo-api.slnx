@@ -14,6 +14,8 @@
     <Project Path="src/user/Tooyioo.User/Tooyioo.User.csproj" />
   </Folder>
   <Folder Name="/test/">
+    <Project Path="test/Slicent.TestEventsA/Slicent.TestEventsA.csproj" />
+    <Project Path="test/Slicent.TestEventsB/Slicent.TestEventsB.csproj" />
     <Project Path="test/Slicent.Tests/Slicent.Tests.csproj" />
     <Project Path="test/Tooyioo.Tests/Tooyioo.Tests.csproj" />
   </Folder>

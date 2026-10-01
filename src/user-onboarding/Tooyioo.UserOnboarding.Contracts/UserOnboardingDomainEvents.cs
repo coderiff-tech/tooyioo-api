@@ -1,4 +1,4 @@
-using Eventuous;
+using Slicent.EventStore;
 
 namespace Tooyioo.UserOnboarding.Contracts;
 
@@ -8,22 +8,22 @@ public static class UserOnboardingDomainEvents
     {
         private const string Prefix = "V1.";
 
-        [EventType(Prefix + "UserOnboardingInitiated")]
+        [DomainEventType(Prefix + "UserOnboardingInitiated")]
         public record UserOnboardingInitiated(string Name, string LastName, string Email);
 
-        [EventType(Prefix + "UserOnboardingExternalIdentityAssociated")]
+        [DomainEventType(Prefix + "UserOnboardingExternalIdentityAssociated")]
         public record UserOnboardingExternalIdentityAssociated(string Id, string Provider, string Issuer);
 
-        [EventType(Prefix + "UserOnboardingEmailVerified")]
+        [DomainEventType(Prefix + "UserOnboardingEmailVerified")]
         public record UserOnboardingEmailVerified;
 
-        [EventType(Prefix + "UserOnboardingAliasChosen")]
+        [DomainEventType(Prefix + "UserOnboardingAliasChosen")]
         public record UserOnboardingAliasChosen(string Alias);
 
-        [EventType(Prefix + "UserOnboardingCompleted")]
+        [DomainEventType(Prefix + "UserOnboardingCompleted")]
         public record UserOnboardingCompleted(string UserId, string TermsAndConditionsVersion);
 
-        [EventType(Prefix + "UserOnboardingCanceled")]
+        [DomainEventType(Prefix + "UserOnboardingCanceled")]
         public record UserOnboardingCanceled(string Reason);
     }
 }
