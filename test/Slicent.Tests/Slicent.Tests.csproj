@@ -9,8 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Eventuous.Testing" Version="0.16.4" />
-        <PackageReference Include="TUnit" Version="1.72.4" />
+        <PackageReference Include="Eventuous.Testing" Version="0.17.0" />
+        <PackageReference Include="TUnit" Version="1.72.10" />
     </ItemGroup>
 
     <ItemGroup>
