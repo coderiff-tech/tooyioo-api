@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json;
 using Eventuous;
 using Eventuous.KurrentDB;
 using Microsoft.AspNetCore.Http;
@@ -59,6 +60,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddSlicentKurrentDb(this IServiceCollection services, string connectionString)
     {
         services.AddKurrentDBClient(connectionString);
+        services.TryAddSingleton<IEventSerializer>(new DefaultEventSerializer(new JsonSerializerOptions(JsonSerializerDefaults.Web)));
         services.AddEventStore<KurrentDBEventStore>();
         
         return services;
